@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/amolabs/amoabci/client/util"
+	"github.com/amolabs/amo-client-go/lib/util"
 
 	"github.com/spf13/cobra"
 
-	"github.com/amolabs/amoabci/client/rpc"
+	"github.com/amolabs/amo-client-go/lib/rpc"
 )
 
 var CancelCmd = &cobra.Command{

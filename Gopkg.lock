@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:bdb52429198b5e162f40225c6ab5f100c0bd9501bca6ef4960ff21f3a25c4b32"
+  digest = "1:1f9b09a493d355aa06e7a6447d963b8253c4b5ca7b635d944114bc17a826ed8a"
   name = "github.com/amolabs/amoabci"
   packages = [
     "amo/code",
@@ -10,16 +10,6 @@
     "amo/store",
     "amo/tx",
     "amo/types",
-    "client/keys",
-    "client/parcel",
-    "client/rpc",
-    "client/util",
-    "cmd/amocli/cmd",
-    "cmd/amocli/cmd/key",
-    "cmd/amocli/cmd/parcel",
-    "cmd/amocli/cmd/query",
-    "cmd/amocli/cmd/tx",
-    "cmd/amocli/util",
     "crypto/p256",
   ]
   pruneopts = "UT"
@@ -188,6 +178,14 @@
   version = "v0.8.1"
 
 [[projects]]
+  digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  pruneopts = "UT"
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:e89f2cdede55684adbe44b5566f55838ad2aee1dff348d14b73ccf733607b671"
   name = "github.com/prometheus/client_golang"
   packages = [
@@ -261,6 +259,14 @@
   pruneopts = "UT"
   revision = "298182f68c66c05229eb03ac171abe6e309ee79a"
   version = "v1.0.3"
+
+[[projects]]
+  digest = "1:972c2427413d41a1e06ca4897e8528e5a1622894050e2f527b38ddf0f343f759"
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  pruneopts = "UT"
+  revision = "ffdc059bfe9ce6a4e144ba849dbedead332c6053"
+  version = "v1.3.0"
 
 [[projects]]
   digest = "1:5b180f17d5bc50b765f4dcf0d126c72979531cbbd7f7929bf3edd87fb801ea2d"
@@ -482,19 +488,20 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/amolabs/amoabci/amo/tx",
     "github.com/amolabs/amoabci/amo/types",
-    "github.com/amolabs/amoabci/client/keys",
-    "github.com/amolabs/amoabci/client/parcel",
-    "github.com/amolabs/amoabci/client/rpc",
-    "github.com/amolabs/amoabci/client/util",
-    "github.com/amolabs/amoabci/cmd/amocli/cmd",
-    "github.com/amolabs/amoabci/cmd/amocli/cmd/key",
-    "github.com/amolabs/amoabci/cmd/amocli/cmd/parcel",
-    "github.com/amolabs/amoabci/cmd/amocli/cmd/query",
-    "github.com/amolabs/amoabci/cmd/amocli/cmd/tx",
-    "github.com/amolabs/amoabci/cmd/amocli/util",
+    "github.com/amolabs/amoabci/crypto/p256",
+    "github.com/paust-team/paust-db/client",
     "github.com/spf13/cobra",
+    "github.com/stretchr/testify/assert",
+    "github.com/tendermint/go-amino",
     "github.com/tendermint/tendermint/crypto",
+    "github.com/tendermint/tendermint/crypto/xsalsa20symmetric",
+    "github.com/tendermint/tendermint/libs/common",
+    "github.com/tendermint/tendermint/rpc/client",
+    "github.com/tendermint/tendermint/rpc/core/types",
+    "github.com/tendermint/tendermint/rpc/lib/types",
+    "github.com/tendermint/tendermint/types",
     "golang.org/x/crypto/ssh/terminal",
   ]
   solver-name = "gps-cdcl"

@@ -8,8 +8,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/tendermint/tendermint/crypto"
 
+	"github.com/amolabs/amo-client-go/lib/rpc"
 	"github.com/amolabs/amoabci/amo/types"
-	"github.com/amolabs/amoabci/client/rpc"
 )
 
 var BalanceCmd = &cobra.Command{

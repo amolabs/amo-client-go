@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/amolabs/amoabci/client/rpc"
+	"github.com/amolabs/amo-client-go/lib/rpc"
 )
 
 var statusCmd = &cobra.Command{

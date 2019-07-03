@@ -6,9 +6,9 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/lib/rpc"
+	"github.com/amolabs/amo-client-go/lib/util"
 	atypes "github.com/amolabs/amoabci/amo/types"
-	"github.com/amolabs/amoabci/client/rpc"
-	"github.com/amolabs/amoabci/client/util"
 )
 
 var WithdrawCmd = &cobra.Command{

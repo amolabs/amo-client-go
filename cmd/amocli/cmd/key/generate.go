@@ -5,9 +5,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/amolabs/amoabci/client/keys"
-	"github.com/amolabs/amoabci/client/util"
-	cliutil "github.com/amolabs/amoabci/cmd/amocli/util"
+	cliutil "github.com/amolabs/amo-client-go/cmd/amocli/util"
+	"github.com/amolabs/amo-client-go/lib/keys"
+	"github.com/amolabs/amo-client-go/lib/util"
 )
 
 var GenCmd = &cobra.Command{

@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	client "github.com/amolabs/amoabci/client/parcel"
+	client "github.com/amolabs/amo-client-go/lib/parcel"
 )
 
 var QueryCmd = &cobra.Command{

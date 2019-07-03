@@ -3,8 +3,8 @@ package tx
 import (
 	"errors"
 
-	"github.com/amolabs/amoabci/client/keys"
-	"github.com/amolabs/amoabci/cmd/amocli/util"
+	"github.com/amolabs/amo-client-go/cmd/amocli/util"
+	"github.com/amolabs/amo-client-go/lib/keys"
 )
 
 var (

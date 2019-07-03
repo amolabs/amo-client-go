@@ -25,6 +25,10 @@
 #   unused-packages = true
 
 
+[[constraint]]
+  name = "github.com/amolabs/amoabci"
+  version = "^1.0-beta1"
+
 [prune]
   go-tests = true
   unused-packages = true

@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/amolabs/amoabci/cmd/amocli/cmd/query"
+	"github.com/amolabs/amo-client-go/cmd/amocli/cmd/query"
 )
 
 /* Commands (expected hierarchy)
