@@ -1,7 +1,6 @@
 package query
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -24,17 +23,7 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	buyer, err := hex.DecodeString(args[0])
-	if err != nil {
-		return err
-	}
-
-	parcel, err := hex.DecodeString(args[1])
-	if err != nil {
-		return err
-	}
-
-	res, err := rpc.QueryRequest(buyer, parcel)
+	res, err := rpc.QueryRequest(args[0], args[1])
 	if err != nil {
 		return err
 	}

@@ -1,12 +1,15 @@
 package rpc
 
 import (
+	"encoding/base64" // when decoding query response
+	"encoding/hex"    // when encoding query request
 	"encoding/json"
 
 	cmn "github.com/tendermint/tendermint/libs/common"
 	"github.com/tendermint/tendermint/rpc/client"
 	ctypes "github.com/tendermint/tendermint/rpc/core/types"
 	"github.com/tendermint/tendermint/types"
+	"github.com/ybbus/jsonrpc"
 
 	"github.com/amolabs/amo-client-go/lib/keys"
 	"github.com/amolabs/amoabci/amo/tx"
@@ -17,6 +20,54 @@ var (
 	RpcRemote     = "tcp://0.0.0.0:26657"
 	rpcWsEndpoint = "/websocket"
 )
+
+type ABCIParams struct {
+	Path   string `json:"path"`
+	Data   string `json:"data"`
+	Height string `json:"height"`
+	Prove  bool   `json:"prove"`
+}
+
+type ABCIResponse struct {
+	Log   string `json:"log"`
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+type TmResponse struct {
+	Response ABCIResponse `json:"response"`
+}
+
+func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
+	queryJson, err := json.Marshal(queryData)
+	if err != nil {
+		return []byte("0"), err
+	}
+	params := ABCIParams{
+		Path:   path,
+		Data:   hex.EncodeToString([]byte(queryJson)),
+		Height: "0",
+		Prove:  false,
+	}
+
+	c := jsonrpc.NewClient("http://amo-tokyo:26657")
+	rsp, err := c.Call("abci_query", params)
+	if err != nil { // call error
+		return []byte("0"), err
+	}
+	if rsp.Error != nil { // rpc error
+		return []byte("0"), err
+	}
+	var res TmResponse
+	err = rsp.GetObject(&res)
+	if err != nil { // conversion error
+		return []byte("0"), err
+	}
+	// TODO: check ABCI error
+	// XXX: need to do something with Log and Key?
+	ret, err := base64.StdEncoding.DecodeString(string(res.Response.Value))
+	return ret, nil
+}
 
 // MakeTx handles making tx message
 func MakeTx(t string, nonce uint32, payload interface{}, key keys.Key) (types.Tx, error) {
@@ -52,12 +103,6 @@ func MakeTx(t string, nonce uint32, payload interface{}, key keys.Key) (types.Tx
 func RPCBroadcastTxCommit(tx types.Tx) (*ctypes.ResultBroadcastTxCommit, error) {
 	cli := client.NewHTTP(RpcRemote, rpcWsEndpoint)
 	return cli.BroadcastTxCommit(tx)
-}
-
-// RPCABCIQuery handles querying
-func RPCABCIQuery(path string, data cmn.HexBytes) (*ctypes.ResultABCIQuery, error) {
-	cli := client.NewHTTP(RpcRemote, rpcWsEndpoint)
-	return cli.ABCIQuery(path, data)
 }
 
 // RPCStatus handle querying the status

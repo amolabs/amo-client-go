@@ -1,12 +1,10 @@
 package query
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/tendermint/tendermint/crypto"
 
 	"github.com/amolabs/amo-client-go/lib/rpc"
 	"github.com/amolabs/amoabci/amo/types"
@@ -25,11 +23,8 @@ func balanceFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	address, err := hex.DecodeString(args[0])
-	if err != nil {
-		return err
-	}
-	res, err := rpc.QueryBalance(crypto.Address(address))
+	// TODO: do some sanity check on client side
+	res, err := rpc.QueryBalance(args[0])
 	if err != nil {
 		return err
 	}
@@ -40,7 +35,7 @@ func balanceFunc(cmd *cobra.Command, args []string) error {
 	}
 
 	var balance types.Currency
-	err = json.Unmarshal(res, &balance)
+	err = json.Unmarshal([]byte(res), &balance)
 	if err != nil {
 		return err
 	}

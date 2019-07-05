@@ -1,7 +1,6 @@
 package query
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -24,12 +23,7 @@ func stakeFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	address, err := hex.DecodeString(args[0])
-	if err != nil {
-		return err
-	}
-
-	res, err := rpc.QueryStake(address)
+	res, err := rpc.QueryStake(args[0])
 	if err != nil {
 		return err
 	}

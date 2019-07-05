@@ -1,7 +1,6 @@
 package query
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -24,12 +23,7 @@ func parcelFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	parcelID, err := hex.DecodeString(args[0])
-	if err != nil {
-		return err
-	}
-
-	res, err := rpc.QueryParcel(parcelID)
+	res, err := rpc.QueryParcel(args[0])
 	if err != nil {
 		return err
 	}

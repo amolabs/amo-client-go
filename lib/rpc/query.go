@@ -1,102 +1,39 @@
 package rpc
 
-import (
-	"encoding/json"
+import ()
 
-	"github.com/tendermint/tendermint/crypto"
-	tm "github.com/tendermint/tendermint/libs/common"
-)
-
-func QueryBalance(address crypto.Address) ([]byte, error) {
-	bytes, err := json.Marshal(address)
-	if err != nil {
-		return nil, err
-	}
-
-	result, err := RPCABCIQuery("/balance", tm.HexBytes(bytes))
-	if err != nil {
-		return nil, err
-	}
-
-	return result.Response.Value, nil
+func QueryBalance(address string) ([]byte, error) {
+	ret, err := ABCIQuery("/balance", address)
+	return ret, err
 }
 
-func QueryStake(address crypto.Address) ([]byte, error) {
-	marshalled, err := json.Marshal(address)
-	if err != nil {
-		return nil, err
-	}
-
-	result, err := RPCABCIQuery("/stake", tm.HexBytes(marshalled))
-	if err != nil {
-		return nil, err
-	}
-
-	return result.Response.Value, nil
+func QueryStake(address string) ([]byte, error) {
+	ret, err := ABCIQuery("/stake", address)
+	return ret, err
 }
 
-func QueryDelegate(address crypto.Address) ([]byte, error) {
-	bytes, err := json.Marshal(address)
-	if err != nil {
-		return nil, err
-	}
-
-	result, err := RPCABCIQuery("/delegate", tm.HexBytes(bytes))
-	if err != nil {
-		return nil, err
-	}
-
-	return result.Response.Value, nil
+func QueryDelegate(address string) ([]byte, error) {
+	ret, err := ABCIQuery("/delegate", address)
+	return ret, err
 }
 
-func QueryParcel(parcelID tm.HexBytes) ([]byte, error) {
-	marshalled, err := json.Marshal(parcelID)
-	if err != nil {
-		return nil, err
-	}
-
-	result, err := RPCABCIQuery("/parcel", tm.HexBytes(marshalled))
-	if err != nil {
-		return nil, err
-	}
-
-	return result.Response.Value, nil
+func QueryParcel(parcelID string) ([]byte, error) {
+	ret, err := ABCIQuery("/parcel", parcelID)
+	return ret, err
 }
 
-func QueryRequest(buyer tm.HexBytes, target tm.HexBytes) ([]byte, error) {
-	keyMap := make(map[string]tm.HexBytes)
-
-	keyMap["buyer"] = buyer
-	keyMap["target"] = target
-
-	keyMapJSON, err := json.Marshal(keyMap)
-	if err != nil {
-		return nil, err
-	}
-
-	result, err := RPCABCIQuery("/request", keyMapJSON)
-	if err != nil {
-		return nil, err
-	}
-
-	return result.Response.Value, nil
+func QueryRequest(buyer string, target string) ([]byte, error) {
+	ret, err := ABCIQuery("/request", struct {
+		Buyer  string `json:"buyer"`
+		Target string `json:"target"`
+	}{buyer, target})
+	return ret, err
 }
 
-func QueryUsage(buyer tm.HexBytes, target tm.HexBytes) ([]byte, error) {
-	keyMap := make(map[string]tm.HexBytes)
-
-	keyMap["buyer"] = buyer
-	keyMap["target"] = target
-
-	keyMapJSON, err := json.Marshal(keyMap)
-	if err != nil {
-		return nil, err
-	}
-
-	result, err := RPCABCIQuery("/usage", keyMapJSON)
-	if err != nil {
-		return nil, err
-	}
-
-	return result.Response.Value, nil
+func QueryUsage(buyer string, target string) ([]byte, error) {
+	ret, err := ABCIQuery("/usage", struct {
+		Buyer  string `json:"buyer"`
+		Target string `json:"target"`
+	}{buyer, target})
+	return ret, err
 }

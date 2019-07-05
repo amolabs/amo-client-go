@@ -1,7 +1,6 @@
 package query
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -24,12 +23,7 @@ func delegateFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	holderAddr, err := hex.DecodeString(args[0])
-	if err != nil {
-		return err
-	}
-
-	res, err := rpc.QueryDelegate(holderAddr)
+	res, err := rpc.QueryDelegate(args[0])
 	if err != nil {
 		return err
 	}

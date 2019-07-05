@@ -1,7 +1,6 @@
 package query
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -24,17 +23,7 @@ func usageFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	buyerAddr, err := hex.DecodeString(args[0])
-	if err != nil {
-		return err
-	}
-
-	targetHex, err := hex.DecodeString(args[1])
-	if err != nil {
-		return err
-	}
-
-	res, err := rpc.QueryUsage(buyerAddr, targetHex)
+	res, err := rpc.QueryUsage(args[0], args[1])
 	if err != nil {
 		return err
 	}
