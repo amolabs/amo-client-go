@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	RpcRemote     = "tcp://0.0.0.0:26657"
+	RpcRemote     = "http://0.0.0.0:26657"
 	rpcWsEndpoint = "/websocket"
 )
 
@@ -50,7 +50,7 @@ func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
 		Prove:  false,
 	}
 
-	c := jsonrpc.NewClient("http://amo-tokyo:26657")
+	c := jsonrpc.NewClient(RpcRemote)
 	rsp, err := c.Call("abci_query", params)
 	if err != nil { // call error
 		return []byte("0"), err

@@ -45,6 +45,6 @@ func Execute() {
 func loadConfig(cmd *cobra.Command, args []string) {
 	rpcArg, err := cmd.Flags().GetString("rpc")
 	if err == nil {
-		rpc.RpcRemote = "tcp://" + rpcArg
+		rpc.RpcRemote = "http://" + rpcArg
 	}
 }
