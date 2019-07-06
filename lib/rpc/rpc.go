@@ -41,7 +41,7 @@ type TmResponse struct {
 func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
 	queryJson, err := json.Marshal(queryData)
 	if err != nil {
-		return []byte("0"), err
+		return nil, err
 	}
 	params := ABCIParams{
 		Path:   path,
@@ -53,15 +53,15 @@ func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
 	c := jsonrpc.NewClient(RpcRemote)
 	rsp, err := c.Call("abci_query", params)
 	if err != nil { // call error
-		return []byte("0"), err
+		return nil, err
 	}
 	if rsp.Error != nil { // rpc error
-		return []byte("0"), err
+		return nil, err
 	}
 	var res TmResponse
 	err = rsp.GetObject(&res)
 	if err != nil { // conversion error
-		return []byte("0"), err
+		return nil, err
 	}
 	// TODO: check ABCI error
 	// XXX: need to do something with Log and Key?

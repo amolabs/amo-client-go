@@ -4,6 +4,9 @@ import ()
 
 func QueryBalance(address string) ([]byte, error) {
 	ret, err := ABCIQuery("/balance", address)
+	if ret == nil {
+		ret = []byte("0")
+	}
 	return ret, err
 }
 
