@@ -1,7 +1,6 @@
 package tx
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -9,7 +8,6 @@ import (
 
 	"github.com/amolabs/amo-client-go/lib/rpc"
 	"github.com/amolabs/amo-client-go/lib/util"
-	atypes "github.com/amolabs/amoabci/amo/types"
 )
 
 var TransferCmd = &cobra.Command{
@@ -20,12 +18,7 @@ var TransferCmd = &cobra.Command{
 }
 
 func transferFunc(cmd *cobra.Command, args []string) error {
-	recp, err := hex.DecodeString(args[0])
-	if err != nil {
-		return err
-	}
-
-	amount, err := new(atypes.Currency).SetString(args[1], 10)
+	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
@@ -35,17 +28,21 @@ func transferFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Transfer(recp, amount, key)
+	result, err := rpc.Transfer(args[0], args[1], key)
 	if err != nil {
 		return err
 	}
 
-	resultJSON, err := json.Marshal(result)
-	if err != nil {
-		return err
+	if asJson {
+		resultJSON, err := json.Marshal(result)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(string(resultJSON))
 	}
 
-	fmt.Println(string(resultJSON))
+	// TODO: rich output
 
 	return nil
 }

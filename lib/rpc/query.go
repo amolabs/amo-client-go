@@ -1,6 +1,6 @@
 package rpc
 
-import ()
+// ABCI queries in AMO context
 
 func QueryBalance(address string) ([]byte, error) {
 	ret, err := ABCIQuery("/balance", address)

@@ -8,7 +8,6 @@ import (
 
 	"github.com/amolabs/amo-client-go/lib/rpc"
 	"github.com/amolabs/amo-client-go/lib/util"
-	atypes "github.com/amolabs/amoabci/amo/types"
 )
 
 var RetractCmd = &cobra.Command{
@@ -19,7 +18,7 @@ var RetractCmd = &cobra.Command{
 }
 
 func retractFunc(cmd *cobra.Command, args []string) error {
-	amount, err := new(atypes.Currency).SetString(args[0], 10)
+	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
@@ -29,17 +28,21 @@ func retractFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Retract(amount, key)
+	result, err := rpc.Retract(args[0], key)
 	if err != nil {
 		return err
 	}
 
-	resultJSON, err := json.Marshal(result)
-	if err != nil {
-		return err
+	if asJson {
+		resultJSON, err := json.Marshal(result)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(string(resultJSON))
 	}
 
-	fmt.Println(string(resultJSON))
+	// TODO: rich output
 
 	return nil
 }

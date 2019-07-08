@@ -6,18 +6,6 @@ import (
 	"github.com/amolabs/amo-client-go/cmd/amocli/cmd/query"
 )
 
-/* Commands (expected hierarchy)
- *
- * amocli |- query |- balance <address>
- *                 |
- *                 |- stake <address>
- *                 |- delegate --holder <address> --delegator <address>
- *                 |
- *                 |- parcel <parcelID>
- *                 |- request --buyer <address> --target <parcelID>
- *                 |- usage --buyer <address> --target <parcelID>
- */
-
 var queryCmd = &cobra.Command{
 	Use:     "query",
 	Aliases: []string{"q"},

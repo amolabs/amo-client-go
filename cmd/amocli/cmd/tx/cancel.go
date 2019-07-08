@@ -1,7 +1,6 @@
 package tx
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -20,7 +19,7 @@ var CancelCmd = &cobra.Command{
 }
 
 func cancelFunc(cmd *cobra.Command, args []string) error {
-	parcel, err := hex.DecodeString(args[0])
+	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
@@ -30,17 +29,21 @@ func cancelFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Cancel(parcel, key)
+	result, err := rpc.Cancel(args[0], key)
 	if err != nil {
 		return err
 	}
 
-	resultJSON, err := json.Marshal(result)
-	if err != nil {
-		return err
+	if asJson {
+		resultJSON, err := json.Marshal(result)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(string(resultJSON))
 	}
 
-	fmt.Println(string(resultJSON))
+	// TODO: rich output
 
 	return nil
 }

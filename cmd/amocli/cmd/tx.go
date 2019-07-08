@@ -6,24 +6,6 @@ import (
 	"github.com/amolabs/amo-client-go/cmd/amocli/cmd/tx"
 )
 
-/* Commands (expected hierarchy)
- *
- * amocli |- tx |- transfer --to <address> --amount <uint64>
- *				|
- *              |- stake --amount <currency> --validator <ed25519>
- *              |- withdraw <currency>
- *              |- delegate --to <address> --amount <currency>
- *              |- retract --from <address> --amount <currecncy>
- *				|
- *		    	|- register --target <file> --custody <key>
- *				|- request --target <file> --payment <uint64>
- *				|- cancel --target <file>
- *				|
- *				|- grant --target <file> --grantee <address> --custody <key>
- *				|- revoke --target <file> --grantee <address>
- *				|- discard --target <file>
- */
-
 var txCmd = &cobra.Command{
 	Use:     "tx",
 	Aliases: []string{"t"},

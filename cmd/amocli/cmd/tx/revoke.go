@@ -1,7 +1,6 @@
 package tx
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -19,12 +18,7 @@ var RevokeCmd = &cobra.Command{
 }
 
 func revokeFunc(cmd *cobra.Command, args []string) error {
-	parcel, err := hex.DecodeString(args[0])
-	if err != nil {
-		return err
-	}
-
-	grantee, err := hex.DecodeString(args[1])
+	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
@@ -34,17 +28,21 @@ func revokeFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Revoke(parcel, grantee, key)
+	result, err := rpc.Revoke(args[0], args[1], key)
 	if err != nil {
 		return err
 	}
 
-	resultJSON, err := json.Marshal(result)
-	if err != nil {
-		return err
+	if asJson {
+		resultJSON, err := json.Marshal(result)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(string(resultJSON))
 	}
 
-	fmt.Println(string(resultJSON))
+	// TODO: rich output
 
 	return nil
 }

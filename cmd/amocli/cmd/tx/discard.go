@@ -1,7 +1,6 @@
 package tx
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -19,7 +18,7 @@ var DiscardCmd = &cobra.Command{
 }
 
 func discardFunc(cmd *cobra.Command, args []string) error {
-	parcel, err := hex.DecodeString(args[0])
+	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
@@ -29,17 +28,21 @@ func discardFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Discard(parcel, key)
+	result, err := rpc.Discard(args[0], key)
 	if err != nil {
 		return err
 	}
 
-	resultJSON, err := json.Marshal(result)
-	if err != nil {
-		return err
+	if asJson {
+		resultJSON, err := json.Marshal(result)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(string(resultJSON))
 	}
 
-	fmt.Println(string(resultJSON))
+	// TODO: rich output
 
 	return nil
 }

@@ -1,41 +1,46 @@
 package rpc
 
 import (
-	"encoding/base64" // when decoding query response
-	"encoding/hex"    // when encoding query request
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/base64" // when decoding rpc response
+	"encoding/hex"    // when encoding rpc request
 	"encoding/json"
-
-	cmn "github.com/tendermint/tendermint/libs/common"
-	"github.com/tendermint/tendermint/rpc/client"
-	ctypes "github.com/tendermint/tendermint/rpc/core/types"
-	"github.com/tendermint/tendermint/types"
-	"github.com/ybbus/jsonrpc"
+	"math/big"
+	"strings"
 
 	"github.com/amolabs/amo-client-go/lib/keys"
-	"github.com/amolabs/amoabci/amo/tx"
-	"github.com/amolabs/amoabci/crypto/p256"
+	"github.com/ybbus/jsonrpc"
 )
 
 var (
-	RpcRemote     = "http://0.0.0.0:26657"
-	rpcWsEndpoint = "/websocket"
+	RpcRemote       = "http://0.0.0.0:26657"
+	rpcWsEndpoint   = "/websocket"
+	AddressByteSize = 20
+	NonceByteSize   = 4
+	c               = elliptic.P256()
 )
 
-type ABCIParams struct {
+// generic ABCI query in Tendermint context
+
+type ABCIQueryParams struct {
 	Path   string `json:"path"`
 	Data   string `json:"data"`
 	Height string `json:"height"`
 	Prove  bool   `json:"prove"`
 }
 
-type ABCIResponse struct {
+type ABCIQueryResponse struct {
 	Log   string `json:"log"`
 	Key   string `json:"key"`
 	Value string `json:"value"`
 }
 
-type TmResponse struct {
-	Response ABCIResponse `json:"response"`
+// XXX: Weired, but tendermint does this anyway
+type TmQueryResult struct {
+	Response ABCIQueryResponse `json:"response"`
 }
 
 func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
@@ -43,7 +48,7 @@ func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	params := ABCIParams{
+	params := ABCIQueryParams{
 		Path:   path,
 		Data:   hex.EncodeToString([]byte(queryJson)),
 		Height: "0",
@@ -58,60 +63,133 @@ func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
 	if rsp.Error != nil { // rpc error
 		return nil, err
 	}
-	var res TmResponse
+	var res TmQueryResult
 	err = rsp.GetObject(&res)
 	if err != nil { // conversion error
 		return nil, err
 	}
 	// TODO: check ABCI error
-	// XXX: need to do something with Log and Key?
+	// XXX: Do we need to do something with Log and Key?
 	ret, err := base64.StdEncoding.DecodeString(string(res.Response.Value))
+	if err != nil {
+		return nil, err
+	}
 	return ret, nil
 }
 
-// MakeTx handles making tx message
-func MakeTx(t string, nonce uint32, payload interface{}, key keys.Key) (types.Tx, error) {
-	raw, err := json.Marshal(payload)
-	if err != nil {
-		return nil, err
-	}
+// generic Tx broadcast in Tendermint context
 
-	var privKey p256.PrivKeyP256
-	copy(privKey[:], key.PrivKey)
-
-	msg := tx.Tx{
-		Type:    t,
-		Payload: raw,
-		Sender:  privKey.PubKey().Address(),
-		Nonce:   cmn.RandBytes(tx.NonceSize),
-	}
-
-	err = msg.Sign(privKey)
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := json.Marshal(msg)
-	if err != nil {
-		return nil, err
-	}
-
-	return tx, nil
+type TxToSign struct {
+	Type    string          `json:"type"`
+	Sender  string          `json:"sender"`
+	Nonce   string          `json:"nonce"`
+	Payload json.RawMessage `json:"payload"`
 }
 
-// RPCBroadcastTxCommit handles sending transactions
-func RPCBroadcastTxCommit(tx types.Tx) (*ctypes.ResultBroadcastTxCommit, error) {
-	cli := client.NewHTTP(RpcRemote, rpcWsEndpoint)
-	return cli.BroadcastTxCommit(tx)
+type TxSig struct {
+	Pubkey   string `json:"pubkey"`
+	SigBytes string `json:"sig_bytes"`
 }
 
-// RPCStatus handle querying the status
-func RPCStatus() (*ctypes.ResultStatus, error) {
-	cli := client.NewHTTP(RpcRemote, rpcWsEndpoint)
-	return cli.Status()
+type TxToSend struct {
+	Type      string          `json:"type"`
+	Sender    string          `json:"sender"`
+	Nonce     string          `json:"nonce"`
+	Payload   json.RawMessage `json:"payload"`
+	Signature TxSig           `json:"signature"`
 }
 
-func RPCBlock(height int64) (*ctypes.ResultBlock, error) {
-	cli := client.NewHTTP(RpcRemote, rpcWsEndpoint)
-	return cli.Block(&height)
+type BroadcastParams struct {
+	Tx []byte `json:"tx"`
+}
+
+type TmBroadcastResult struct {
+	CheckTx struct {
+		Code int `json:"code,omitempty"`
+	} `json:"check_tx"`
+	DeliverTx struct {
+		Code int `json:"code,omitempty"`
+	} `json:"deliver_tx"`
+	Hash   string `json:"hash"`
+	Height string `json:"height"` // number as a string
+}
+
+func getAddressBytes(pubkey []byte) []byte {
+	hash := sha256.Sum256(pubkey)
+	return hash[:AddressByteSize]
+}
+
+func SignSendTx(txType string, payload interface{}, key keys.Key) (TmBroadcastResult, error) {
+	payloadJson, err := json.Marshal(payload)
+	if err != nil {
+		return TmBroadcastResult{}, err
+	}
+
+	nonceBytes := make([]byte, NonceByteSize)
+	_, err = rand.Read(nonceBytes)
+	sender := strings.ToUpper(hex.EncodeToString(getAddressBytes(key.PubKey)))
+	nonce := strings.ToUpper(hex.EncodeToString(nonceBytes))
+	txToSign := TxToSign{
+		Type:    txType,
+		Sender:  sender,
+		Nonce:   nonce,
+		Payload: payloadJson,
+	}
+	msg, err := json.Marshal(txToSign)
+	if err != nil {
+		return TmBroadcastResult{}, err
+	}
+	h := sha256.Sum256(msg)
+	X, Y := c.ScalarBaseMult(key.PrivKey[:])
+	ecdsaPrivKey := ecdsa.PrivateKey{
+		D: new(big.Int).SetBytes(key.PrivKey[:]),
+		PublicKey: ecdsa.PublicKey{
+			Curve: c,
+			X:     X,
+			Y:     Y,
+		},
+	}
+	r, s, err := ecdsa.Sign(rand.Reader, &ecdsaPrivKey, h[:])
+	rb := r.Bytes()
+	sb := s.Bytes()
+	sigBytes := make([]byte, 64)
+	copy(sigBytes[32-len(rb):], rb)
+	copy(sigBytes[64-len(sb):], sb)
+	txSig := TxSig{
+		Pubkey:   hex.EncodeToString(key.PubKey),
+		SigBytes: hex.EncodeToString(sigBytes),
+	}
+	tx := TxToSend{
+		Type:      txToSign.Type,    // forward
+		Sender:    txToSign.Sender,  // forward
+		Nonce:     txToSign.Nonce,   // forward
+		Payload:   txToSign.Payload, // forward
+		Signature: txSig,            // signature appendix
+	}
+	b, err := json.Marshal(tx)
+	if err != nil {
+		return TmBroadcastResult{}, err
+	}
+
+	return BroadcastTx(b)
+}
+
+func BroadcastTx(tx []byte) (TmBroadcastResult, error) {
+	params := BroadcastParams{
+		Tx: tx,
+	}
+	c := jsonrpc.NewClient(RpcRemote)
+	rsp, err := c.Call("broadcast_tx_commit", params)
+	if err != nil { // call error
+		return TmBroadcastResult{}, err
+	}
+	if rsp.Error != nil { // rpc error
+		return TmBroadcastResult{}, err
+	}
+	var res TmBroadcastResult
+	err = rsp.GetObject(&res)
+	if err != nil { // conversion error
+		return TmBroadcastResult{}, err
+	}
+	return res, nil
 }

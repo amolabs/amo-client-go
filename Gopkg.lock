@@ -2,13 +2,10 @@
 
 
 [[projects]]
-  digest = "1:1f9b09a493d355aa06e7a6447d963b8253c4b5ca7b635d944114bc17a826ed8a"
+  digest = "1:8b25020f1d183a2487297ce6aed052e7dede99402c78bda0ca35bff373cca653"
   name = "github.com/amolabs/amoabci"
   packages = [
-    "amo/code",
     "amo/encoding/binary",
-    "amo/store",
-    "amo/tx",
     "amo/types",
     "crypto/p256",
   ]
@@ -496,7 +493,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/amolabs/amoabci/amo/tx",
     "github.com/amolabs/amoabci/amo/types",
     "github.com/amolabs/amoabci/crypto/p256",
     "github.com/paust-team/paust-db/client",
@@ -509,7 +505,6 @@
     "github.com/tendermint/tendermint/rpc/client",
     "github.com/tendermint/tendermint/rpc/core/types",
     "github.com/tendermint/tendermint/rpc/lib/types",
-    "github.com/tendermint/tendermint/types",
     "github.com/ybbus/jsonrpc",
     "golang.org/x/crypto/ssh/terminal",
   ]

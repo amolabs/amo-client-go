@@ -1,7 +1,6 @@
 package tx
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -9,7 +8,6 @@ import (
 
 	"github.com/amolabs/amo-client-go/lib/rpc"
 	"github.com/amolabs/amo-client-go/lib/util"
-	atypes "github.com/amolabs/amoabci/amo/types"
 )
 
 var DelegateCmd = &cobra.Command{
@@ -20,12 +18,7 @@ var DelegateCmd = &cobra.Command{
 }
 
 func delegateFunc(cmd *cobra.Command, args []string) error {
-	amount, err := new(atypes.Currency).SetString(args[1], 10)
-	if err != nil {
-		return err
-	}
-
-	delegator, err := hex.DecodeString(args[0])
+	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
@@ -35,17 +28,21 @@ func delegateFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Delegate(delegator, amount, key)
+	result, err := rpc.Delegate(args[0], args[1], key)
 	if err != nil {
 		return err
 	}
 
-	resultJSON, err := json.Marshal(result)
-	if err != nil {
-		return err
+	if asJson {
+		resultJSON, err := json.Marshal(result)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(string(resultJSON))
 	}
 
-	fmt.Println(string(resultJSON))
+	// TODO: rich output
 
 	return nil
 }
