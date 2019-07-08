@@ -105,10 +105,10 @@ type BroadcastParams struct {
 
 type TmBroadcastResult struct {
 	CheckTx struct {
-		Code int `json:"code,omitempty"`
+		Code int64 `json:"code,omitempty"`
 	} `json:"check_tx"`
 	DeliverTx struct {
-		Code int `json:"code,omitempty"`
+		Code int64 `json:"code,omitempty"`
 	} `json:"deliver_tx"`
 	Hash   string `json:"hash"`
 	Height string `json:"height"` // number as a string
@@ -190,6 +190,31 @@ func BroadcastTx(tx []byte) (TmBroadcastResult, error) {
 	err = rsp.GetObject(&res)
 	if err != nil { // conversion error
 		return TmBroadcastResult{}, err
+	}
+	return res, nil
+}
+
+// misc rpcs
+
+type TmStatusResult struct {
+	NodeInfo      json.RawMessage `json:"node_info"`
+	SyncInfo      json.RawMessage `json:"sync_info"`
+	ValidatorInfo json.RawMessage `json:"validator_info"`
+}
+
+func NodeStatus() (TmStatusResult, error) {
+	c := jsonrpc.NewClient(RpcRemote)
+	rsp, err := c.Call("status")
+	if err != nil { // call error
+		return TmStatusResult{}, err
+	}
+	if rsp.Error != nil { // rpc error
+		return TmStatusResult{}, err
+	}
+	var res TmStatusResult
+	err = rsp.GetObject(&res)
+	if err != nil { // conversion error
+		return TmStatusResult{}, err
 	}
 	return res, nil
 }

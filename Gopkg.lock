@@ -502,7 +502,6 @@
     "github.com/tendermint/tendermint/crypto",
     "github.com/tendermint/tendermint/crypto/xsalsa20symmetric",
     "github.com/tendermint/tendermint/libs/common",
-    "github.com/tendermint/tendermint/rpc/client",
     "github.com/tendermint/tendermint/rpc/core/types",
     "github.com/tendermint/tendermint/rpc/lib/types",
     "github.com/ybbus/jsonrpc",
