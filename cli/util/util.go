@@ -8,6 +8,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/spf13/cobra"
 	"golang.org/x/crypto/ssh/terminal"
 )
 
@@ -49,3 +50,5 @@ func PromptPassphrase() (string, error) {
 	}
 	return string(b), nil
 }
+
+var LineBreak = &cobra.Command{Run: func(*cobra.Command, []string) {}}

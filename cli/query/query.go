@@ -1,12 +1,12 @@
-package cli
+package query
 
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/amolabs/amo-client-go/cli/query"
+	"github.com/amolabs/amo-client-go/cli/util"
 )
 
-var queryCmd = &cobra.Command{
+var Cmd = &cobra.Command{
 	Use:     "query",
 	Aliases: []string{"q"},
 	Short:   "Query AMO blockchain data",
@@ -20,13 +20,13 @@ var queryCmd = &cobra.Command{
 }
 
 func init() {
-	queryCmd.AddCommand(
-		query.BalanceCmd,
-		query.StakeCmd,
-		query.DelegateCmd,
-		LineBreak,
-		query.ParcelCmd,
-		query.RequestCmd,
-		query.UsageCmd,
+	Cmd.AddCommand(
+		BalanceCmd,
+		StakeCmd,
+		DelegateCmd,
+		util.LineBreak,
+		ParcelCmd,
+		RequestCmd,
+		UsageCmd,
 	)
 }

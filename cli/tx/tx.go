@@ -1,12 +1,12 @@
-package cli
+package tx
 
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/amolabs/amo-client-go/cli/tx"
+	"github.com/amolabs/amo-client-go/cli/util"
 )
 
-var txCmd = &cobra.Command{
+var Cmd = &cobra.Command{
 	Use:     "tx",
 	Aliases: []string{"t"},
 	Short:   "Send signed transactions",
@@ -20,25 +20,25 @@ var txCmd = &cobra.Command{
 }
 
 func init() {
-	txCmd.AddCommand(
-		tx.TransferCmd,
-		LineBreak,
-		tx.StakeCmd,
-		tx.WithdrawCmd,
-		tx.DelegateCmd,
-		tx.RetractCmd,
-		LineBreak,
-		tx.RegisterCmd,
-		tx.RequestCmd,
-		tx.GrantCmd,
-		LineBreak,
-		tx.DiscardCmd,
-		tx.CancelCmd,
-		tx.RevokeCmd,
+	Cmd.AddCommand(
+		TransferCmd,
+		util.LineBreak,
+		StakeCmd,
+		WithdrawCmd,
+		DelegateCmd,
+		RetractCmd,
+		util.LineBreak,
+		RegisterCmd,
+		RequestCmd,
+		GrantCmd,
+		util.LineBreak,
+		DiscardCmd,
+		CancelCmd,
+		RevokeCmd,
 	)
-	txCmd.PersistentPreRun = preRunChain
-	txCmd.PersistentFlags().StringP("user", "u", "", "username")
-	txCmd.PersistentFlags().StringP("pass", "p", "",
+	Cmd.PersistentPreRun = preRunChain
+	Cmd.PersistentFlags().StringP("user", "u", "", "username")
+	Cmd.PersistentFlags().StringP("pass", "p", "",
 		"passphrase of an encrypted key")
 }
 
@@ -50,7 +50,7 @@ func preRunChain(cmd *cobra.Command, args []string) {
 	// command, but we need chain of persistentPreRun.
 	beep := false
 	for c := cmd; c != nil; c = c.Parent() {
-		if c == txCmd {
+		if c == Cmd {
 			beep = true
 			continue
 		}
@@ -66,11 +66,11 @@ func preRunChain(cmd *cobra.Command, args []string) {
 func readUserPass(cmd *cobra.Command, args []string) {
 	username, err := cmd.Flags().GetString("user")
 	if err == nil {
-		tx.Username = username
+		Username = username
 	}
 
 	passphrase, err := cmd.Flags().GetString("pass")
 	if err == nil {
-		tx.Passphrase = passphrase
+		Passphrase = passphrase
 	}
 }

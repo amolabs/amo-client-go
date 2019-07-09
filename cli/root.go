@@ -3,10 +3,13 @@ package cli
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/cli/key"
+	"github.com/amolabs/amo-client-go/cli/parcel"
+	"github.com/amolabs/amo-client-go/cli/query"
+	"github.com/amolabs/amo-client-go/cli/tx"
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/rpc"
 )
-
-var LineBreak = &cobra.Command{Run: func(*cobra.Command, []string) {}}
 
 var RootCmd = &cobra.Command{
 	Use:              "amocli",
@@ -19,13 +22,13 @@ func init() {
 
 	RootCmd.AddCommand(
 		versionCmd,
-		keyCmd,
-		LineBreak,
+		key.Cmd,
+		util.LineBreak,
 		statusCmd,
-		queryCmd,
-		txCmd,
-		parcelCmd,
-		LineBreak,
+		query.Cmd,
+		tx.Cmd,
+		parcel.Cmd,
+		util.LineBreak,
 	)
 	RootCmd.PersistentFlags().StringP("rpc", "r", "0.0.0.0:26657",
 		"node_ip:port")
