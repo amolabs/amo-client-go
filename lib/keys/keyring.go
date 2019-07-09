@@ -5,18 +5,47 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
+	"path/filepath"
 	"sort"
 
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/xsalsa20symmetric"
 
-	"github.com/amolabs/amo-client-go/lib/util"
 	"github.com/amolabs/amoabci/crypto/p256"
 )
 
 type KeyRing struct {
 	filePath string
 	keyList  map[string]Key // just a cache
+}
+
+func EnsureDir(dir string, mode os.FileMode) error {
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		err := os.MkdirAll(dir, mode)
+		if err != nil {
+			return fmt.Errorf("Could not create directory %v. %v", dir, err)
+		}
+	}
+	return nil
+}
+
+func EnsureFile(path string) error {
+	dirPath, _ := filepath.Split(path)
+
+	if len(dirPath) > 0 {
+		err := EnsureDir(dirPath, 0775)
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, 0600)
+	if err != nil {
+		return err
+	}
+
+	return err
 }
 
 func GetKeyRing(path string) (*KeyRing, error) {
@@ -31,7 +60,7 @@ func GetKeyRing(path string) (*KeyRing, error) {
 }
 
 func (kr *KeyRing) Load() error {
-	err := util.EnsureFile(kr.filePath)
+	err := EnsureFile(kr.filePath)
 	if err != nil {
 		return err
 	}
@@ -55,7 +84,7 @@ func (kr *KeyRing) Load() error {
 }
 
 func (kr *KeyRing) Save() error {
-	err := util.EnsureFile(kr.filePath)
+	err := EnsureFile(kr.filePath)
 	if err != nil {
 		return err
 	}
