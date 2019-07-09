@@ -14,7 +14,7 @@ import (
 var RootCmd = &cobra.Command{
 	Use:              "amocli",
 	Short:            "AMO blockchain console",
-	PersistentPreRun: loadConfig,
+	PersistentPreRun: readGlobalFlags,
 }
 
 func init() {
@@ -23,8 +23,8 @@ func init() {
 	RootCmd.AddCommand(
 		versionCmd,
 		key.Cmd,
-		util.LineBreak,
 		statusCmd,
+		util.LineBreak,
 		query.Cmd,
 		tx.Cmd,
 		parcel.Cmd,
@@ -32,11 +32,21 @@ func init() {
 	)
 	RootCmd.PersistentFlags().StringP("rpc", "r", "0.0.0.0:26657", "ip:port")
 	RootCmd.PersistentFlags().BoolP("json", "j", false, "output as json")
+	RootCmd.PersistentFlags().StringP("user", "u", "", "username")
+	RootCmd.PersistentFlags().StringP("pass", "p", "", "passphrase")
 }
 
-func loadConfig(cmd *cobra.Command, args []string) {
+func readGlobalFlags(cmd *cobra.Command, args []string) {
 	rpcArg, err := cmd.Flags().GetString("rpc")
 	if err == nil {
 		rpc.RpcRemote = "http://" + rpcArg
+	}
+	username, err := cmd.Flags().GetString("user")
+	if err == nil {
+		tx.Username = username
+	}
+	passphrase, err := cmd.Flags().GetString("pass")
+	if err == nil {
+		tx.Passphrase = passphrase
 	}
 }
