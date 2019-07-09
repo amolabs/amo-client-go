@@ -43,10 +43,10 @@ func readGlobalFlags(cmd *cobra.Command, args []string) {
 	}
 	username, err := cmd.Flags().GetString("user")
 	if err == nil {
-		tx.Username = username
+		key.Username = username
 	}
 	passphrase, err := cmd.Flags().GetString("pass")
 	if err == nil {
-		tx.Passphrase = passphrase
+		key.Passphrase = passphrase
 	}
 }

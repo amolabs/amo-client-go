@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/cli/key"
 	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/rpc"
 )
@@ -23,7 +24,7 @@ func stakeFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	key, err := GetUserKey(util.DefaultKeyFilePath())
+	key, err := key.GetUserKey(util.DefaultKeyFilePath())
 	if err != nil {
 		return err
 	}
