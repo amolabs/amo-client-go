@@ -1,9 +1,15 @@
 package main
 
 import (
-	"github.com/amolabs/amo-client-go/cmd/amocli/cmd"
+	"fmt"
+	"os"
+
+	"github.com/amolabs/amo-client-go/cli"
 )
 
 func main() {
-	cmd.Execute()
+	if err := cli.RootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }

@@ -6,29 +6,29 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/rpc"
-	"github.com/amolabs/amo-client-go/lib/util"
 )
 
-var DelegateCmd = &cobra.Command{
-	Use:   "delegate <address> <amount>",
-	Short: "Lock sender's AMO coin as a delegated stake of the delegator",
-	Args:  cobra.MinimumNArgs(2),
-	RunE:  delegateFunc,
+var DiscardCmd = &cobra.Command{
+	Use:   "discard <parcel_id>",
+	Short: "Discard the registered data in store/parcel",
+	Args:  cobra.MinimumNArgs(1),
+	RunE:  discardFunc,
 }
 
-func delegateFunc(cmd *cobra.Command, args []string) error {
+func discardFunc(cmd *cobra.Command, args []string) error {
 	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
 
-	key, err := GetRawKey(util.DefaultKeyFilePath())
+	key, err := GetUserKey(util.DefaultKeyFilePath())
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Delegate(args[0], args[1], key)
+	result, err := rpc.Discard(args[0], key)
 	if err != nil {
 		return err
 	}

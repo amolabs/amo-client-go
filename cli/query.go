@@ -1,9 +1,9 @@
-package cmd
+package cli
 
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/amolabs/amo-client-go/cmd/amocli/cmd/query"
+	"github.com/amolabs/amo-client-go/cli/query"
 )
 
 var queryCmd = &cobra.Command{

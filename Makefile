@@ -1,6 +1,6 @@
 .PHONY: build test
 
-all: install
+all: build
 
 GO := $(shell command -v go 2> /dev/null)
 FS := /

@@ -1,9 +1,6 @@
-package cmd
+package cli
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/amolabs/amo-client-go/lib/rpc"
@@ -11,17 +8,16 @@ import (
 
 var LineBreak = &cobra.Command{Run: func(*cobra.Command, []string) {}}
 
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 	Use:              "amocli",
 	Short:            "AMO blockchain console",
 	PersistentPreRun: loadConfig,
 }
 
-// Execute function is the main gate to this app
-func Execute() {
+func init() {
 	cobra.EnableCommandSorting = false
 
-	rootCmd.AddCommand(
+	RootCmd.AddCommand(
 		versionCmd,
 		keyCmd,
 		LineBreak,
@@ -31,15 +27,10 @@ func Execute() {
 		parcelCmd,
 		LineBreak,
 	)
-	rootCmd.PersistentFlags().StringP("rpc", "r", "0.0.0.0:26657",
+	RootCmd.PersistentFlags().StringP("rpc", "r", "0.0.0.0:26657",
 		"node_ip:port")
-	rootCmd.PersistentFlags().BoolP("json", "j", false,
+	RootCmd.PersistentFlags().BoolP("json", "j", false,
 		"output as json")
-
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
 }
 
 func loadConfig(cmd *cobra.Command, args []string) {

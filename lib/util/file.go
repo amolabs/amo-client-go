@@ -7,24 +7,6 @@ import (
 	cmn "github.com/tendermint/tendermint/libs/common"
 )
 
-var (
-	defaultCLIDir      = ".amocli"
-	defaultKeyDir      = "keys"
-	defaultKeyListFile = "keys.json"
-)
-
-func defaultCLIPath() string {
-	return filepath.Join(os.ExpandEnv("$HOME"), defaultCLIDir)
-}
-
-func DefaultKeyPath() string {
-	return filepath.Join(defaultCLIPath(), defaultKeyDir)
-}
-
-func DefaultKeyFilePath() string {
-	return filepath.Join(DefaultKeyPath(), defaultKeyListFile)
-}
-
 func EnsureFile(path string) error {
 	dirPath, _ := filepath.Split(path)
 

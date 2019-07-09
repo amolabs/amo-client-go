@@ -5,9 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cliutil "github.com/amolabs/amo-client-go/cmd/amocli/util"
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/keys"
-	"github.com/amolabs/amo-client-go/lib/util"
 )
 
 var GenCmd = &cobra.Command{
@@ -42,7 +41,7 @@ func genFunc(cmd *cobra.Command, args []string) error {
 	var passphrase []byte
 
 	if encrypt {
-		b, err := cliutil.PromptPassphrase()
+		b, err := util.PromptPassphrase()
 		if err != nil {
 			return err
 		}

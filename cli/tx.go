@@ -1,9 +1,9 @@
-package cmd
+package cli
 
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/amolabs/amo-client-go/cmd/amocli/cmd/tx"
+	"github.com/amolabs/amo-client-go/cli/tx"
 )
 
 var txCmd = &cobra.Command{

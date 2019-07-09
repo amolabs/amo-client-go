@@ -4,11 +4,30 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"syscall"
 
 	"golang.org/x/crypto/ssh/terminal"
 )
+
+var (
+	defaultCLIDir      = ".amocli"
+	defaultKeyDir      = "keys"
+	defaultKeyListFile = "keys.json"
+)
+
+func defaultCLIPath() string {
+	return filepath.Join(os.ExpandEnv("$HOME"), defaultCLIDir)
+}
+
+func DefaultKeyPath() string {
+	return filepath.Join(defaultCLIPath(), defaultKeyDir)
+}
+
+func DefaultKeyFilePath() string {
+	return filepath.Join(DefaultKeyPath(), defaultKeyListFile)
+}
 
 func PromptUsername() (string, error) {
 	fmt.Printf("\nInput username of the signing key: ")

@@ -6,29 +6,29 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/rpc"
-	"github.com/amolabs/amo-client-go/lib/util"
 )
 
-var DiscardCmd = &cobra.Command{
-	Use:   "discard <parcel_id>",
-	Short: "Discard the registered data in store/parcel",
+var WithdrawCmd = &cobra.Command{
+	Use:   "withdraw <amount>",
+	Short: "Withdraw all or part of the AMO coin locked as a stake",
 	Args:  cobra.MinimumNArgs(1),
-	RunE:  discardFunc,
+	RunE:  withdrawFunc,
 }
 
-func discardFunc(cmd *cobra.Command, args []string) error {
+func withdrawFunc(cmd *cobra.Command, args []string) error {
 	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
 
-	key, err := GetRawKey(util.DefaultKeyFilePath())
+	key, err := GetUserKey(util.DefaultKeyFilePath())
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Discard(args[0], key)
+	result, err := rpc.Withdraw(args[0], key)
 	if err != nil {
 		return err
 	}

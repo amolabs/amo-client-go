@@ -3,7 +3,7 @@ package tx
 import (
 	"errors"
 
-	"github.com/amolabs/amo-client-go/cmd/amocli/util"
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/keys"
 )
 
@@ -13,7 +13,7 @@ var (
 	UserKey    keys.Key
 )
 
-func GetRawKey(path string) (keys.Key, error) {
+func GetUserKey(path string) (keys.Key, error) {
 	empty := keys.Key{}
 	kr, err := keys.GetKeyRing(path)
 	if err != nil {

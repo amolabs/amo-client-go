@@ -4,32 +4,31 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/amolabs/amo-client-go/lib/util"
-
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/rpc"
 )
 
-var CancelCmd = &cobra.Command{
-	Use:   "cancel <parcel_id>",
-	Short: "Cancel the request of parcel in store/request",
-	Args:  cobra.MinimumNArgs(1),
-	RunE:  cancelFunc,
+var RequestCmd = &cobra.Command{
+	Use:   "request <parcel_id> <amount>",
+	Short: "Request a parcel permission with payment",
+	Args:  cobra.MinimumNArgs(2),
+	RunE:  requestFunc,
 }
 
-func cancelFunc(cmd *cobra.Command, args []string) error {
+func requestFunc(cmd *cobra.Command, args []string) error {
 	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
 
-	key, err := GetRawKey(util.DefaultKeyFilePath())
+	key, err := GetUserKey(util.DefaultKeyFilePath())
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Cancel(args[0], key)
+	result, err := rpc.Request(args[0], args[1], key)
 	if err != nil {
 		return err
 	}

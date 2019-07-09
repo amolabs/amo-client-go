@@ -3,8 +3,8 @@ package key
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/keys"
-	"github.com/amolabs/amo-client-go/lib/util"
 )
 
 var ListCmd = &cobra.Command{

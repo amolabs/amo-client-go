@@ -6,29 +6,29 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/rpc"
-	"github.com/amolabs/amo-client-go/lib/util"
 )
 
-var RequestCmd = &cobra.Command{
-	Use:   "request <parcel_id> <amount>",
-	Short: "Request a parcel permission with payment",
+var StakeCmd = &cobra.Command{
+	Use:   "stake <validator_pubkey> <amount>",
+	Short: "Lock AMO coin and acquire a stake with a validator key",
 	Args:  cobra.MinimumNArgs(2),
-	RunE:  requestFunc,
+	RunE:  stakeFunc,
 }
 
-func requestFunc(cmd *cobra.Command, args []string) error {
+func stakeFunc(cmd *cobra.Command, args []string) error {
 	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
 
-	key, err := GetRawKey(util.DefaultKeyFilePath())
+	key, err := GetUserKey(util.DefaultKeyFilePath())
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Request(args[0], args[1], key)
+	result, err := rpc.Stake(args[0], args[1], key)
 	if err != nil {
 		return err
 	}

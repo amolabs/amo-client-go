@@ -6,29 +6,29 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/rpc"
-	"github.com/amolabs/amo-client-go/lib/util"
 )
 
-var RegisterCmd = &cobra.Command{
-	Use:   "register <parcel_id> <key_custody>",
-	Short: "Register parcel with extra information",
+var DelegateCmd = &cobra.Command{
+	Use:   "delegate <address> <amount>",
+	Short: "Lock sender's AMO coin as a delegated stake of the delegator",
 	Args:  cobra.MinimumNArgs(2),
-	RunE:  registerFunc,
+	RunE:  delegateFunc,
 }
 
-func registerFunc(cmd *cobra.Command, args []string) error {
+func delegateFunc(cmd *cobra.Command, args []string) error {
 	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
 
-	key, err := GetRawKey(util.DefaultKeyFilePath())
+	key, err := GetUserKey(util.DefaultKeyFilePath())
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Register(args[0], args[1], key)
+	result, err := rpc.Delegate(args[0], args[1], key)
 	if err != nil {
 		return err
 	}

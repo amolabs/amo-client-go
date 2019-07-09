@@ -6,29 +6,29 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/rpc"
-	"github.com/amolabs/amo-client-go/lib/util"
 )
 
-var RevokeCmd = &cobra.Command{
-	Use:   "revoke <parcel_id> <address>",
-	Short: "Delete the usage of parcel in store/usage",
-	Args:  cobra.MinimumNArgs(2),
-	RunE:  revokeFunc,
+var GrantCmd = &cobra.Command{
+	Use:   "grant <parcel_id> <address> <key_custody>",
+	Short: "Grant a parcel permission",
+	Args:  cobra.MinimumNArgs(3),
+	RunE:  grantFunc,
 }
 
-func revokeFunc(cmd *cobra.Command, args []string) error {
+func grantFunc(cmd *cobra.Command, args []string) error {
 	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
 
-	key, err := GetRawKey(util.DefaultKeyFilePath())
+	key, err := GetUserKey(util.DefaultKeyFilePath())
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Revoke(args[0], args[1], key)
+	result, err := rpc.Grant(args[0], args[1], args[2], key)
 	if err != nil {
 		return err
 	}
