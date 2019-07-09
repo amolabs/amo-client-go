@@ -30,10 +30,8 @@ func init() {
 		parcel.Cmd,
 		util.LineBreak,
 	)
-	RootCmd.PersistentFlags().StringP("rpc", "r", "0.0.0.0:26657",
-		"node_ip:port")
-	RootCmd.PersistentFlags().BoolP("json", "j", false,
-		"output as json")
+	RootCmd.PersistentFlags().StringP("rpc", "r", "0.0.0.0:26657", "ip:port")
+	RootCmd.PersistentFlags().BoolP("json", "j", false, "output as json")
 }
 
 func loadConfig(cmd *cobra.Command, args []string) {
