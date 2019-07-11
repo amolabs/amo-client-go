@@ -20,7 +20,7 @@ var (
 	rpcWsEndpoint   = "/websocket"
 	AddressByteSize = 20
 	NonceByteSize   = 4
-	c               = elliptic.P256()
+	c               = elliptic.P256() // move to crypto sub-package
 )
 
 // generic ABCI query in Tendermint context
@@ -103,7 +103,7 @@ type BroadcastParams struct {
 	Tx []byte `json:"tx"`
 }
 
-type TmBroadcastResult struct {
+type TmTxResult struct {
 	CheckTx struct {
 		Code int64 `json:"code,omitempty"`
 	} `json:"check_tx"`
@@ -119,10 +119,10 @@ func getAddressBytes(pubkey []byte) []byte {
 	return hash[:AddressByteSize]
 }
 
-func SignSendTx(txType string, payload interface{}, key keys.Key) (TmBroadcastResult, error) {
+func SignSendTx(txType string, payload interface{}, key keys.Key) (TmTxResult, error) {
 	payloadJson, err := json.Marshal(payload)
 	if err != nil {
-		return TmBroadcastResult{}, err
+		return TmTxResult{}, err
 	}
 
 	nonceBytes := make([]byte, NonceByteSize)
@@ -137,8 +137,9 @@ func SignSendTx(txType string, payload interface{}, key keys.Key) (TmBroadcastRe
 	}
 	msg, err := json.Marshal(txToSign)
 	if err != nil {
-		return TmBroadcastResult{}, err
+		return TmTxResult{}, err
 	}
+	// do sign
 	h := sha256.Sum256(msg)
 	X, Y := c.ScalarBaseMult(key.PrivKey[:])
 	ecdsaPrivKey := ecdsa.PrivateKey{
@@ -150,11 +151,15 @@ func SignSendTx(txType string, payload interface{}, key keys.Key) (TmBroadcastRe
 		},
 	}
 	r, s, err := ecdsa.Sign(rand.Reader, &ecdsaPrivKey, h[:])
+	if err != nil {
+		return TmTxResult{}, err
+	}
 	rb := r.Bytes()
 	sb := s.Bytes()
 	sigBytes := make([]byte, 64)
 	copy(sigBytes[32-len(rb):], rb)
 	copy(sigBytes[64-len(sb):], sb)
+	// done sign
 	txSig := TxSig{
 		Pubkey:   hex.EncodeToString(key.PubKey),
 		SigBytes: hex.EncodeToString(sigBytes),
@@ -168,28 +173,28 @@ func SignSendTx(txType string, payload interface{}, key keys.Key) (TmBroadcastRe
 	}
 	b, err := json.Marshal(tx)
 	if err != nil {
-		return TmBroadcastResult{}, err
+		return TmTxResult{}, err
 	}
 
 	return BroadcastTx(b)
 }
 
-func BroadcastTx(tx []byte) (TmBroadcastResult, error) {
+func BroadcastTx(tx []byte) (TmTxResult, error) {
 	params := BroadcastParams{
 		Tx: tx,
 	}
 	c := jsonrpc.NewClient(RpcRemote)
 	rsp, err := c.Call("broadcast_tx_commit", params)
 	if err != nil { // call error
-		return TmBroadcastResult{}, err
+		return TmTxResult{}, err
 	}
 	if rsp.Error != nil { // rpc error
-		return TmBroadcastResult{}, err
+		return TmTxResult{}, err
 	}
-	var res TmBroadcastResult
+	var res TmTxResult
 	err = rsp.GetObject(&res)
 	if err != nil { // conversion error
-		return TmBroadcastResult{}, err
+		return TmTxResult{}, err
 	}
 	return res, nil
 }
