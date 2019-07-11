@@ -12,7 +12,6 @@ var Cmd = &cobra.Command{
 func init() {
 	Cmd.AddCommand(
 		UploadCmd,
-		RetrieveCmd,
-		QueryCmd,
+		DownloadCmd,
 	)
 }
