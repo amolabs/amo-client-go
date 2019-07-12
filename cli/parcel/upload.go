@@ -6,6 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/amolabs/amo-client-go/cli/key"
+	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/storage"
 )
 
@@ -23,11 +25,16 @@ func init() {
 }
 
 func uploadFunc(cmd *cobra.Command, args []string) error {
+	key, err := key.GetUserKey(util.DefaultKeyFilePath())
+	if err != nil {
+		return err
+	}
+
 	data, err := hex.DecodeString(args[0])
 	if err != nil {
 		return err
 	}
-	parcelID, err := storage.Upload(data)
+	parcelID, err := storage.Upload(data, key)
 	if err != nil {
 		return err
 	}

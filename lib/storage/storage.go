@@ -21,7 +21,7 @@ var (
 	c        = elliptic.P256() // move to crypto sub-package
 )
 
-type AuthReq struct {
+type AuthBody struct {
 	User      string          `json:"user"`
 	Operation json.RawMessage `json:"operation"`
 }
@@ -32,6 +32,12 @@ func getOp(name, param string) (string, error) {
 		err error
 	)
 	switch name {
+	case "upload":
+		authOp := struct {
+			Name string `json:"name"`
+			Hash string `json:"hash"`
+		}{"upload", param}
+		op, err = json.Marshal(authOp)
 	case "download":
 		authOp := struct {
 			Name string `json:"name"`
@@ -46,11 +52,11 @@ func getOp(name, param string) (string, error) {
 }
 
 func requestToken(account, op string) ([]byte, error) {
-	authReq := AuthReq{
+	authBody := AuthBody{
 		User:      account,
 		Operation: []byte(op),
 	}
-	reqJson, err := json.Marshal(authReq)
+	reqJson, err := json.Marshal(authBody)
 	if err != nil {
 		return nil, err
 	}

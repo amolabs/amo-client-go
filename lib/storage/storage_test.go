@@ -16,6 +16,7 @@ import (
 const (
 	testToken = `{"token":"token body"}`
 	testBody  = "test parcel content"
+	testId    = "eeee"
 )
 
 // see https://github.com/amolabs/amo-storage#auth-api
@@ -32,19 +33,20 @@ func testHandleAuth(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var authReq struct {
+	// same as AuthBody but, change each field as a pointer
+	var authBody struct {
 		User      *string          `json:"user"`
-		Operation *json.RawMessage `json:"operation"` // TODO: change it
+		Operation *json.RawMessage `json:"operation"`
 	}
-	err = json.Unmarshal(body, &authReq)
-	if err != nil || authReq.User == nil || authReq.Operation == nil {
+	err = json.Unmarshal(body, &authBody)
+	if err != nil || authBody.User == nil || authBody.Operation == nil {
 		w.WriteHeader(400)
 		w.Write([]byte(`{"error":"malformed request body"}`))
 		return
 	}
 	var opReq struct {
 	}
-	err = json.Unmarshal(*authReq.Operation, &opReq)
+	err = json.Unmarshal(*authBody.Operation, &opReq)
 	if err != nil {
 		w.WriteHeader(400)
 		w.Write([]byte(`{"error":"malformed request body"}`))
@@ -60,6 +62,27 @@ func testHandleUpload(w http.ResponseWriter, req *http.Request) {
 		w.Write([]byte(`{"error":"Expected POST method"}`))
 		return
 	}
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		w.WriteHeader(400)
+		w.Write([]byte(`{"error":"empty request body"}`))
+		return
+	}
+
+	// same as AuthBody but, change each field as a pointer
+	var uploadBody struct {
+		Owner    *string          `json:"owner"`
+		Metadata *json.RawMessage `json:"metadata"`
+		Data     *string          `json:"data"`
+	}
+	err = json.Unmarshal(body, &uploadBody)
+	if err != nil || uploadBody.Owner == nil || uploadBody.Metadata == nil || uploadBody.Data == nil {
+		w.WriteHeader(400)
+		w.Write([]byte(`{"error":"malformed request body"}`))
+		return
+	}
+
+	w.Write([]byte(testId))
 }
 
 func testHandleDownload(w http.ResponseWriter, req *http.Request) {
@@ -136,6 +159,7 @@ func TestAll(t *testing.T) {
 	assert.Empty(t, op)
 	assert.Error(t, err)
 
+	// download
 	op, err = getOp("download", "2f2f")
 	assert.NotEmpty(t, op)
 	assert.NoError(t, err)
@@ -163,4 +187,26 @@ func TestAll(t *testing.T) {
 		fmt.Println(err)
 	}
 	assert.Equal(t, testBody, string(data))
+
+	// upload
+	op, err = getOp("upload", "ffff")
+	assert.NotEmpty(t, op)
+	assert.NoError(t, err)
+	assert.Equal(t, `{"name":"upload","hash":"ffff"}`, op)
+
+	authToken, err = requestToken(key.Address, op)
+	assert.NoError(t, err)
+	assert.NotNil(t, authToken)
+	assert.Equal(t, testToken, string(authToken))
+
+	sig, err = signToken(*key, authToken)
+	assert.NoError(t, err)
+	assert.NotNil(t, sig)
+
+	id, err := doUpload(key.Address, nil, authToken, key.PubKey, sig)
+	assert.NoError(t, err)
+	if err != nil {
+		fmt.Println(err)
+	}
+	assert.Equal(t, testId, id)
 }
