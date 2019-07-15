@@ -9,6 +9,7 @@ import (
 	"github.com/amolabs/amo-client-go/cli/tx"
 	"github.com/amolabs/amo-client-go/cli/util"
 	"github.com/amolabs/amo-client-go/lib/rpc"
+	"github.com/amolabs/amo-client-go/lib/storage"
 )
 
 var RootCmd = &cobra.Command{
@@ -31,6 +32,7 @@ func init() {
 		util.LineBreak,
 	)
 	RootCmd.PersistentFlags().StringP("rpc", "r", "0.0.0.0:26657", "ip:port")
+	RootCmd.PersistentFlags().StringP("sto", "s", "0.0.0.0:80", "ip:port")
 	RootCmd.PersistentFlags().BoolP("json", "j", false, "output as json")
 	RootCmd.PersistentFlags().StringP("user", "u", "", "username")
 	RootCmd.PersistentFlags().StringP("pass", "p", "", "passphrase")
@@ -40,6 +42,10 @@ func readGlobalFlags(cmd *cobra.Command, args []string) {
 	rpcArg, err := cmd.Flags().GetString("rpc")
 	if err == nil {
 		rpc.RpcRemote = "http://" + rpcArg
+	}
+	stoArg, err := cmd.Flags().GetString("sto")
+	if err == nil {
+		storage.Endpoint = "http://" + stoArg
 	}
 	username, err := cmd.Flags().GetString("user")
 	if err == nil {
