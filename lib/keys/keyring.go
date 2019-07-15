@@ -8,11 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-
-	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/xsalsa20symmetric"
-
-	"github.com/amolabs/amoabci/crypto/p256"
 )
 
 type KeyRing struct {
@@ -102,30 +97,24 @@ func (kr *KeyRing) Save() error {
 	return nil
 }
 
-func (kr *KeyRing) GenerateNewKey(username string, passphrase []byte, encrypt bool, seed string) (*KeyEntry, error) {
-	key, err := GenerateKey(passphrase, encrypt, seed)
+func (kr *KeyRing) GenerateNewKey(username string,
+	seed string, passphrase []byte, encrypt bool) (*KeyEntry, error) {
+	key, err := GenerateKey(seed, passphrase, encrypt)
 	if err != nil {
 		return nil, errors.New("Fail to generate new key.")
 	}
 
-	return key, kr.addKey(username, key)
+	return key, kr.AddKey(username, key)
 }
 
-// TODO: use KeyRing.addKey()
-func (kr *KeyRing) ImportPrivKey(keyBytes []byte,
-	username string, passphrase []byte, encrypt bool) (*KeyEntry, error) {
-	_, ok := kr.keyList[username]
-	if ok {
-		return nil, errors.New("Username already exists.")
+func (kr *KeyRing) ImportNewKey(username string,
+	keyBytes []byte, passphrase []byte, encrypt bool) (*KeyEntry, error) {
+	key, err := ImportKey(keyBytes, passphrase, encrypt)
+	if err != nil {
+		return nil, errors.New("Fail to import key.")
 	}
 
-	if len(keyBytes) != p256.PrivKeyP256Size {
-		return nil, errors.New("Input private key size mismatch.")
-	}
-	var privKey p256.PrivKeyP256
-	copy(privKey[:], keyBytes)
-
-	return kr.addNewP256Key(privKey, username, passphrase, encrypt)
+	return key, kr.AddKey(username, key)
 }
 
 func (kr *KeyRing) GetKey(username string) *KeyEntry {
@@ -185,7 +174,7 @@ func (kr *KeyRing) GetFirstKey() *KeyEntry {
 	return key
 }
 
-func (kr *KeyRing) addKey(username string, key *KeyEntry) error {
+func (kr *KeyRing) AddKey(username string, key *KeyEntry) error {
 	_, ok := kr.keyList[username]
 	if ok {
 		return errors.New("Username already exists.")
@@ -193,33 +182,4 @@ func (kr *KeyRing) addKey(username string, key *KeyEntry) error {
 
 	kr.keyList[username] = *key
 	return kr.Save()
-}
-
-func (kr *KeyRing) addNewP256Key(privKey p256.PrivKeyP256,
-	username string, passphrase []byte, encrypt bool) (*KeyEntry, error) {
-	pubKey, ok := privKey.PubKey().(p256.PubKeyP256)
-	if !ok {
-		return nil, errors.New("Error when deriving pubkey from privkey.")
-	}
-
-	key := new(KeyEntry)
-
-	key.Type = p256.PrivKeyAminoName
-	key.Address = pubKey.Address().String()
-	key.PubKey = pubKey.RawBytes()
-	if encrypt {
-		key.PrivKey = xsalsa20symmetric.EncryptSymmetric(
-			privKey.RawBytes(), crypto.Sha256(passphrase))
-	} else {
-		key.PrivKey = privKey.RawBytes()
-	}
-	key.Encrypted = encrypt
-
-	kr.keyList[username] = *key
-	err := kr.Save()
-	if err != nil {
-		return nil, err
-	}
-
-	return key, nil
 }

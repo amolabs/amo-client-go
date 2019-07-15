@@ -68,7 +68,7 @@ func importFunc(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	_, err = kr.ImportPrivKey(privKey, username, passphrase, encrypt)
+	_, err = kr.ImportNewKey(username, privKey, passphrase, encrypt)
 	if err != nil {
 		return err
 	}

@@ -17,13 +17,40 @@ type KeyEntry struct {
 	Encrypted bool   `json:"encrypted"`
 }
 
-func GenerateKey(passphrase []byte, encrypt bool, seed string) (*KeyEntry, error) {
+func GenerateKey(seed string, passphrase []byte, encrypt bool) (*KeyEntry, error) {
 	var privKey p256.PrivKeyP256
 	if len(seed) > 0 {
 		privKey = p256.GenPrivKeyFromSecret([]byte(seed))
 	} else {
 		privKey = p256.GenPrivKey()
 	}
+
+	pubKey, ok := privKey.PubKey().(p256.PubKeyP256)
+	if !ok {
+		return nil, errors.New("Error when deriving pubkey from privkey.")
+	}
+
+	key := new(KeyEntry)
+	key.Type = p256.PrivKeyAminoName
+	key.Address = pubKey.Address().String()
+	key.PubKey = pubKey.RawBytes()
+	if encrypt {
+		key.PrivKey = xsalsa20symmetric.EncryptSymmetric(
+			privKey.RawBytes(), crypto.Sha256(passphrase))
+	} else {
+		key.PrivKey = privKey.RawBytes()
+	}
+	key.Encrypted = encrypt
+
+	return key, nil
+}
+
+func ImportKey(keyBytes []byte, passphrase []byte, encrypt bool) (*KeyEntry, error) {
+	if len(keyBytes) != p256.PrivKeyP256Size {
+		return nil, errors.New("Input private key size mismatch.")
+	}
+	var privKey p256.PrivKeyP256
+	copy(privKey[:], keyBytes)
 
 	pubKey, ok := privKey.PubKey().(p256.PubKeyP256)
 	if !ok {

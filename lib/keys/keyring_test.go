@@ -31,7 +31,7 @@ func TestGenKey(t *testing.T) {
 	assert.NotNil(t, kr)
 	assert.Equal(t, 0, len(kr.keyList))
 
-	key, err := kr.GenerateNewKey("test", []byte("pass"), true, "test")
+	key, err := kr.GenerateNewKey("test", "test", []byte("pass"), true)
 	assert.NoError(t, err)
 	assert.NotNil(t, key)
 	assert.Equal(t, 40, len(key.Address))
@@ -60,7 +60,7 @@ func TestGenKey(t *testing.T) {
 	assert.Nil(t, key2)
 
 	// test genkey without enc
-	key, err = kr.GenerateNewKey("test", nil, false, "test")
+	key, err = kr.GenerateNewKey("test", "test", nil, false)
 	assert.NoError(t, err)
 	assert.NotNil(t, key)
 	assert.Equal(t, 40, len(key.Address))
@@ -82,11 +82,11 @@ func TestImportKey(t *testing.T) {
 	testPubKey, _ := testKey.PubKey().(p256.PubKeyP256)
 	wrongBytes := testKeyBytes[:len(testKey)-1]
 
-	key, err := kr.ImportPrivKey(wrongBytes, "test", []byte("pass"), true)
+	key, err := kr.ImportNewKey("test", wrongBytes, []byte("pass"), true)
 	assert.Error(t, err)
 	assert.Nil(t, key)
 
-	key, err = kr.ImportPrivKey(testKeyBytes, "test", []byte("pass"), true)
+	key, err = kr.ImportNewKey("test", testKeyBytes, []byte("pass"), true)
 	assert.NoError(t, err)
 	assert.NotNil(t, key)
 	assert.Equal(t, 40, len(key.Address))
