@@ -134,7 +134,7 @@
   version = "v0.14.1"
 
 [[projects]]
-  digest = "1:13f81f02ae247daecdc04d0d77a33348ba86f57a5f1117a8b0f38c436311a62c"
+  digest = "1:3d2363303e8f3d59294f86deb2fd05af109dc67580ce0ac8a7db3805f35d9ed4"
   name = "github.com/tendermint/tendermint"
   packages = [
     "crypto",
@@ -143,7 +143,6 @@
     "crypto/xsalsa20symmetric",
     "libs/common",
     "libs/log",
-    "rpc/lib/types",
   ]
   pruneopts = "UT"
   revision = "8fb2c2a0e824d68a1c057e02b4897b085e3a855a"
@@ -193,10 +192,8 @@
     "github.com/amolabs/amoabci/crypto/p256",
     "github.com/spf13/cobra",
     "github.com/stretchr/testify/assert",
-    "github.com/tendermint/go-amino",
     "github.com/tendermint/tendermint/crypto",
     "github.com/tendermint/tendermint/crypto/xsalsa20symmetric",
-    "github.com/tendermint/tendermint/rpc/lib/types",
     "github.com/ybbus/jsonrpc",
     "golang.org/x/crypto/ssh/terminal",
   ]
