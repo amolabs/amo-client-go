@@ -17,6 +17,7 @@ type UploadBody struct {
 	Data     string          `json:"data"`
 }
 
+// TODO: derive owner from pubKey
 func doUpload(owner string, data, token, pubKey, sig []byte) (string, error) {
 	uploadBody := UploadBody{
 		Owner:    owner,

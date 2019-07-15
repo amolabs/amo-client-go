@@ -13,5 +13,7 @@ func init() {
 	Cmd.AddCommand(
 		UploadCmd,
 		DownloadCmd,
+		InspectCmd,
+		RemoveCmd,
 	)
 }

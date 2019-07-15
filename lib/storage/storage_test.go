@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,6 +18,7 @@ const (
 	testToken = `{"token":"token body"}`
 	testBody  = "test parcel content"
 	testId    = "eeee"
+	testMeta  = `{"owner":"2f2f"}`
 )
 
 // see https://github.com/amolabs/amo-storage#auth-api
@@ -56,7 +58,7 @@ func testHandleAuth(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(testToken))
 }
 
-func testHandleUpload(w http.ResponseWriter, req *http.Request) {
+func testHandlePOST(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		w.WriteHeader(405)
 		w.Write([]byte(`{"error":"Expected POST method"}`))
@@ -85,12 +87,33 @@ func testHandleUpload(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(testId))
 }
 
-func testHandleDownload(w http.ResponseWriter, req *http.Request) {
+func testHandleGET(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "GET" {
 		w.WriteHeader(405)
 		w.Write([]byte(`{"error":"Expected GET method"}`))
 		return
 	}
+	u, err := url.ParseRequestURI(req.RequestURI)
+	if err != nil {
+		w.WriteHeader(400)
+		w.Write([]byte(`{"error":"malformed request URI"}`))
+		return
+	}
+	q := u.Query()
+	k := q.Get("key")
+	if len(k) > 0 {
+		// inspect with url query
+		switch k {
+		case "metadata":
+			w.Write([]byte(testMeta))
+		default:
+			w.WriteHeader(400)
+			w.Write([]byte(`{"error":"unknown query key"}`))
+		}
+		return
+	}
+
+	// download with auth
 	authToken := req.Header.Get("X-Auth-Token")
 	pubKey := req.Header.Get("X-Public-Key")
 	sig := req.Header.Get("X-Signature")
@@ -104,7 +127,7 @@ func testHandleDownload(w http.ResponseWriter, req *http.Request) {
 		w.Write([]byte(`{"error":"X-Public-Key header missing"}`))
 		return
 	}
-	_, err := base64.StdEncoding.DecodeString(pubKey)
+	_, err = base64.StdEncoding.DecodeString(pubKey)
 	if err != nil {
 		w.WriteHeader(400)
 		w.Write([]byte(`{"error":"malformed pubKey"}`))
@@ -134,12 +157,12 @@ func setUp() {
 	// serve parcel upload
 	http.HandleFunc(
 		"/api/v1/parcels",
-		testHandleUpload,
+		testHandlePOST,
 	)
 	// serve test parcel data
 	http.HandleFunc(
 		"/api/v1/parcels/",
-		testHandleDownload,
+		testHandleGET,
 	)
 	go http.ListenAndServe("localhost:12345", nil)
 	Endpoint = "http://localhost:12345"
@@ -181,6 +204,14 @@ func TestAll(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, sig)
 
+	/* TODO
+	data, err := doDownload("ffff", authToken, key.PubKey, sig)
+	assert.Error(t, err)
+	if err != nil {
+		fmt.Println(err)
+	}
+	*/
+
 	data, err := doDownload("2f2f", authToken, key.PubKey, sig)
 	assert.NoError(t, err)
 	if err != nil {
@@ -209,4 +240,37 @@ func TestAll(t *testing.T) {
 		fmt.Println(err)
 	}
 	assert.Equal(t, testId, id)
+
+	// inspect
+	// XXX: inspect operation does not require auth
+	data, err = doInspect("1f1f")
+	assert.NoError(t, err)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// TODO: check owner
+	assert.Equal(t, testId, id)
+
+	// remove
+	op, err = getOp("remove", "3f3f")
+	assert.NotEmpty(t, op)
+	assert.NoError(t, err)
+	assert.Equal(t, `{"name":"remove","id":"3f3f"}`, op)
+
+	authToken, err = requestToken(key.Address, op)
+	assert.NoError(t, err)
+	assert.NotNil(t, authToken)
+	assert.Equal(t, testToken, string(authToken))
+
+	sig, err = signToken(*key, authToken)
+	assert.NoError(t, err)
+	assert.NotNil(t, sig)
+
+	data, err = doRemove("2f2f", authToken, key.PubKey, sig)
+	assert.NoError(t, err)
+	if err != nil {
+		fmt.Println(err)
+	}
+	assert.Equal(t, testBody, string(data))
+
 }

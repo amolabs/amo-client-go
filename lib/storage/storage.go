@@ -44,6 +44,12 @@ func getOp(name, param string) (string, error) {
 			Id   string `json:"id"`
 		}{"download", param}
 		op, err = json.Marshal(authOp)
+	case "remove":
+		authOp := struct {
+			Name string `json:"name"`
+			Id   string `json:"id"`
+		}{"remove", param}
+		op, err = json.Marshal(authOp)
 	default:
 		return "", errors.New("Unknown operation name")
 	}

@@ -7,8 +7,7 @@ import (
 	"github.com/amolabs/amo-client-go/lib/keys"
 )
 
-func doDownload(id string, token, pubKey, sig []byte) ([]byte, error) {
-	// TODO: check op description in token
+func doRemove(id string, token, pubKey, sig []byte) ([]byte, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(
 		"GET",
@@ -25,8 +24,8 @@ func doDownload(id string, token, pubKey, sig []byte) ([]byte, error) {
 	return doHTTP(client, req)
 }
 
-func Download(parcelID string, key keys.Key) ([]byte, error) {
-	op, err := getOp("download", parcelID)
+func Remove(parcelID string, key keys.Key) ([]byte, error) {
+	op, err := getOp("remove", parcelID)
 	if err != nil {
 		return nil, err
 	}
@@ -36,5 +35,5 @@ func Download(parcelID string, key keys.Key) ([]byte, error) {
 	}
 	sig, err := signToken(key, authToken)
 
-	return doDownload(parcelID, authToken, key.PubKey, sig)
+	return doRemove(parcelID, authToken, key.PubKey, sig)
 }
