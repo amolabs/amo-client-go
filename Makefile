@@ -39,21 +39,21 @@ $(GOPATH)/bin/dep:
 	$(call go_get,golang,dep,22125cfaa6ddc71e145b1535d4b7ee9744fefff2)
 	cd $(GITHUBDIR)$(FS)golang$(FS)dep$(FS)cmd$(FS)dep && $(GO) install
 
-get_vendor_deps:
+get_vendor_deps: get_tools
 	@echo "--> Generating vendor directory via dep ensure"
 	@rm -rf .vendor-new
 	@dep ensure -v -vendor-only
 
-update_vendor_deps:
+update_vendor_deps: get_tools
 	@echo "--> Running dep ensure"
 	@rm -rf .vendor-new
 	@dep ensure -v -update
 
-build:
+build: get_vendor_deps
 	@echo "--> Building amo console (amocli)"
 	$(BUILDENV) go build ./cmd/amocli
 
-install:
+install: get_vendor_deps
 	@echo "--> Installing amo console (amocli)"
 	go install ./cmd/amocli
 
