@@ -9,7 +9,7 @@ import (
 	"github.com/amolabs/amoabci/crypto/p256"
 )
 
-type Key struct {
+type KeyEntry struct {
 	Type      string `json:"type"`
 	Address   string `json:"address"`
 	PubKey    []byte `json:"pub_key"`
@@ -17,7 +17,7 @@ type Key struct {
 	Encrypted bool   `json:"encrypted"`
 }
 
-func GenerateKey(passphrase []byte, encrypt bool, seed string) (*Key, error) {
+func GenerateKey(passphrase []byte, encrypt bool, seed string) (*KeyEntry, error) {
 	var privKey p256.PrivKeyP256
 	if len(seed) > 0 {
 		privKey = p256.GenPrivKeyFromSecret([]byte(seed))
@@ -30,7 +30,7 @@ func GenerateKey(passphrase []byte, encrypt bool, seed string) (*Key, error) {
 		return nil, errors.New("Error when deriving pubkey from privkey.")
 	}
 
-	key := new(Key)
+	key := new(KeyEntry)
 	key.Type = p256.PrivKeyAminoName
 	key.Address = pubKey.Address().String()
 	key.PubKey = pubKey.RawBytes()
@@ -45,7 +45,7 @@ func GenerateKey(passphrase []byte, encrypt bool, seed string) (*Key, error) {
 	return key, nil
 }
 
-func (key *Key) Decrypt(passphrase []byte) error {
+func (key *KeyEntry) Decrypt(passphrase []byte) error {
 	if !key.Encrypted {
 		return errors.New("The key is not encrypted")
 	}

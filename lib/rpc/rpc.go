@@ -119,7 +119,7 @@ func getAddressBytes(pubkey []byte) []byte {
 	return hash[:AddressByteSize]
 }
 
-func SignSendTx(txType string, payload interface{}, key keys.Key) (TmTxResult, error) {
+func SignSendTx(txType string, payload interface{}, key keys.KeyEntry) (TmTxResult, error) {
 	payloadJson, err := json.Marshal(payload)
 	if err != nil {
 		return TmTxResult{}, err

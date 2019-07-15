@@ -17,7 +17,7 @@ import (
 
 type KeyRing struct {
 	filePath string
-	keyList  map[string]Key // just a cache
+	keyList  map[string]KeyEntry // just a cache
 }
 
 func EnsureDir(dir string, mode os.FileMode) error {
@@ -51,7 +51,7 @@ func EnsureFile(path string) error {
 func GetKeyRing(path string) (*KeyRing, error) {
 	kr := new(KeyRing)
 	kr.filePath = path
-	kr.keyList = make(map[string]Key)
+	kr.keyList = make(map[string]KeyEntry)
 	err := kr.Load()
 	if err != nil {
 		return nil, err
@@ -70,7 +70,7 @@ func (kr *KeyRing) Load() error {
 		return err
 	}
 
-	newKeyList := make(map[string]Key)
+	newKeyList := make(map[string]KeyEntry)
 	if len(b) > 0 {
 		err = json.Unmarshal(b, &newKeyList)
 		if err != nil {
@@ -102,7 +102,7 @@ func (kr *KeyRing) Save() error {
 	return nil
 }
 
-func (kr *KeyRing) GenerateNewKey(username string, passphrase []byte, encrypt bool, seed string) (*Key, error) {
+func (kr *KeyRing) GenerateNewKey(username string, passphrase []byte, encrypt bool, seed string) (*KeyEntry, error) {
 	key, err := GenerateKey(passphrase, encrypt, seed)
 	if err != nil {
 		return nil, errors.New("Fail to generate new key.")
@@ -113,7 +113,7 @@ func (kr *KeyRing) GenerateNewKey(username string, passphrase []byte, encrypt bo
 
 // TODO: use KeyRing.addKey()
 func (kr *KeyRing) ImportPrivKey(keyBytes []byte,
-	username string, passphrase []byte, encrypt bool) (*Key, error) {
+	username string, passphrase []byte, encrypt bool) (*KeyEntry, error) {
 	_, ok := kr.keyList[username]
 	if ok {
 		return nil, errors.New("Username already exists.")
@@ -128,7 +128,7 @@ func (kr *KeyRing) ImportPrivKey(keyBytes []byte,
 	return kr.addNewP256Key(privKey, username, passphrase, encrypt)
 }
 
-func (kr *KeyRing) GetKey(username string) *Key {
+func (kr *KeyRing) GetKey(username string) *KeyEntry {
 	key, ok := kr.keyList[username]
 	if !ok {
 		return nil
@@ -176,8 +176,8 @@ func (kr *KeyRing) GetNumKeys() int {
 	return len(kr.keyList)
 }
 
-func (kr *KeyRing) GetFirstKey() *Key {
-	var key *Key = nil
+func (kr *KeyRing) GetFirstKey() *KeyEntry {
+	var key *KeyEntry = nil
 	for _, v := range kr.keyList {
 		key = &v
 		break
@@ -185,7 +185,7 @@ func (kr *KeyRing) GetFirstKey() *Key {
 	return key
 }
 
-func (kr *KeyRing) addKey(username string, key *Key) error {
+func (kr *KeyRing) addKey(username string, key *KeyEntry) error {
 	_, ok := kr.keyList[username]
 	if ok {
 		return errors.New("Username already exists.")
@@ -196,13 +196,13 @@ func (kr *KeyRing) addKey(username string, key *Key) error {
 }
 
 func (kr *KeyRing) addNewP256Key(privKey p256.PrivKeyP256,
-	username string, passphrase []byte, encrypt bool) (*Key, error) {
+	username string, passphrase []byte, encrypt bool) (*KeyEntry, error) {
 	pubKey, ok := privKey.PubKey().(p256.PubKeyP256)
 	if !ok {
 		return nil, errors.New("Error when deriving pubkey from privkey.")
 	}
 
-	key := new(Key)
+	key := new(KeyEntry)
 
 	key.Type = p256.PrivKeyAminoName
 	key.Address = pubKey.Address().String()

@@ -10,11 +10,11 @@ import (
 var (
 	Username   string
 	Passphrase string
-	UserKey    keys.Key
+	UserKey    keys.KeyEntry
 )
 
-func GetUserKey(path string) (keys.Key, error) {
-	empty := keys.Key{}
+func GetUserKey(path string) (keys.KeyEntry, error) {
+	empty := keys.KeyEntry{}
 	kr, err := keys.GetKeyRing(path)
 	if err != nil {
 		return empty, err
@@ -37,7 +37,7 @@ func GetUserKey(path string) (keys.Key, error) {
 
 	key := kr.GetKey(Username)
 	if key == nil {
-		return empty, errors.New("Key not found")
+		return empty, errors.New("KeyEntry not found")
 	}
 
 	// if key is encrypted, request passphrase to decrpyt it
