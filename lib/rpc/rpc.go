@@ -129,7 +129,7 @@ func SignSendTx(txType string, payload interface{}, key keys.KeyEntry) (TmTxResu
 
 	nonceBytes := make([]byte, NonceByteSize)
 	_, err = rand.Read(nonceBytes)
-	sender := strings.ToUpper(hex.EncodeToString(getAddressBytes(key.PubKey)))
+	sender := strings.ToUpper(key.Address)
 	nonce := strings.ToUpper(hex.EncodeToString(nonceBytes))
 	txToSign := TxToSign{
 		Type:    txType,
