@@ -105,10 +105,12 @@ type BroadcastParams struct {
 
 type TmTxResult struct {
 	CheckTx struct {
-		Code int64 `json:"code,omitempty"`
+		Code int64  `json:"code,omitempty"`
+		Info string `json:"info,omitempty"`
 	} `json:"check_tx"`
 	DeliverTx struct {
-		Code int64 `json:"code,omitempty"`
+		Code int64  `json:"code,omitempty"`
+		Info string `json:"info,omitempty"`
 	} `json:"deliver_tx"`
 	Hash   string `json:"hash"`
 	Height string `json:"height"` // number as a string
