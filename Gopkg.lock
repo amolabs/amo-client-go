@@ -2,18 +2,6 @@
 
 
 [[projects]]
-  digest = "1:8b25020f1d183a2487297ce6aed052e7dede99402c78bda0ca35bff373cca653"
-  name = "github.com/amolabs/amoabci"
-  packages = [
-    "amo/encoding/binary",
-    "amo/types",
-    "crypto/p256",
-  ]
-  pruneopts = "UT"
-  revision = "a86d1c76672f0ab87fa88350012964f65c135e59"
-  version = "v1.0-beta1"
-
-[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -22,7 +10,7 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:704b145137b5555c6bac6a7e52875e4df8a0a1b7ea74aaae864abcab61e672b0"
+  digest = "1:342e605326dbcb362c94e705d058d51f43b127558f64258114c411075546f5a9"
   name = "github.com/go-kit/kit"
   packages = [
     "log",
@@ -30,8 +18,8 @@
     "log/term",
   ]
   pruneopts = "UT"
-  revision = "4dc7be5d2d12881735283bcab7352178e190fc71"
-  version = "v0.6.0"
+  revision = "150a65a7ec6156b4b640c1fd55f26fd3d475d656"
+  version = "v0.9.0"
 
 [[projects]]
   digest = "1:4062bc6de62d73e2be342243cf138cf499b34d558876db8d9430e2149388a4d8"
@@ -40,14 +28,6 @@
   pruneopts = "UT"
   revision = "07c9b44f60d7ffdfb7d8efe1ad539965737836dc"
   version = "v0.4.0"
-
-[[projects]]
-  digest = "1:586ea76dbd0374d6fb649a91d70d652b7fe0ccffb8910a77468e7702e7901f3d"
-  name = "github.com/go-stack/stack"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "2fee6af1a9795aafbe0253a0cfbdf668e1fb8a9a"
-  version = "v1.8.0"
 
 [[projects]]
   digest = "1:4652941215f23c7ad6546bab86964c72248a1134baa53f0df618661344ba5cac"
@@ -62,12 +42,12 @@
   version = "v1.2.1"
 
 [[projects]]
-  digest = "1:318f1c959a8a740366fce4b1e1eb2fd914036b4af58fbd0a003349b305f118ad"
+  digest = "1:573ca21d3669500ff845bdebee890eb7fc7f0f50c59f2132f2a0c6b03d85086a"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
   pruneopts = "UT"
-  revision = "b5d812f8a3706043e23a9cd5babf2e5423744d30"
-  version = "v1.3.1"
+  revision = "6c65a5562fc06764971b7c5d05c76c75e84bdbf7"
+  version = "v1.3.2"
 
 [[projects]]
   digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
@@ -126,28 +106,18 @@
   version = "v1.3.0"
 
 [[projects]]
-  digest = "1:ad9c4c1a4e7875330b1f62906f2830f043a23edb5db997e3a5ac5d3e6eadf80a"
-  name = "github.com/tendermint/go-amino"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "dc14acf9ef15f85828bfbc561ed9dd9d2a284885"
-  version = "v0.14.1"
-
-[[projects]]
-  digest = "1:13f81f02ae247daecdc04d0d77a33348ba86f57a5f1117a8b0f38c436311a62c"
+  digest = "1:4f737c27ae6dea98a4e0364e7ff0755f56f04ae99396755412783a3a9169a6c7"
   name = "github.com/tendermint/tendermint"
   packages = [
     "crypto",
-    "crypto/ed25519",
     "crypto/tmhash",
     "crypto/xsalsa20symmetric",
     "libs/common",
     "libs/log",
-    "rpc/lib/types",
   ]
   pruneopts = "UT"
-  revision = "8fb2c2a0e824d68a1c057e02b4897b085e3a855a"
-  version = "v0.31.7"
+  revision = "dbf4062acd626716a37817f54550dd3776425caa"
+  version = "v0.32.1"
 
 [[projects]]
   digest = "1:564b31f09a21367ada5b019d8413afe99cf770775606f94c7bef42b2ef79dfdf"
@@ -159,11 +129,9 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e8dc989ceddc0fca73ef9518b1b43ab0f5761695892d8e91ed791940ac17263a"
+  digest = "1:edbf592d4255a924b0021961416d00d45c75a53589e48f024f35b71dbd8f6838"
   name = "golang.org/x/crypto"
   packages = [
-    "ed25519",
-    "ed25519/internal/edwards25519",
     "internal/subtle",
     "nacl/secretbox",
     "poly1305",
@@ -175,7 +143,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:7e3e63385ebe2dd5210be1534c516d8ae33c7ffac74126e5243d43ba7222e0d4"
+  digest = "1:34a0c43f2d706c6292cd418409b68ae23657c8a5e960ab97bc199972d4e86d0c"
   name = "golang.org/x/sys"
   packages = [
     "cpu",
@@ -183,20 +151,15 @@
     "windows",
   ]
   pruneopts = "UT"
-  revision = "04f50cda93cbb67f2afa353c52f342100e80e625"
+  revision = "fae7ac547cb717d141c433a2a173315e216b64c4"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/amolabs/amoabci/amo/types",
-    "github.com/amolabs/amoabci/crypto/p256",
     "github.com/spf13/cobra",
     "github.com/stretchr/testify/assert",
-    "github.com/tendermint/go-amino",
-    "github.com/tendermint/tendermint/crypto",
     "github.com/tendermint/tendermint/crypto/xsalsa20symmetric",
-    "github.com/tendermint/tendermint/rpc/lib/types",
     "github.com/ybbus/jsonrpc",
     "golang.org/x/crypto/ssh/terminal",
   ]

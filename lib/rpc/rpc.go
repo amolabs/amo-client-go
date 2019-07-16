@@ -105,10 +105,12 @@ type BroadcastParams struct {
 
 type TmTxResult struct {
 	CheckTx struct {
-		Code int64 `json:"code,omitempty"`
+		Code int64  `json:"code,omitempty"`
+		Info string `json:"info,omitempty"`
 	} `json:"check_tx"`
 	DeliverTx struct {
-		Code int64 `json:"code,omitempty"`
+		Code int64  `json:"code,omitempty"`
+		Info string `json:"info,omitempty"`
 	} `json:"deliver_tx"`
 	Hash   string `json:"hash"`
 	Height string `json:"height"` // number as a string
@@ -119,7 +121,7 @@ func getAddressBytes(pubkey []byte) []byte {
 	return hash[:AddressByteSize]
 }
 
-func SignSendTx(txType string, payload interface{}, key keys.Key) (TmTxResult, error) {
+func SignSendTx(txType string, payload interface{}, key keys.KeyEntry) (TmTxResult, error) {
 	payloadJson, err := json.Marshal(payload)
 	if err != nil {
 		return TmTxResult{}, err
@@ -127,7 +129,7 @@ func SignSendTx(txType string, payload interface{}, key keys.Key) (TmTxResult, e
 
 	nonceBytes := make([]byte, NonceByteSize)
 	_, err = rand.Read(nonceBytes)
-	sender := strings.ToUpper(hex.EncodeToString(getAddressBytes(key.PubKey)))
+	sender := strings.ToUpper(key.Address)
 	nonce := strings.ToUpper(hex.EncodeToString(nonceBytes))
 	txToSign := TxToSign{
 		Type:    txType,

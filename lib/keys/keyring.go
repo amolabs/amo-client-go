@@ -8,16 +8,11 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-
-	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/xsalsa20symmetric"
-
-	"github.com/amolabs/amoabci/crypto/p256"
 )
 
 type KeyRing struct {
 	filePath string
-	keyList  map[string]Key // just a cache
+	keyList  map[string]KeyEntry // just a cache
 }
 
 func EnsureDir(dir string, mode os.FileMode) error {
@@ -51,7 +46,7 @@ func EnsureFile(path string) error {
 func GetKeyRing(path string) (*KeyRing, error) {
 	kr := new(KeyRing)
 	kr.filePath = path
-	kr.keyList = make(map[string]Key)
+	kr.keyList = make(map[string]KeyEntry)
 	err := kr.Load()
 	if err != nil {
 		return nil, err
@@ -70,7 +65,7 @@ func (kr *KeyRing) Load() error {
 		return err
 	}
 
-	newKeyList := make(map[string]Key)
+	newKeyList := make(map[string]KeyEntry)
 	if len(b) > 0 {
 		err = json.Unmarshal(b, &newKeyList)
 		if err != nil {
@@ -102,33 +97,25 @@ func (kr *KeyRing) Save() error {
 	return nil
 }
 
-func (kr *KeyRing) GenerateNewKey(username string, passphrase []byte, encrypt bool, seed string) (*Key, error) {
-	key, err := GenerateKey(passphrase, encrypt, seed)
+func (kr *KeyRing) GenerateNewKey(username string, seed string, passphrase []byte, encrypt bool) (*KeyEntry, error) {
+	key, err := GenerateKey(seed, passphrase, encrypt)
 	if err != nil {
 		return nil, errors.New("Fail to generate new key.")
 	}
 
-	return key, kr.addKey(username, key)
+	return key, kr.AddKey(username, key)
 }
 
-// TODO: use KeyRing.addKey()
-func (kr *KeyRing) ImportPrivKey(keyBytes []byte,
-	username string, passphrase []byte, encrypt bool) (*Key, error) {
-	_, ok := kr.keyList[username]
-	if ok {
-		return nil, errors.New("Username already exists.")
+func (kr *KeyRing) ImportNewKey(username string, keyBytes []byte, passphrase []byte, encrypt bool) (*KeyEntry, error) {
+	key, err := ImportKey(keyBytes, passphrase, encrypt)
+	if err != nil {
+		return nil, errors.New("Fail to import key.")
 	}
 
-	if len(keyBytes) != p256.PrivKeyP256Size {
-		return nil, errors.New("Input private key size mismatch.")
-	}
-	var privKey p256.PrivKeyP256
-	copy(privKey[:], keyBytes)
-
-	return kr.addNewP256Key(privKey, username, passphrase, encrypt)
+	return key, kr.AddKey(username, key)
 }
 
-func (kr *KeyRing) GetKey(username string) *Key {
+func (kr *KeyRing) GetKey(username string) *KeyEntry {
 	key, ok := kr.keyList[username]
 	if !ok {
 		return nil
@@ -155,8 +142,7 @@ func (kr *KeyRing) PrintKeyList() {
 
 	sort.Strings(sortKey)
 
-	fmt.Printf("%3s %-9s %-20s %-3s %-40s\n",
-		"#", "username", "type", "enc", "address")
+	fmt.Printf("%3s %-9s %-3s %-40s\n", "#", "username", "enc", "address")
 
 	i := 0
 	for _, username := range sortKey {
@@ -167,8 +153,7 @@ func (kr *KeyRing) PrintKeyList() {
 		if key.Encrypted {
 			enc = "o"
 		}
-		fmt.Printf("%3d %-9s %-20s %-3s %-40s\n",
-			i, username, key.Type, enc, key.Address)
+		fmt.Printf("%3d %-9s %-3s %-40s\n", i, username, enc, key.Address)
 	}
 }
 
@@ -176,8 +161,8 @@ func (kr *KeyRing) GetNumKeys() int {
 	return len(kr.keyList)
 }
 
-func (kr *KeyRing) GetFirstKey() *Key {
-	var key *Key = nil
+func (kr *KeyRing) GetFirstKey() *KeyEntry {
+	var key *KeyEntry = nil
 	for _, v := range kr.keyList {
 		key = &v
 		break
@@ -185,7 +170,7 @@ func (kr *KeyRing) GetFirstKey() *Key {
 	return key
 }
 
-func (kr *KeyRing) addKey(username string, key *Key) error {
+func (kr *KeyRing) AddKey(username string, key *KeyEntry) error {
 	_, ok := kr.keyList[username]
 	if ok {
 		return errors.New("Username already exists.")
@@ -193,33 +178,4 @@ func (kr *KeyRing) addKey(username string, key *Key) error {
 
 	kr.keyList[username] = *key
 	return kr.Save()
-}
-
-func (kr *KeyRing) addNewP256Key(privKey p256.PrivKeyP256,
-	username string, passphrase []byte, encrypt bool) (*Key, error) {
-	pubKey, ok := privKey.PubKey().(p256.PubKeyP256)
-	if !ok {
-		return nil, errors.New("Error when deriving pubkey from privkey.")
-	}
-
-	key := new(Key)
-
-	key.Type = p256.PrivKeyAminoName
-	key.Address = pubKey.Address().String()
-	key.PubKey = pubKey.RawBytes()
-	if encrypt {
-		key.PrivKey = xsalsa20symmetric.EncryptSymmetric(
-			privKey.RawBytes(), crypto.Sha256(passphrase))
-	} else {
-		key.PrivKey = privKey.RawBytes()
-	}
-	key.Encrypted = encrypt
-
-	kr.keyList[username] = *key
-	err := kr.Save()
-	if err != nil {
-		return nil, err
-	}
-
-	return key, nil
 }

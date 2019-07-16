@@ -1,56 +1,122 @@
 package keys
 
 import (
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
+	"math/big"
+	"strings"
 
-	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/xsalsa20symmetric"
-
-	"github.com/amolabs/amoabci/crypto/p256"
 )
 
-type Key struct {
-	Type      string `json:"type"`
+var (
+	c = elliptic.P256()
+)
+
+type KeyEntry struct {
 	Address   string `json:"address"`
 	PubKey    []byte `json:"pub_key"`
 	PrivKey   []byte `json:"priv_key"`
 	Encrypted bool   `json:"encrypted"`
 }
 
-func GenerateKey(passphrase []byte, encrypt bool, seed string) (*Key, error) {
-	var privKey p256.PrivKeyP256
+func generateECDSAKey(seed string) (privKey *ecdsa.PrivateKey, err error) {
 	if len(seed) > 0 {
-		privKey = p256.GenPrivKeyFromSecret([]byte(seed))
+		b := sha256.Sum256([]byte(seed))
+		privKey = new(ecdsa.PrivateKey)
+		privKey.D = new(big.Int).SetBytes(b[:])
+		X, Y := c.ScalarBaseMult(b[:])
+		privKey.PublicKey = ecdsa.PublicKey{
+			Curve: c,
+			X:     X,
+			Y:     Y,
+		}
 	} else {
-		privKey = p256.GenPrivKey()
+		privKey, err = ecdsa.GenerateKey(c, rand.Reader)
 	}
 
-	pubKey, ok := privKey.PubKey().(p256.PubKeyP256)
-	if !ok {
-		return nil, errors.New("Error when deriving pubkey from privkey.")
-	}
-
-	key := new(Key)
-	key.Type = p256.PrivKeyAminoName
-	key.Address = pubKey.Address().String()
-	key.PubKey = pubKey.RawBytes()
-	if encrypt {
-		key.PrivKey = xsalsa20symmetric.EncryptSymmetric(
-			privKey.RawBytes(), crypto.Sha256(passphrase))
-	} else {
-		key.PrivKey = privKey.RawBytes()
-	}
-	key.Encrypted = encrypt
-
-	return key, nil
+	return privKey, err
 }
 
-func (key *Key) Decrypt(passphrase []byte) error {
+func setECDSAKey(keyBytes []byte) (*ecdsa.PrivateKey, error) {
+	if len(keyBytes) != 32 {
+		return nil, errors.New("Wrong private key size")
+	}
+	privKey := new(ecdsa.PrivateKey)
+	privKey.D = new(big.Int).SetBytes(keyBytes)
+	X, Y := c.ScalarBaseMult(keyBytes)
+	privKey.PublicKey = ecdsa.PublicKey{
+		Curve: c,
+		X:     X,
+		Y:     Y,
+	}
+	return privKey, nil
+}
+
+func fillInt(b []byte, l int, i *big.Int) {
+	source := i.Bytes()
+	offset := l - len(source)
+	if offset >= 0 {
+		copy(b[offset:], source)
+	} else {
+		// Inappropriate input data, but we do what we can do.
+		copy(b[:l], source)
+	}
+}
+
+func toKeyEntry(privKey *ecdsa.PrivateKey, pw []byte, encrypt bool) *KeyEntry {
+	key := new(KeyEntry)
+	b := make([]byte, 32)
+	fillInt(b, 32, privKey.D)
+	if encrypt {
+		encKey := sha256.Sum256(pw)
+		key.PrivKey = xsalsa20symmetric.EncryptSymmetric(b, encKey[:])
+	} else {
+		key.PrivKey = b
+	}
+	key.Encrypted = encrypt
+	// encode to uncompressed form of a public key
+	b = make([]byte, 65)
+	b[0] = 0x04
+	fillInt(b[1:], 32, privKey.PublicKey.X)
+	fillInt(b[33:], 32, privKey.PublicKey.Y)
+	key.PubKey = b
+	// hash it to derive address
+	hash := sha256.Sum256(b)
+	key.Address = strings.ToUpper(hex.EncodeToString(hash[:20]))
+
+	return key
+}
+
+func GenerateKey(seed string, passphrase []byte, encrypt bool) (*KeyEntry, error) {
+	privKey, err := generateECDSAKey(seed)
+	if err != nil {
+		return nil, err
+	}
+
+	return toKeyEntry(privKey, passphrase, encrypt), nil
+}
+
+func ImportKey(keyBytes []byte, passphrase []byte, encrypt bool) (*KeyEntry, error) {
+	privKey, err := setECDSAKey(keyBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return toKeyEntry(privKey, passphrase, encrypt), nil
+}
+
+func (key *KeyEntry) Decrypt(passphrase []byte) error {
 	if !key.Encrypted {
 		return errors.New("The key is not encrypted")
 	}
 
-	plainKey, err := xsalsa20symmetric.DecryptSymmetric(key.PrivKey, crypto.Sha256(passphrase))
+	encKey := sha256.Sum256(passphrase)
+	plainKey, err := xsalsa20symmetric.DecryptSymmetric(key.PrivKey, encKey[:])
 	if err != nil {
 		return err
 	}

@@ -52,7 +52,7 @@ func genFunc(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	_, err = kr.GenerateNewKey(username, passphrase, encrypt, seed)
+	_, err = kr.GenerateNewKey(username, seed, passphrase, encrypt)
 	if err != nil {
 		return err
 	}

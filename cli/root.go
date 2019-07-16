@@ -32,7 +32,8 @@ func init() {
 		util.LineBreak,
 	)
 	RootCmd.PersistentFlags().StringP("rpc", "r", "0.0.0.0:26657", "ip:port")
-	RootCmd.PersistentFlags().StringP("sto", "s", "0.0.0.0:80", "ip:port")
+	// TODO: change shorcut or reorganize global flags
+	RootCmd.PersistentFlags().String("sto", "0.0.0.0:80", "ip:port")
 	RootCmd.PersistentFlags().BoolP("json", "j", false, "output as json")
 	RootCmd.PersistentFlags().StringP("user", "u", "", "username")
 	RootCmd.PersistentFlags().StringP("pass", "p", "", "passphrase")

@@ -24,7 +24,7 @@ func doRemove(id string, token, pubKey, sig []byte) ([]byte, error) {
 	return doHTTP(client, req)
 }
 
-func Remove(parcelID string, key keys.Key) ([]byte, error) {
+func Remove(parcelID string, key keys.KeyEntry) ([]byte, error) {
 	op, err := getOp("remove", parcelID)
 	if err != nil {
 		return nil, err

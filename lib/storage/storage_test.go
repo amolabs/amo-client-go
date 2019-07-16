@@ -192,7 +192,7 @@ func TestAll(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, authToken)
 
-	key, err := keys.GenerateKey(nil, false, "tester")
+	key, err := keys.GenerateKey("tester", nil, false)
 	assert.NoError(t, err)
 
 	authToken, err = requestToken(key.Address, op)

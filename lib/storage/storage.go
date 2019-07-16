@@ -78,7 +78,7 @@ func requestToken(account, op string) ([]byte, error) {
 	return doHTTP(client, req)
 }
 
-func signToken(key keys.Key, token []byte) ([]byte, error) {
+func signToken(key keys.KeyEntry, token []byte) ([]byte, error) {
 	// do sign
 	h := sha256.Sum256(token)
 	X, Y := c.ScalarBaseMult(key.PrivKey[:])

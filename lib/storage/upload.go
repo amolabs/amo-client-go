@@ -46,7 +46,7 @@ func doUpload(owner string, data, token, pubKey, sig []byte) (string, error) {
 	return string(ret), err
 }
 
-func Upload(data []byte, key keys.Key) (string, error) {
+func Upload(data []byte, key keys.KeyEntry) (string, error) {
 	bytes := sha256.Sum256(data)
 	hash := hex.EncodeToString(bytes[:])
 	op, err := getOp("upload", hash)

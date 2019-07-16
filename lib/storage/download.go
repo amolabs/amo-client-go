@@ -25,7 +25,7 @@ func doDownload(id string, token, pubKey, sig []byte) ([]byte, error) {
 	return doHTTP(client, req)
 }
 
-func Download(parcelID string, key keys.Key) ([]byte, error) {
+func Download(parcelID string, key keys.KeyEntry) ([]byte, error) {
 	op, err := getOp("download", parcelID)
 	if err != nil {
 		return nil, err

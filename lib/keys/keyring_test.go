@@ -5,8 +5,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	"github.com/amolabs/amoabci/crypto/p256"
 )
 
 const (
@@ -31,7 +29,7 @@ func TestGenKey(t *testing.T) {
 	assert.NotNil(t, kr)
 	assert.Equal(t, 0, len(kr.keyList))
 
-	key, err := kr.GenerateNewKey("test", []byte("pass"), true, "test")
+	key, err := kr.GenerateNewKey("test", "test", []byte("pass"), true)
 	assert.NoError(t, err)
 	assert.NotNil(t, key)
 	assert.Equal(t, 40, len(key.Address))
@@ -60,7 +58,7 @@ func TestGenKey(t *testing.T) {
 	assert.Nil(t, key2)
 
 	// test genkey without enc
-	key, err = kr.GenerateNewKey("test", nil, false, "test")
+	key, err = kr.GenerateNewKey("test", "test", nil, false)
 	assert.NoError(t, err)
 	assert.NotNil(t, key)
 	assert.Equal(t, 40, len(key.Address))
@@ -77,29 +75,30 @@ func TestImportKey(t *testing.T) {
 	assert.Equal(t, 0, len(kr.keyList))
 
 	// test import
-	testKey := p256.GenPrivKeyFromSecret([]byte("test"))
-	testKeyBytes := testKey.RawBytes()
-	testPubKey, _ := testKey.PubKey().(p256.PubKeyP256)
-	wrongBytes := testKeyBytes[:len(testKey)-1]
-
-	key, err := kr.ImportPrivKey(wrongBytes, "test", []byte("pass"), true)
-	assert.Error(t, err)
-	assert.Nil(t, key)
-
-	key, err = kr.ImportPrivKey(testKeyBytes, "test", []byte("pass"), true)
+	testKey, err := GenerateKey("seed", nil, false)
+	assert.NotNil(t, testKey)
 	assert.NoError(t, err)
+	testKeyBytes := testKey.PrivKey
+
+	key, err := kr.ImportNewKey("bob", testKeyBytes[:31], []byte("pass"), true)
+	assert.Nil(t, key)
+	assert.Error(t, err)
+
+	key, err = kr.ImportNewKey("bob", testKeyBytes, []byte("pass"), true)
 	assert.NotNil(t, key)
+	assert.NoError(t, err)
 	assert.Equal(t, 40, len(key.Address))
-	assert.Equal(t, testPubKey.RawBytes(), key.PubKey)
+	assert.Equal(t, testKey.Address, key.Address)
+	assert.Equal(t, testKey.PubKey, key.PubKey)
 	assert.True(t, key.Encrypted)
-	key2 := kr.GetKey("test")
+	key2 := kr.GetKey("bob")
 	assert.NotNil(t, key2)
 	assert.Equal(t, key, key2)
 
 	// check if the actual file was updated
 	err = kr.Load()
 	assert.NoError(t, err)
-	key2 = kr.GetKey("test")
+	key2 = kr.GetKey("bob")
 	assert.NotNil(t, key2)
 	assert.Equal(t, key, key2)
 
