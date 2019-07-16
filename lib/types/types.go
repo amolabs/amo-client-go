@@ -15,7 +15,7 @@ import (
 // package.
 
 type Currency string
-type PubKeyEd25519 string
+type PubKeyEd25519 []byte
 type Address string
 
 type Stake struct {

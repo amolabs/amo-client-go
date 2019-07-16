@@ -1,6 +1,8 @@
 package tx
 
 import (
+	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
@@ -29,7 +31,18 @@ func stakeFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Stake(args[0], args[1], key)
+	// This step is for user convenience. First, try base64 encoding, if it
+	// succeeds encode it as hex again and send. If it fails assume hex
+	// encoding and send it as is.
+	var val string
+	bin, err := base64.StdEncoding.DecodeString(args[0])
+	if err == nil {
+		val = hex.EncodeToString(bin)
+	} else {
+		val = args[0]
+	}
+
+	result, err := rpc.Stake(val, args[1], key)
 	if err != nil {
 		return err
 	}
