@@ -192,7 +192,6 @@
     "github.com/amolabs/amoabci/crypto/p256",
     "github.com/spf13/cobra",
     "github.com/stretchr/testify/assert",
-    "github.com/tendermint/tendermint/crypto",
     "github.com/tendermint/tendermint/crypto/xsalsa20symmetric",
     "github.com/ybbus/jsonrpc",
     "golang.org/x/crypto/ssh/terminal",

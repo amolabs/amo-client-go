@@ -1,9 +1,9 @@
 package keys
 
 import (
+	"crypto/sha256"
 	"errors"
 
-	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/xsalsa20symmetric"
 
 	"github.com/amolabs/amoabci/crypto/p256"
@@ -35,8 +35,9 @@ func GenerateKey(seed string, passphrase []byte, encrypt bool) (*KeyEntry, error
 	key.Address = pubKey.Address().String()
 	key.PubKey = pubKey.RawBytes()
 	if encrypt {
+		encKey := sha256.Sum256(passphrase)
 		key.PrivKey = xsalsa20symmetric.EncryptSymmetric(
-			privKey.RawBytes(), crypto.Sha256(passphrase))
+			privKey.RawBytes(), encKey[:])
 	} else {
 		key.PrivKey = privKey.RawBytes()
 	}
@@ -62,8 +63,9 @@ func ImportKey(keyBytes []byte, passphrase []byte, encrypt bool) (*KeyEntry, err
 	key.Address = pubKey.Address().String()
 	key.PubKey = pubKey.RawBytes()
 	if encrypt {
+		encKey := sha256.Sum256(passphrase)
 		key.PrivKey = xsalsa20symmetric.EncryptSymmetric(
-			privKey.RawBytes(), crypto.Sha256(passphrase))
+			privKey.RawBytes(), encKey[:])
 	} else {
 		key.PrivKey = privKey.RawBytes()
 	}
@@ -77,7 +79,8 @@ func (key *KeyEntry) Decrypt(passphrase []byte) error {
 		return errors.New("The key is not encrypted")
 	}
 
-	plainKey, err := xsalsa20symmetric.DecryptSymmetric(key.PrivKey, crypto.Sha256(passphrase))
+	encKey := sha256.Sum256(passphrase)
+	plainKey, err := xsalsa20symmetric.DecryptSymmetric(key.PrivKey, encKey[:])
 	if err != nil {
 		return err
 	}
