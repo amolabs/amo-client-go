@@ -10,7 +10,6 @@ import (
 )
 
 type KeyEntry struct {
-	Type      string `json:"type"`
 	Address   string `json:"address"`
 	PubKey    []byte `json:"pub_key"`
 	PrivKey   []byte `json:"priv_key"`
@@ -31,7 +30,6 @@ func GenerateKey(seed string, passphrase []byte, encrypt bool) (*KeyEntry, error
 	}
 
 	key := new(KeyEntry)
-	key.Type = p256.PrivKeyAminoName
 	key.Address = pubKey.Address().String()
 	key.PubKey = pubKey.RawBytes()
 	if encrypt {
@@ -59,7 +57,6 @@ func ImportKey(keyBytes []byte, passphrase []byte, encrypt bool) (*KeyEntry, err
 	}
 
 	key := new(KeyEntry)
-	key.Type = p256.PrivKeyAminoName
 	key.Address = pubKey.Address().String()
 	key.PubKey = pubKey.RawBytes()
 	if encrypt {

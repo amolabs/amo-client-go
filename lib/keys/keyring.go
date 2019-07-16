@@ -144,8 +144,7 @@ func (kr *KeyRing) PrintKeyList() {
 
 	sort.Strings(sortKey)
 
-	fmt.Printf("%3s %-9s %-20s %-3s %-40s\n",
-		"#", "username", "type", "enc", "address")
+	fmt.Printf("%3s %-9s %-3s %-40s\n", "#", "username", "enc", "address")
 
 	i := 0
 	for _, username := range sortKey {
@@ -156,8 +155,7 @@ func (kr *KeyRing) PrintKeyList() {
 		if key.Encrypted {
 			enc = "o"
 		}
-		fmt.Printf("%3d %-9s %-20s %-3s %-40s\n",
-			i, username, key.Type, enc, key.Address)
+		fmt.Printf("%3d %-9s %-3s %-40s\n", i, username, enc, key.Address)
 	}
 }
 
