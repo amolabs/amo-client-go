@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/amolabs/amo-client-go/lib/rpc"
-	"github.com/amolabs/amoabci/amo/types"
+	"github.com/amolabs/amo-client-go/lib/types"
 )
 
 var RequestCmd = &cobra.Command{
@@ -36,7 +36,7 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 	if res == nil || len(res) == 0 || string(res) == "null" {
 		fmt.Println("no request")
 	} else {
-		var request types.RequestValue
+		var request types.Request
 		err = json.Unmarshal(res, &request)
 		if err != nil {
 			return err

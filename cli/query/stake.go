@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/amolabs/amo-client-go/lib/rpc"
-	"github.com/amolabs/amoabci/amo/types"
+	"github.com/amolabs/amo-client-go/lib/types"
 )
 
 var StakeCmd = &cobra.Command{

@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/amolabs/amo-client-go/lib/rpc"
-	"github.com/amolabs/amoabci/amo/types"
+	"github.com/amolabs/amo-client-go/lib/types"
 )
 
 var UsageCmd = &cobra.Command{
@@ -36,7 +36,7 @@ func usageFunc(cmd *cobra.Command, args []string) error {
 	if res == nil || len(res) == 0 || string(res) == "null" {
 		fmt.Println("no usage")
 	} else {
-		var usage types.UsageValue
+		var usage types.Usage
 		err = json.Unmarshal(res, &usage)
 		if err != nil {
 			return err
