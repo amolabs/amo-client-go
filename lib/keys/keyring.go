@@ -97,8 +97,7 @@ func (kr *KeyRing) Save() error {
 	return nil
 }
 
-func (kr *KeyRing) GenerateNewKey(username string,
-	seed string, passphrase []byte, encrypt bool) (*KeyEntry, error) {
+func (kr *KeyRing) GenerateNewKey(username string, seed string, passphrase []byte, encrypt bool) (*KeyEntry, error) {
 	key, err := GenerateKey(seed, passphrase, encrypt)
 	if err != nil {
 		return nil, errors.New("Fail to generate new key.")
@@ -107,8 +106,7 @@ func (kr *KeyRing) GenerateNewKey(username string,
 	return key, kr.AddKey(username, key)
 }
 
-func (kr *KeyRing) ImportNewKey(username string,
-	keyBytes []byte, passphrase []byte, encrypt bool) (*KeyEntry, error) {
+func (kr *KeyRing) ImportNewKey(username string, keyBytes []byte, passphrase []byte, encrypt bool) (*KeyEntry, error) {
 	key, err := ImportKey(keyBytes, passphrase, encrypt)
 	if err != nil {
 		return nil, errors.New("Fail to import key.")

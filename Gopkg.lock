@@ -7,7 +7,6 @@
   packages = [
     "amo/encoding/binary",
     "amo/types",
-    "crypto/p256",
   ]
   pruneopts = "UT"
   revision = "a86d1c76672f0ab87fa88350012964f65c135e59"
@@ -189,7 +188,6 @@
   analyzer-version = 1
   input-imports = [
     "github.com/amolabs/amoabci/amo/types",
-    "github.com/amolabs/amoabci/crypto/p256",
     "github.com/spf13/cobra",
     "github.com/stretchr/testify/assert",
     "github.com/tendermint/tendermint/crypto/xsalsa20symmetric",
