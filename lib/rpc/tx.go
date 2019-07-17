@@ -60,7 +60,7 @@ func Discard(target string, key keys.KeyEntry) (TmTxResult, error) {
 }
 
 func Request(target string, payment string, key keys.KeyEntry) (TmTxResult, error) {
-	ret, err := SignSendTx("register", struct {
+	ret, err := SignSendTx("request", struct {
 		Target  string `json:"target"`
 		Payment string `json:"payment"`
 	}{target, payment}, key)
@@ -84,7 +84,7 @@ func Grant(target string, grantee string, custody string, key keys.KeyEntry) (Tm
 }
 
 func Revoke(target string, grantee string, key keys.KeyEntry) (TmTxResult, error) {
-	ret, err := SignSendTx("register", struct {
+	ret, err := SignSendTx("revoke", struct {
 		Target  string `json:"target"`
 		Grantee string `json:"grantee"`
 	}{target, grantee}, key)
