@@ -14,6 +14,7 @@ func init() {
 	Cmd.AddCommand(
 		ListCmd,
 		ImportCmd,
+		ExportCmd,
 		GenCmd,
 		RemoveCmd,
 	)
