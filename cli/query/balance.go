@@ -39,7 +39,7 @@ func balanceFunc(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(balance, "mote") // TODO: print AMO unit also
+	fmt.Println(balance.String())
 
 	return nil
 }

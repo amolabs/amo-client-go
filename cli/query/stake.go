@@ -43,7 +43,7 @@ func stakeFunc(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		fmt.Printf("amount: %s\nvalidator pubkey: %s\n",
-			stake.Amount, hex.EncodeToString(stake.Validator))
+			stake.Amount.String(), hex.EncodeToString(stake.Validator))
 	}
 
 	return nil

@@ -41,7 +41,8 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("payment: %s\nexpire: %s\n", request.Payment, request.Exp)
+		fmt.Printf("payment: %s\nexpire: %s\n",
+			request.Payment.String(), request.Exp)
 	}
 
 	return nil

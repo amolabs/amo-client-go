@@ -42,7 +42,7 @@ func delegateFunc(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		fmt.Printf("amount: %s\ndelegator address: %s\n",
-			delegate.Amount, delegate.Delegator)
+			delegate.Amount.String(), delegate.Delegator)
 	}
 
 	return nil

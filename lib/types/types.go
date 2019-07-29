@@ -1,8 +1,12 @@
 package types
 
 import (
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"math/big"
 	"time"
-	//"math/big"
 )
 
 // These types are borrowed from github.com/amolabs/amoabci/amo/types. The
@@ -14,7 +18,32 @@ import (
 // sorted out to exclude complex tendermint native types and imported into this
 // package.
 
-type Currency string
+type Currency struct {
+	big.Int
+}
+
+func (c *Currency) UnmarshalJSON(b []byte) error {
+	if len(b) < 2 || b[0] != '"' || b[len(b)-1] != '"' {
+		return errors.New(
+			"Currency should be represented as double-quoted string(hex:" +
+				hex.EncodeToString(b) +
+				",str:" +
+				string(b) +
+				").")
+	}
+	err := json.Unmarshal(b[1:len(b)-1], &c.Int)
+	return err
+}
+
+func (c *Currency) String() string {
+	oneAMO := new(big.Float)
+	oneAMO.SetInt64(1000000000000000000)
+	amo := new(big.Float)
+	amo.SetInt(&c.Int)
+	amo = amo.Quo(amo, oneAMO)
+	return fmt.Sprintf("%s mote (%s AMO)", c.Int.String(), amo.String())
+}
+
 type PubKeyEd25519 []byte
 type Address string
 
