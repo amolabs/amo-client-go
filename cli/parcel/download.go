@@ -3,6 +3,7 @@ package parcel
 import (
 	"encoding/hex"
 	"fmt"
+	"io/ioutil"
 
 	"github.com/spf13/cobra"
 
@@ -18,7 +19,22 @@ var DownloadCmd = &cobra.Command{
 	RunE:  downloadFunc,
 }
 
+func init() {
+	cmd := DownloadCmd
+	cmd.Flags().SortFlags = false
+	cmd.Flags().StringP("file", "f", "", "file to save")
+}
+
 func downloadFunc(cmd *cobra.Command, args []string) error {
+	doSave := false
+	filename, err := cmd.Flags().GetString("file")
+	if err != nil {
+		return err
+	}
+	if len(filename) > 0 {
+		doSave = true
+	}
+
 	key, err := key.GetUserKey(util.DefaultKeyFilePath())
 	if err != nil {
 		return err
@@ -30,8 +46,16 @@ func downloadFunc(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	displayData := hex.EncodeToString(data)
-	fmt.Println("Downloaded data as a hex-encoded string:", displayData)
+	if doSave {
+		err = ioutil.WriteFile(filename, data, 0644)
+		if err != nil {
+			return err
+		}
+		fmt.Println("Downloaded data has been saved to the file:", filename)
+	} else {
+		displayData := hex.EncodeToString(data)
+		fmt.Println("Downloaded data as a hex-encoded string:", displayData)
+	}
 
 	return nil
 }
