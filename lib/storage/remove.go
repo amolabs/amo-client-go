@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"encoding/base64"
+	"encoding/hex"
 	"net/http"
 
 	"github.com/amolabs/amo-client-go/lib/keys"
@@ -18,8 +18,8 @@ func doRemove(id string, token, pubKey, sig []byte) ([]byte, error) {
 		return nil, err
 	}
 	req.Header.Add("X-Auth-Token", string(token))
-	req.Header.Add("X-Public-Key", base64.StdEncoding.EncodeToString(pubKey))
-	req.Header.Add("X-Signature", base64.StdEncoding.EncodeToString(sig))
+	req.Header.Add("X-Public-Key", hex.EncodeToString(pubKey))
+	req.Header.Add("X-Signature", hex.EncodeToString(sig))
 
 	return doHTTP(client, req)
 }

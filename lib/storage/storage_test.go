@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	testToken = `{"token":"token body"}`
+	testToken = `testtoken`
 	testBody  = "test parcel content"
 	testId    = "eeee"
 	testMeta  = `{"owner":"2f2f"}`
@@ -55,7 +55,17 @@ func testHandleAuth(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	w.Write([]byte(testToken))
+	res := struct {
+		Token string `json:"token"`
+	}{testToken}
+	fmt.Println("res", res)
+	rsp, err := json.Marshal(res)
+	fmt.Println("rsp", string(rsp))
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(`{"error":"internal error: unable to marshal json"}`))
+	}
+	w.Write(rsp)
 }
 
 func testHandlePOST(w http.ResponseWriter, req *http.Request) {
@@ -127,8 +137,8 @@ func testHandleGET(w http.ResponseWriter, req *http.Request) {
 		w.Write([]byte(`{"error":"X-Public-Key header missing"}`))
 		return
 	}
-	_, err = base64.StdEncoding.DecodeString(pubKey)
-	if err != nil {
+	b, err := hex.DecodeString(pubKey)
+	if err != nil || len(b) != 65 {
 		w.WriteHeader(400)
 		w.Write([]byte(`{"error":"malformed pubKey"}`))
 		return
@@ -138,8 +148,8 @@ func testHandleGET(w http.ResponseWriter, req *http.Request) {
 		w.Write([]byte(`{"error":"X-Signature header missing"}`))
 		return
 	}
-	_, err = base64.StdEncoding.DecodeString(sig)
-	if err != nil {
+	b, err = hex.DecodeString(sig)
+	if err != nil || len(b) != 64 {
 		w.WriteHeader(400)
 		w.Write([]byte(`{"error":"malformed signature"}`))
 		return

@@ -75,7 +75,18 @@ func requestToken(account, op string) ([]byte, error) {
 	)
 	req.Header.Add("Content-Type", "application/json")
 
-	return doHTTP(client, req)
+	rsp, err := doHTTP(client, req)
+	if err != nil {
+		return nil, err
+	}
+	var resJson struct {
+		Token string `json:"token"`
+	}
+	err = json.Unmarshal(rsp, &resJson)
+	if err != nil {
+		return nil, err
+	}
+	return []byte(resJson.Token), nil
 }
 
 func signToken(key keys.KeyEntry, token []byte) ([]byte, error) {

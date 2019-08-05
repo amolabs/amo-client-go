@@ -26,6 +26,11 @@ func init() {
 }
 
 func downloadFunc(cmd *cobra.Command, args []string) error {
+	asJson, err := cmd.Flags().GetBool("json")
+	if err != nil {
+		return err
+	}
+
 	doSave := false
 	filename, err := cmd.Flags().GetString("file")
 	if err != nil {
@@ -42,7 +47,11 @@ func downloadFunc(cmd *cobra.Command, args []string) error {
 
 	data, err := storage.Download(args[0], key)
 	if err != nil {
-		fmt.Println("Error downloading:", err)
+		if asJson {
+			fmt.Println(err)
+		} else {
+			fmt.Println("Error downloading:", err)
+		}
 		return nil
 	}
 

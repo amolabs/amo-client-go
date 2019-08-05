@@ -3,7 +3,6 @@ package storage
 import (
 	"bytes"
 	"crypto/sha256"
-	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"net/http"
@@ -21,7 +20,7 @@ type UploadBody struct {
 func doUpload(owner string, data, token, pubKey, sig []byte) (string, error) {
 	uploadBody := UploadBody{
 		Owner:    owner,
-		Metadata: []byte(`{"owner":"owner"}`),
+		Metadata: []byte(`{"owner":"` + owner + `"}`),
 		Data:     hex.EncodeToString(data),
 	}
 	reqJson, err := json.Marshal(uploadBody)
@@ -39,8 +38,8 @@ func doUpload(owner string, data, token, pubKey, sig []byte) (string, error) {
 		return "", err
 	}
 	req.Header.Add("X-Auth-Token", string(token))
-	req.Header.Add("X-Public-Key", base64.StdEncoding.EncodeToString(pubKey))
-	req.Header.Add("X-Signature", base64.StdEncoding.EncodeToString(sig))
+	req.Header.Add("X-Public-Key", hex.EncodeToString(pubKey))
+	req.Header.Add("X-Signature", hex.EncodeToString(sig))
 
 	ret, err := doHTTP(client, req)
 	return string(ret), err
