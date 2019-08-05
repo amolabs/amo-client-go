@@ -37,6 +37,7 @@ func doUpload(owner string, data, token, pubKey, sig []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("X-Auth-Token", string(token))
 	req.Header.Add("X-Public-Key", hex.EncodeToString(pubKey))
 	req.Header.Add("X-Signature", hex.EncodeToString(sig))
