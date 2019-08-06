@@ -19,3 +19,7 @@ tags
 
 # vendor
 /vendor
+
+# intermediate test files
+test_script/testfile
+downloaded

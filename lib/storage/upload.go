@@ -3,7 +3,6 @@ package storage
 import (
 	"bytes"
 	"crypto/sha256"
-	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"net/http"
@@ -18,15 +17,15 @@ type UploadBody struct {
 }
 
 // TODO: derive owner from pubKey
-func doUpload(owner string, data, token, pubKey, sig []byte) (string, error) {
+func doUpload(owner string, data, token, pubKey, sig []byte) ([]byte, error) {
 	uploadBody := UploadBody{
 		Owner:    owner,
-		Metadata: []byte(`{"owner":"owner"}`),
+		Metadata: []byte(`{"owner":"` + owner + `"}`),
 		Data:     hex.EncodeToString(data),
 	}
 	reqJson, err := json.Marshal(uploadBody)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	client := &http.Client{}
@@ -36,26 +35,27 @@ func doUpload(owner string, data, token, pubKey, sig []byte) (string, error) {
 		bytes.NewBuffer(reqJson),
 	)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
+	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("X-Auth-Token", string(token))
-	req.Header.Add("X-Public-Key", base64.StdEncoding.EncodeToString(pubKey))
-	req.Header.Add("X-Signature", base64.StdEncoding.EncodeToString(sig))
+	req.Header.Add("X-Public-Key", hex.EncodeToString(pubKey))
+	req.Header.Add("X-Signature", hex.EncodeToString(sig))
 
 	ret, err := doHTTP(client, req)
-	return string(ret), err
+	return ret, err
 }
 
-func Upload(data []byte, key keys.KeyEntry) (string, error) {
+func Upload(data []byte, key keys.KeyEntry) ([]byte, error) {
 	bytes := sha256.Sum256(data)
 	hash := hex.EncodeToString(bytes[:])
 	op, err := getOp("upload", hash)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	authToken, err := requestToken(key.Address, op)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	sig, err := signToken(key, authToken)
 

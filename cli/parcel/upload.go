@@ -2,6 +2,7 @@ package parcel
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -27,8 +28,14 @@ func init() {
 }
 
 func uploadFunc(cmd *cobra.Command, args []string) error {
-	var data []byte
 	var err error
+
+	asJson, err := cmd.Flags().GetBool("json")
+	if err != nil {
+		return err
+	}
+
+	var data []byte
 	if len(args) > 0 {
 		data, err = hex.DecodeString(args[0])
 		if err != nil {
@@ -53,12 +60,28 @@ func uploadFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	parcelID, err := storage.Upload(data, key)
+	res, err := storage.Upload(data, key)
 	if err != nil {
-		return err
+		if asJson {
+			fmt.Println(err)
+		} else {
+			fmt.Println("Error uploading:", err)
+		}
+		return nil
 	}
 
-	fmt.Println("New parcel ID:", parcelID)
+	if asJson {
+		fmt.Println(string(res))
+	} else {
+		var parcel struct {
+			id string `json:"id"`
+		}
+		err = json.Unmarshal([]byte(res), &parcel)
+		if err != nil {
+			return err
+		}
+		fmt.Println("New parcel ID:", parcel.id)
+	}
 
 	return nil
 }

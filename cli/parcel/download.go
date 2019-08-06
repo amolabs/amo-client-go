@@ -2,6 +2,7 @@ package parcel
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 
@@ -26,6 +27,11 @@ func init() {
 }
 
 func downloadFunc(cmd *cobra.Command, args []string) error {
+	asJson, err := cmd.Flags().GetBool("json")
+	if err != nil {
+		return err
+	}
+
 	doSave := false
 	filename, err := cmd.Flags().GetString("file")
 	if err != nil {
@@ -40,21 +46,61 @@ func downloadFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	data, err := storage.Download(args[0], key)
+	res, err := storage.Download(args[0], key)
 	if err != nil {
-		fmt.Println("Error downloading:", err)
+		if asJson {
+			fmt.Println(err)
+		} else {
+			fmt.Println("Error downloading:", err)
+		}
 		return nil
 	}
 
 	if doSave {
-		err = ioutil.WriteFile(filename, data, 0644)
+		var resJson struct {
+			Id       string          `json:"id"`
+			Owner    string          `json:"owner"`
+			Metadata json.RawMessage `json:"metadata"`
+			Data     string          `json:"data,omitempty"`
+			Filename string          `json:"filename,omitempty"`
+		}
+		err = json.Unmarshal(res, &resJson)
 		if err != nil {
 			return err
 		}
-		fmt.Println("Downloaded data has been saved to the file:", filename)
+		b, err := hex.DecodeString(resJson.Data)
+		if err != nil {
+			return err
+		}
+		err = ioutil.WriteFile(filename, b, 0644)
+		if err != nil {
+			return err
+		}
+		resJson.Data = ""
+		resJson.Filename = filename
+		if asJson {
+			b, err = json.Marshal(resJson)
+			fmt.Println(string(b))
+		} else {
+			// TODO: more verbose
+			fmt.Println("Downloaded data has been saved to the file:", filename)
+		}
 	} else {
-		displayData := hex.EncodeToString(data)
-		fmt.Println("Downloaded data as a hex-encoded string:", displayData)
+		if asJson {
+			fmt.Println(string(res))
+		} else {
+			var resJson struct {
+				id       string `json:"id"`
+				owner    string `json:"owner"`
+				metadata string `json:"metadata"`
+				data     string `json:"data"`
+			}
+			err = json.Unmarshal(res, &resJson)
+			if err != nil {
+				return err
+			}
+			fmt.Println("Downloaded data as a hex-encoded string:", resJson.data)
+		}
 	}
 
 	return nil
