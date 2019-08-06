@@ -4,7 +4,7 @@ AMOCLI=./amocli
 RPC="--rpc amo-tokyo2:26657"
 STO="--sto amo-sto:5000"
 OPT="$RPC $STO"
-SLEEP=0
+SLEEP=0.5
 testfile=test_script/testfile
 
 eval $(amocli key list | awk '{ if ($2 != "t0") printf "%s=%s\n",$2,$4 }')

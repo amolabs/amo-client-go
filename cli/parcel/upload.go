@@ -62,7 +62,12 @@ func uploadFunc(cmd *cobra.Command, args []string) error {
 
 	res, err := storage.Upload(data, key)
 	if err != nil {
-		return err
+		if asJson {
+			fmt.Println(err)
+		} else {
+			fmt.Println("Error uploading:", err)
+		}
+		return nil
 	}
 
 	if asJson {

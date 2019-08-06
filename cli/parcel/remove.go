@@ -1,7 +1,6 @@
 package parcel
 
 import (
-	"encoding/hex"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -24,14 +23,12 @@ func removeFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	data, err := storage.Remove(args[0], key)
+	_, err = storage.Remove(args[0], key)
 	if err != nil {
 		fmt.Println("Error removing:", err)
 		return nil
 	}
 
-	displayData := hex.EncodeToString(data)
-	fmt.Println("Removed data as a hex-encoded string:", displayData)
-
+	fmt.Println("Parcel removed:", args[0])
 	return nil
 }

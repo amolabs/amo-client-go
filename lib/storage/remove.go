@@ -10,7 +10,7 @@ import (
 func doRemove(id string, token, pubKey, sig []byte) ([]byte, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(
-		"GET",
+		"DELETE",
 		Endpoint+"/api/v1/parcels/"+id,
 		nil,
 	)

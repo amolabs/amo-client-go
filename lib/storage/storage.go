@@ -125,9 +125,9 @@ func doHTTP(client *http.Client, req *http.Request) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if rsp.StatusCode != 200 && rsp.StatusCode != 201 {
+	if rsp.StatusCode < 200 || rsp.StatusCode > 299 {
 		return nil, fmt.Errorf(
-			"HTTP status code %d, res body: %s",
+			`{"status":%d,"res_body":%s}`,
 			rsp.StatusCode,
 			body,
 		)
