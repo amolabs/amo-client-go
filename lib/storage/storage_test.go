@@ -68,7 +68,7 @@ func testHandleAuth(w http.ResponseWriter, req *http.Request) {
 	w.Write(rsp)
 }
 
-func testHandlePOST(w http.ResponseWriter, req *http.Request) {
+func testHandleUpload(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		w.WriteHeader(405)
 		w.Write([]byte(`{"error":"Expected POST method"}`))
@@ -94,13 +94,17 @@ func testHandlePOST(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	w.Write([]byte(testId))
+	stoRes := struct {
+		Id string `json:"id"`
+	}{testId}
+	res, _ := json.Marshal(stoRes)
+	w.Write(res)
 }
 
-func testHandleGET(w http.ResponseWriter, req *http.Request) {
-	if req.Method != "GET" {
+func testHandleParcel(w http.ResponseWriter, req *http.Request) {
+	if req.Method != "GET" && req.Method != "DELETE" {
 		w.WriteHeader(405)
-		w.Write([]byte(`{"error":"Expected GET method"}`))
+		w.Write([]byte(`{"error":"Expected GET or DELETE method"}`))
 		return
 	}
 	u, err := url.ParseRequestURI(req.RequestURI)
@@ -124,38 +128,41 @@ func testHandleGET(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// download with auth
-	authToken := req.Header.Get("X-Auth-Token")
-	pubKey := req.Header.Get("X-Public-Key")
-	sig := req.Header.Get("X-Signature")
-	if authToken != testToken {
-		w.WriteHeader(401)
-		w.Write([]byte(`{"error":"X-Auth-Token header missing"}`))
-		return
-	}
-	if len(pubKey) == 0 {
-		w.WriteHeader(401)
-		w.Write([]byte(`{"error":"X-Public-Key header missing"}`))
-		return
-	}
-	b, err := hex.DecodeString(pubKey)
-	if err != nil || len(b) != 65 {
-		w.WriteHeader(400)
-		w.Write([]byte(`{"error":"malformed pubKey"}`))
-		return
-	}
-	if len(sig) == 0 {
-		w.WriteHeader(401)
-		w.Write([]byte(`{"error":"X-Signature header missing"}`))
-		return
-	}
-	b, err = hex.DecodeString(sig)
-	if err != nil || len(b) != 64 {
-		w.WriteHeader(400)
-		w.Write([]byte(`{"error":"malformed signature"}`))
-		return
-	}
+	if req.Method == "GET" {
+		authToken := req.Header.Get("X-Auth-Token")
+		pubKey := req.Header.Get("X-Public-Key")
+		sig := req.Header.Get("X-Signature")
+		if authToken != testToken {
+			w.WriteHeader(401)
+			w.Write([]byte(`{"error":"X-Auth-Token header missing"}`))
+			return
+		}
+		if len(pubKey) == 0 {
+			w.WriteHeader(401)
+			w.Write([]byte(`{"error":"X-Public-Key header missing"}`))
+			return
+		}
+		b, err := hex.DecodeString(pubKey)
+		if err != nil || len(b) != 65 {
+			w.WriteHeader(400)
+			w.Write([]byte(`{"error":"malformed pubKey"}`))
+			return
+		}
+		if len(sig) == 0 {
+			w.WriteHeader(401)
+			w.Write([]byte(`{"error":"X-Signature header missing"}`))
+			return
+		}
+		b, err = hex.DecodeString(sig)
+		if err != nil || len(b) != 64 {
+			w.WriteHeader(400)
+			w.Write([]byte(`{"error":"malformed signature"}`))
+			return
+		}
 
-	w.Write([]byte(testBody))
+		w.Write([]byte(testBody))
+	} else if req.Method == "DELETE" {
+	}
 }
 
 func setUp() {
@@ -167,12 +174,12 @@ func setUp() {
 	// serve parcel upload
 	http.HandleFunc(
 		"/api/v1/parcels",
-		testHandlePOST,
+		testHandleUpload,
 	)
 	// serve test parcel data
 	http.HandleFunc(
 		"/api/v1/parcels/",
-		testHandleGET,
+		testHandleParcel,
 	)
 	go http.ListenAndServe("localhost:12345", nil)
 	Endpoint = "http://localhost:12345"
@@ -244,11 +251,17 @@ func TestAll(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, sig)
 
-	id, err := doUpload(key.Address, nil, authToken, key.PubKey, sig)
+	resJson, err := doUpload(key.Address, nil, authToken, key.PubKey, sig)
 	assert.NoError(t, err)
 	if err != nil {
 		fmt.Println(err)
 	}
+	var res struct {
+		Id string `json:"id"`
+	}
+	err = json.Unmarshal(resJson, &res)
+	assert.NoError(t, err)
+	id := res.Id
 	assert.Equal(t, testId, id)
 
 	// inspect
@@ -276,11 +289,11 @@ func TestAll(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, sig)
 
-	data, err = doRemove("2f2f", authToken, key.PubKey, sig)
+	rsp, err := doRemove("2f2f", authToken, key.PubKey, sig)
 	assert.NoError(t, err)
 	if err != nil {
 		fmt.Println(err)
 	}
-	assert.Equal(t, testBody, string(data))
+	assert.Empty(t, rsp)
 
 }
