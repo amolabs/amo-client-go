@@ -1,7 +1,7 @@
 package parcel
 
 import (
-	"encoding/hex"
+	"encoding/json"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -17,14 +17,33 @@ var InspectCmd = &cobra.Command{
 }
 
 func inspectFunc(cmd *cobra.Command, args []string) error {
-	data, err := storage.Inspect(args[0])
+	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
-		fmt.Println("Error inspecting:", err)
+		return err
+	}
+
+	resJson, err := storage.Inspect(args[0])
+	if err != nil {
+		if asJson {
+			fmt.Println(err)
+		} else {
+			fmt.Println("Error inspecting:", err)
+		}
 		return nil
 	}
 
-	displayData := hex.EncodeToString(data)
-	fmt.Println("Inspected data as a hex-encoded string:", displayData)
+	if asJson {
+		fmt.Println(string(resJson))
+	} else {
+		var res struct {
+			Metadata json.RawMessage `json:"metadata"`
+		}
+		err = json.Unmarshal(resJson, &res)
+		if err != nil {
+			return err
+		}
+		fmt.Println("Metadata:", string(res.Metadata))
+	}
 
 	return nil
 }
