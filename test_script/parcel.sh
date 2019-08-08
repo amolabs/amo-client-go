@@ -34,7 +34,7 @@ base64 -b64 /dev/urandom | head -10 > $testfile
 echo "u2 try downloading non-existent parcel p1 (ERROR)"
 out=$($AMOCLI $OPT --json --user u2 parcel download 1f1f1f1f --file downloaded)
 s=$(echo $out | python -c "import sys, json; print json.load(sys.stdin)['status']")
-if [ "$s" != "403" ]; then fail "$out"; fi
+if [ "$s" != "404" ]; then fail "$out"; fi
 sleep $SLEEP
 
 echo "purse transfer 1 AMO to u2"
