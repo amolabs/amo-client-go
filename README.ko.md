@@ -3,10 +3,13 @@ Golang을 위한 AMO 클라이언트의 참조 구현. This document is availabl
 [English](README.md) also.
 
 ## Introduction
-AMO 클라이언트란 [AMO client RPC specification](../rpc.md)과 [AMO storage
-specification](../storage.md)를 준수하기만 하면 어떤 소프트웨어 프로그램, 혹은
-하드웨어 장치일 수 있다. AMO Labs에서는 참조 구현으로서 CLI 프로그램을 제공하며
-(https://github.com/amolabs/amo-client-go) 일상적인 작업에 사용할 수 있다.
+AMO 클라이언트란 [AMO client RPC
+specification](https://github.com/amolabs/docs/blob/master/rpc.md)과 [AMO
+storage
+specification](https://github.com/amolabs/docs/blob/master/storage.md)를
+준수하기만 하면 어떤 소프트웨어 프로그램, 혹은 하드웨어 장치일 수 있다. AMO
+Labs에서는 참조 구현으로서 CLI 프로그램을 제공하며 일상적인 작업에 사용할 수
+있다.
 
 ## AMO client 설치
 ### 컴파일된 바이너리 설치

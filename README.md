@@ -4,10 +4,10 @@ in [Korean](README.ko.md) also.
 
 ## Introduction
 An AMO client is any software or hardware application conforming to [AMO client
-RPC specification](https://github.com/amolabs/docs/rpc.md) and [AMO storage
-specification](https://github.com/amolabs/docs/storage.md). AMO Labs provides a
-CLI software program as a reference implementation, but it can be usable for
-day-to-day workflow.
+RPC specification](https://github.com/amolabs/docs/blob/master/rpc.md) and [AMO
+storage specification](https://github.com/amolabs/docs/blob/master/storage.md).
+AMO Labs provides a CLI software program as a reference implementation, but it
+can be usable for day-to-day workflow.
 
 The purposes of this software are:
 * To demonstrate how to interact with the AMO blockchain nodes and AMO storage
