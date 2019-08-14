@@ -24,8 +24,8 @@ func init() {
 	RootCmd.AddCommand(
 		versionCmd,
 		key.Cmd,
-		statusCmd,
 		util.LineBreak,
+		statusCmd,
 		query.Cmd,
 		tx.Cmd,
 		parcel.Cmd,
