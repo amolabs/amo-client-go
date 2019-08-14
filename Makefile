@@ -6,7 +6,7 @@ GO := $(shell command -v go 2> /dev/null)
 FS := /
 # go source code files including files from vendor directory
 GOSRCS=$(shell find . -name \*.go)
-#BUILDENV=CGO_ENABLED=0
+BUILDENV=CGO_ENABLED=0
 
 ifeq ($(GO),)
   $(error could not find go. Is it in PATH? $(GO))
