@@ -54,8 +54,8 @@ type Stake struct {
 
 type Delegate struct {
 	Holder    Address
+	Delegatee Address  `json:"delegatee"`
 	Amount    Currency `json:"amount"`
-	Delegator Address  `json:"delegator"`
 }
 
 type Parcel struct {
