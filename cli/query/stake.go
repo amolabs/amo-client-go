@@ -44,6 +44,10 @@ func stakeFunc(cmd *cobra.Command, args []string) error {
 		}
 		fmt.Printf("amount: %s\nvalidator pubkey: %s\n",
 			stake.Amount.String(), hex.EncodeToString(stake.Validator))
+		for i, d := range stake.Delegates {
+			fmt.Printf("  delegate %2d: %s from %s\n",
+				i+1, d.Amount.String(), d.Delegator)
+		}
 	}
 
 	return nil

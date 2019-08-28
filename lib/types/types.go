@@ -48,12 +48,13 @@ type PubKeyEd25519 []byte
 type Address string
 
 type Stake struct {
-	Amount    Currency      `json:"amount"`
 	Validator PubKeyEd25519 `json:"validator"`
+	Amount    Currency      `json:"amount"`
+	Delegates []Delegate    `json:"delegates"`
 }
 
 type Delegate struct {
-	Holder    Address
+	Delegator Address  `json:"delegator"`
 	Delegatee Address  `json:"delegatee"`
 	Amount    Currency `json:"amount"`
 }
