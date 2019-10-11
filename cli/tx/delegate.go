@@ -29,7 +29,7 @@ func delegateFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Delegate(args[0], args[1], key)
+	result, err := rpc.Delegate(args[0], args[1], key, Fee)
 	if err != nil {
 		return err
 	}

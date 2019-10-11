@@ -48,6 +48,10 @@ func readGlobalFlags(cmd *cobra.Command, args []string) {
 	if err == nil {
 		storage.Endpoint = "http://" + stoArg
 	}
+	feeArg, err := cmd.Flags().GetString("fee")
+	if err == nil {
+		tx.Fee = feeArg
+	}
 	username, err := cmd.Flags().GetString("user")
 	if err == nil {
 		key.Username = username

@@ -6,17 +6,14 @@ import (
 	"github.com/amolabs/amo-client-go/cli/util"
 )
 
+var (
+	Fee string
+)
+
 var Cmd = &cobra.Command{
 	Use:     "tx",
 	Aliases: []string{"t"},
 	Short:   "Send signed transactions",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		if err := cmd.Help(); err != nil {
-			return err
-		}
-
-		return nil
-	},
 }
 
 func init() {
@@ -36,4 +33,5 @@ func init() {
 		CancelCmd,
 		RevokeCmd,
 	)
+	Cmd.PersistentFlags().StringP("fee", "f", "0", "fee for tx")
 }

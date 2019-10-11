@@ -42,7 +42,7 @@ func stakeFunc(cmd *cobra.Command, args []string) error {
 		val = args[0]
 	}
 
-	result, err := rpc.Stake(val, args[1], key)
+	result, err := rpc.Stake(val, args[1], key, Fee)
 	if err != nil {
 		return err
 	}

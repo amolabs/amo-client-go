@@ -29,7 +29,7 @@ func grantFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Grant(args[0], args[1], args[2], key)
+	result, err := rpc.Grant(args[0], args[1], args[2], key, Fee)
 	if err != nil {
 		return err
 	}

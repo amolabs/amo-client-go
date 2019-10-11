@@ -6,87 +6,87 @@ import (
 
 // Tx broadcast in AMO context
 
-func Transfer(to string, amount string, key keys.KeyEntry) (TmTxResult, error) {
+func Transfer(to string, amount string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("transfer", struct {
 		To     string `json:"to"`
 		Amount string `json:"amount"`
-	}{to, amount}, key)
+	}{to, amount}, key, fee)
 	return ret, err
 }
 
-func Stake(validator string, amount string, key keys.KeyEntry) (TmTxResult, error) {
+func Stake(validator string, amount string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("stake", struct {
 		Validator string `json:"validator"`
 		Amount    string `json:"amount"`
-	}{validator, amount}, key)
+	}{validator, amount}, key, fee)
 	return ret, err
 }
 
-func Withdraw(amount string, key keys.KeyEntry) (TmTxResult, error) {
+func Withdraw(amount string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("withdraw", struct {
 		Amount string `json:"amount"`
-	}{amount}, key)
+	}{amount}, key, fee)
 	return ret, err
 }
 
-func Delegate(to string, amount string, key keys.KeyEntry) (TmTxResult, error) {
+func Delegate(to string, amount string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("delegate", struct {
 		To     string `json:"to"`
 		Amount string `json:"amount"`
-	}{to, amount}, key)
+	}{to, amount}, key, fee)
 	return ret, err
 }
 
-func Retract(amount string, key keys.KeyEntry) (TmTxResult, error) {
+func Retract(amount string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("retract", struct {
 		Amount string `json:"amount"`
-	}{amount}, key)
+	}{amount}, key, fee)
 	return ret, err
 }
 
-func Register(target string, custody string, key keys.KeyEntry) (TmTxResult, error) {
+func Register(target string, custody string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("register", struct {
 		Target  string `json:"target"`
 		Custody string `json:"custody"`
-	}{target, custody}, key)
+	}{target, custody}, key, fee)
 	return ret, err
 }
 
-func Discard(target string, key keys.KeyEntry) (TmTxResult, error) {
+func Discard(target string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("discard", struct {
 		Target string `json:"target"`
-	}{target}, key)
+	}{target}, key, fee)
 	return ret, err
 }
 
-func Request(target string, payment string, key keys.KeyEntry) (TmTxResult, error) {
+func Request(target string, payment string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("request", struct {
 		Target  string `json:"target"`
 		Payment string `json:"payment"`
-	}{target, payment}, key)
+	}{target, payment}, key, fee)
 	return ret, err
 }
 
-func Cancel(target string, key keys.KeyEntry) (TmTxResult, error) {
+func Cancel(target string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("cancel", struct {
 		Target string `json:"target"`
-	}{target}, key)
+	}{target}, key, fee)
 	return ret, err
 }
 
-func Grant(target string, grantee string, custody string, key keys.KeyEntry) (TmTxResult, error) {
+func Grant(target string, grantee string, custody string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("grant", struct {
 		Target  string `json:"target"`
 		Grantee string `json:"grantee"`
 		Custody string `json:"custody"`
-	}{target, grantee, custody}, key)
+	}{target, grantee, custody}, key, fee)
 	return ret, err
 }
 
-func Revoke(target string, grantee string, key keys.KeyEntry) (TmTxResult, error) {
+func Revoke(target string, grantee string, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	ret, err := SignSendTx("revoke", struct {
 		Target  string `json:"target"`
 		Grantee string `json:"grantee"`
-	}{target, grantee}, key)
+	}{target, grantee}, key, fee)
 	return ret, err
 }
