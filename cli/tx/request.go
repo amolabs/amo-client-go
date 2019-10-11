@@ -29,7 +29,7 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Request(args[0], args[1], key)
+	result, err := rpc.Request(args[0], args[1], key, Fee)
 	if err != nil {
 		return err
 	}

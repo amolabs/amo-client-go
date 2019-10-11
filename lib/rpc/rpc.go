@@ -84,6 +84,7 @@ type TxToSign struct {
 	Sender  string          `json:"sender"`
 	Nonce   string          `json:"nonce"`
 	Payload json.RawMessage `json:"payload"`
+	Fee     string          `json:"fee"`
 }
 
 type TxSig struct {
@@ -96,6 +97,7 @@ type TxToSend struct {
 	Sender    string          `json:"sender"`
 	Nonce     string          `json:"nonce"`
 	Payload   json.RawMessage `json:"payload"`
+	Fee       string          `json:"fee"`
 	Signature TxSig           `json:"signature"`
 }
 
@@ -121,7 +123,7 @@ func getAddressBytes(pubkey []byte) []byte {
 	return hash[:AddressByteSize]
 }
 
-func SignSendTx(txType string, payload interface{}, key keys.KeyEntry) (TmTxResult, error) {
+func SignSendTx(txType string, payload interface{}, key keys.KeyEntry, fee string) (TmTxResult, error) {
 	payloadJson, err := json.Marshal(payload)
 	if err != nil {
 		return TmTxResult{}, err
@@ -136,6 +138,7 @@ func SignSendTx(txType string, payload interface{}, key keys.KeyEntry) (TmTxResu
 		Sender:  sender,
 		Nonce:   nonce,
 		Payload: payloadJson,
+		Fee:     fee,
 	}
 	msg, err := json.Marshal(txToSign)
 	if err != nil {
@@ -171,6 +174,7 @@ func SignSendTx(txType string, payload interface{}, key keys.KeyEntry) (TmTxResu
 		Sender:    txToSign.Sender,  // forward
 		Nonce:     txToSign.Nonce,   // forward
 		Payload:   txToSign.Payload, // forward
+		Fee:       txToSign.Fee,     // forward
 		Signature: txSig,            // signature appendix
 	}
 	b, err := json.Marshal(tx)

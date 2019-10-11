@@ -29,7 +29,7 @@ func withdrawFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Withdraw(args[0], key)
+	result, err := rpc.Withdraw(args[0], key, Fee)
 	if err != nil {
 		return err
 	}

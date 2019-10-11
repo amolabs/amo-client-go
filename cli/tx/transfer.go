@@ -15,7 +15,8 @@ var TransferCmd = &cobra.Command{
 	Use:   "transfer <address> <amount>",
 	Short: "Transfer the specified amount of money to <address>",
 	Args:  cobra.MinimumNArgs(2),
-	RunE:  transferFunc,
+	//	PersistentPreRun: readGlobalFlags,
+	RunE: transferFunc,
 }
 
 func transferFunc(cmd *cobra.Command, args []string) error {
@@ -29,7 +30,7 @@ func transferFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Transfer(args[0], args[1], key)
+	result, err := rpc.Transfer(args[0], args[1], key, Fee)
 	if err != nil {
 		return err
 	}
