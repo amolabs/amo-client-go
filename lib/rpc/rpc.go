@@ -83,8 +83,8 @@ type TxToSign struct {
 	Type    string          `json:"type"`
 	Sender  string          `json:"sender"`
 	Nonce   string          `json:"nonce"`
-	Payload json.RawMessage `json:"payload"`
 	Fee     string          `json:"fee"`
+	Payload json.RawMessage `json:"payload"`
 }
 
 type TxSig struct {
@@ -96,8 +96,8 @@ type TxToSend struct {
 	Type      string          `json:"type"`
 	Sender    string          `json:"sender"`
 	Nonce     string          `json:"nonce"`
-	Payload   json.RawMessage `json:"payload"`
 	Fee       string          `json:"fee"`
+	Payload   json.RawMessage `json:"payload"`
 	Signature TxSig           `json:"signature"`
 }
 
