@@ -3,6 +3,7 @@ package query
 import (
 	"encoding/json"
 	"fmt"
+	"sort"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -70,6 +71,10 @@ func incentiveFunc(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+
+	sort.Slice(incentives, func(i, j int) bool {
+		return incentives[i].BlockHeight < incentives[j].BlockHeight
+	})
 
 	for _, incentive := range incentives {
 		fmt.Printf("block height: %d, address: %s, amount: %s\n",
