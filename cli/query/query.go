@@ -24,6 +24,7 @@ func init() {
 		BalanceCmd,
 		StakeCmd,
 		DelegateCmd,
+		IncentiveCmd,
 		util.LineBreak,
 		ParcelCmd,
 		RequestCmd,

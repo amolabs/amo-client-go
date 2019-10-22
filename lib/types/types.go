@@ -74,3 +74,9 @@ type Usage struct {
 	Custody string    `json:"custody"`
 	Exp     time.Time `json:"exp"`
 }
+
+type IncentiveInfo struct {
+	BlockHeight int64    `json:"block_height"`
+	Address     Address  `json:"address"`
+	Amount      Currency `json:"amount"`
+}

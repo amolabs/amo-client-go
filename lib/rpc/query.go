@@ -40,3 +40,21 @@ func QueryUsage(buyer string, target string) ([]byte, error) {
 	}{buyer, target})
 	return ret, err
 }
+
+func QueryBlockIncentive(height string) ([]byte, error) {
+	ret, err := ABCIQuery("/inc_block", height)
+	return ret, err
+}
+
+func QueryAddressIncentive(address string) ([]byte, error) {
+	ret, err := ABCIQuery("/inc_address", address)
+	return ret, err
+}
+
+func QueryIncentive(height string, address string) ([]byte, error) {
+	ret, err := ABCIQuery("/inc", struct {
+		Height  string `json:"height"`
+		Address string `json:"address"`
+	}{height, address})
+	return ret, err
+}
