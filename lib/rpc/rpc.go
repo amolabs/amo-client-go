@@ -8,7 +8,11 @@ import (
 	"encoding/base64" // when decoding rpc response
 	"encoding/hex"    // when encoding rpc request
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"math/big"
+	"net/http"
+	"net/http/httptest"
 	"strings"
 
 	"github.com/amolabs/amo-client-go/lib/keys"
@@ -18,6 +22,7 @@ import (
 var (
 	RpcRemote       = "http://0.0.0.0:26657"
 	rpcWsEndpoint   = "/websocket"
+	DryRun          = false
 	AddressByteSize = 20
 	NonceByteSize   = 4
 	curve           = elliptic.P256() // move to crypto sub-package
@@ -53,6 +58,30 @@ func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
 		Data:   hex.EncodeToString([]byte(queryJson)),
 		Height: "0",
 		Prove:  false,
+	}
+
+	if DryRun {
+		// Setup dummy HTTP server which just prints rpc message body to
+		// stdout.
+		handler := func(w http.ResponseWriter, r *http.Request) {
+			body, err := ioutil.ReadAll(r.Body)
+			if err == nil {
+				fmt.Println(string(body))
+			}
+			w.WriteHeader(200)
+			return
+		}
+		server := httptest.NewServer(http.HandlerFunc(handler))
+		defer server.Close()
+		// Setup dummy HTTP transport for rpcClient
+		rpcClient := jsonrpc.NewClientWithOpts(
+			server.URL,
+			&jsonrpc.RPCClientOpts{
+				HTTPClient: server.Client(),
+			})
+		// Make dummy HTTP call
+		_, _ = rpcClient.Call("abci_query", params)
+		return nil, nil
 	}
 
 	rpcClient := jsonrpc.NewClient(RpcRemote)
@@ -189,6 +218,31 @@ func BroadcastTx(tx []byte) (TmTxResult, error) {
 	params := BroadcastParams{
 		Tx: tx,
 	}
+
+	if DryRun {
+		// Setup dummy HTTP server which just prints rpc message body to
+		// stdout.
+		handler := func(w http.ResponseWriter, r *http.Request) {
+			body, err := ioutil.ReadAll(r.Body)
+			if err == nil {
+				fmt.Println(string(body))
+			}
+			w.WriteHeader(200)
+			return
+		}
+		server := httptest.NewServer(http.HandlerFunc(handler))
+		defer server.Close()
+		// Setup dummy HTTP transport for rpcClient
+		rpcClient := jsonrpc.NewClientWithOpts(
+			server.URL,
+			&jsonrpc.RPCClientOpts{
+				HTTPClient: server.Client(),
+			})
+		// Make dummy HTTP call
+		_, _ = rpcClient.Call("broadcast_tx_sync", params)
+		return TmTxResult{}, nil
+	}
+
 	rpcClient := jsonrpc.NewClient(RpcRemote)
 	rsp, err := rpcClient.Call("broadcast_tx_commit", params)
 	if err != nil { // call error

@@ -35,6 +35,10 @@ func transferFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	if rpc.DryRun {
+		return nil
+	}
+
 	if asJson {
 		resultJSON, err := json.Marshal(result)
 		if err != nil {

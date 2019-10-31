@@ -35,6 +35,7 @@ func init() {
 	// TODO: change shorcut or reorganize global flags
 	RootCmd.PersistentFlags().String("sto", "0.0.0.0:80", "ip:port")
 	RootCmd.PersistentFlags().BoolP("json", "j", false, "output as json")
+	RootCmd.PersistentFlags().BoolP("dry", "d", false, "dry run")
 	RootCmd.PersistentFlags().StringP("user", "u", "", "username")
 	RootCmd.PersistentFlags().StringP("pass", "p", "", "passphrase")
 }
@@ -47,6 +48,10 @@ func readGlobalFlags(cmd *cobra.Command, args []string) {
 	stoArg, err := cmd.Flags().GetString("sto")
 	if err == nil {
 		storage.Endpoint = "http://" + stoArg
+	}
+	dryRun, err := cmd.Flags().GetBool("dry")
+	if err == nil {
+		rpc.DryRun = dryRun
 	}
 	feeArg, err := cmd.Flags().GetString("fee")
 	if err == nil {
