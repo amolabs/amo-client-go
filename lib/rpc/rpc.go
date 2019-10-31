@@ -20,7 +20,7 @@ var (
 	rpcWsEndpoint   = "/websocket"
 	AddressByteSize = 20
 	NonceByteSize   = 4
-	c               = elliptic.P256() // move to crypto sub-package
+	curve           = elliptic.P256() // move to crypto sub-package
 )
 
 // generic ABCI query in Tendermint context
@@ -55,8 +55,8 @@ func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
 		Prove:  false,
 	}
 
-	c := jsonrpc.NewClient(RpcRemote)
-	rsp, err := c.Call("abci_query", params)
+	rpcClient := jsonrpc.NewClient(RpcRemote)
+	rsp, err := rpcClient.Call("abci_query", params)
 	if err != nil { // call error
 		return nil, err
 	}
@@ -146,11 +146,11 @@ func SignSendTx(txType string, payload interface{}, key keys.KeyEntry, fee strin
 	}
 	// do sign
 	h := sha256.Sum256(msg)
-	X, Y := c.ScalarBaseMult(key.PrivKey[:])
+	X, Y := curve.ScalarBaseMult(key.PrivKey[:])
 	ecdsaPrivKey := ecdsa.PrivateKey{
 		D: new(big.Int).SetBytes(key.PrivKey[:]),
 		PublicKey: ecdsa.PublicKey{
-			Curve: c,
+			Curve: curve,
 			X:     X,
 			Y:     Y,
 		},
@@ -189,8 +189,8 @@ func BroadcastTx(tx []byte) (TmTxResult, error) {
 	params := BroadcastParams{
 		Tx: tx,
 	}
-	c := jsonrpc.NewClient(RpcRemote)
-	rsp, err := c.Call("broadcast_tx_commit", params)
+	rpcClient := jsonrpc.NewClient(RpcRemote)
+	rsp, err := rpcClient.Call("broadcast_tx_commit", params)
 	if err != nil { // call error
 		return TmTxResult{}, err
 	}
@@ -214,8 +214,8 @@ type TmStatusResult struct {
 }
 
 func NodeStatus() (TmStatusResult, error) {
-	c := jsonrpc.NewClient(RpcRemote)
-	rsp, err := c.Call("status")
+	rpcClient := jsonrpc.NewClient(RpcRemote)
+	rsp, err := rpcClient.Call("status")
 	if err != nil { // call error
 		return TmStatusResult{}, err
 	}
