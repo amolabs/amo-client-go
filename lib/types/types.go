@@ -80,3 +80,20 @@ type IncentiveInfo struct {
 	Address     Address  `json:"address"`
 	Amount      Currency `json:"amount"`
 }
+
+type AMOAppConfig struct {
+	MaxValidators   uint64 `json:"max_validators"`
+	WeightValidator int64  `json:"weight_validator"`
+	WeightDelegator int64  `json:"weight_delegator"`
+
+	BlkReward uint64 `json:"blk_reward"`
+	TxReward  uint64 `json:"tx_reward"`
+
+	PenaltyRatioM float64 `json:"penalty_ratio_m"` // malicious validator
+	PenaltyRatioL float64 `json:"penalty_ratio_l"` // lazy validators
+
+	LazinessCounterSize  int64   `json:"laziness_counter_size"`
+	LazinessCounterRatio float64 `json:"laziness_counter_ratio"`
+
+	LockupPeriod uint64 `json:"lockup_period"`
+}

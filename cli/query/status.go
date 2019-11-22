@@ -1,4 +1,4 @@
-package cli
+package query
 
 import (
 	"encoding/json"
@@ -9,8 +9,8 @@ import (
 	"github.com/amolabs/amo-client-go/lib/rpc"
 )
 
-var statusCmd = &cobra.Command{
-	Use:   "status",
+var StatusCmd = &cobra.Command{
+	Use:   "node",
 	Short: "Show status of AMO node",
 	Long:  "Show status of AMO node including node info, pubkey, latest block hash, app hash, block height and time",
 	RunE: func(cmd *cobra.Command, args []string) error {

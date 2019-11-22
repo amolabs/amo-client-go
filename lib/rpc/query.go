@@ -2,6 +2,11 @@ package rpc
 
 // ABCI queries in AMO context
 
+func QueryAppConfig() ([]byte, error) {
+	ret, err := ABCIQuery("/app_config", nil)
+	return ret, err
+}
+
 func QueryBalance(address string) ([]byte, error) {
 	ret, err := ABCIQuery("/balance", address)
 	if ret == nil {

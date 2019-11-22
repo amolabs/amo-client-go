@@ -25,7 +25,6 @@ func init() {
 		versionCmd,
 		key.Cmd,
 		util.LineBreak,
-		statusCmd,
 		query.Cmd,
 		tx.Cmd,
 		parcel.Cmd,

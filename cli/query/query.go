@@ -21,6 +21,9 @@ var Cmd = &cobra.Command{
 
 func init() {
 	Cmd.AddCommand(
+		StatusCmd,
+		AppConfigCmd,
+		util.LineBreak,
 		BalanceCmd,
 		StakeCmd,
 		DelegateCmd,
