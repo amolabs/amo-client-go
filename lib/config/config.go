@@ -29,13 +29,6 @@ func GetConfig(path string) (*Config, error) {
 		return nil, err
 	}
 
-	if cfg.configSet.LastHeight == "" || cfg.configSet.LastHeight == "0" {
-		err = cfg.updateLastHeight()
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return cfg, err
 }
 func (cfg *Config) Load() error {
@@ -97,7 +90,7 @@ func (cfg *Config) SetABCIConfig(abciConfig types.AMOAppConfig) {
 	cfg.configSet.ABCIConfig = abciConfig
 }
 
-func (cfg *Config) updateLastHeight() error {
+func (cfg *Config) UpdateLastHeight() error {
 	rawMsg, err := rpc.NodeStatus()
 	if err != nil {
 		return err

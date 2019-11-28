@@ -1,10 +1,7 @@
 package tx
 
 import (
-	"encoding/json"
-
 	"github.com/amolabs/amo-client-go/lib/config"
-	"github.com/amolabs/amo-client-go/lib/rpc"
 )
 
 func GetLastHeight(path string) (string, error) {
@@ -14,31 +11,12 @@ func GetLastHeight(path string) (string, error) {
 		return lastHeight, err
 	}
 
-	lastHeight = cfg.GetLastHeight()
-	if lastHeight == "" {
-		// get lastheight from outside
-		rawMsg, err := rpc.NodeStatus()
-		if err != nil {
-			return lastHeight, err
-		}
-
-		jsonMsg, err := json.Marshal(rawMsg.SyncInfo)
-		if err != nil {
-			return lastHeight, err
-		}
-
-		data := make(map[string]interface{})
-		err = json.Unmarshal(jsonMsg, &data)
-		if err != nil {
-			return lastHeight, err
-		}
-
-		lastHeight = data["latest_block_height"].(string)
-		cfg.SetLastHeight(lastHeight)
-		cfg.Save()
+	err = cfg.UpdateLastHeight()
+	if err != nil {
+		return lastHeight, err
 	}
 
-	return lastHeight, nil
+	return cfg.GetLastHeight(), nil
 }
 
 func SetLastHeight(path, lastHeight string) error {
