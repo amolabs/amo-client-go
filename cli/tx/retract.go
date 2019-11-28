@@ -29,9 +29,18 @@ func retractFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Retract(args[0], key, Fee)
+	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
 	if err != nil {
 		return err
+	}
+
+	result, err := rpc.Retract(args[0], key, Fee, lastHeight)
+	if err != nil {
+		return err
+	}
+
+	if result.Height != "0" {
+		SetLastHeight(util.DefaultConfigFilePath(), result.Height)
 	}
 
 	if asJson {

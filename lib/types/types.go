@@ -95,5 +95,6 @@ type AMOAppConfig struct {
 	LazinessCounterSize  int64   `json:"laziness_counter_size"`
 	LazinessCounterRatio float64 `json:"laziness_counter_ratio"`
 
-	LockupPeriod uint64 `json:"lockup_period"`
+	BlockBoundTxGracePeriod uint64 `json:"block_bound_tx_grace_period"`
+	LockupPeriod            uint64 `json:"lockup_period"`
 }

@@ -14,12 +14,17 @@ import (
 
 var (
 	defaultCLIDir      = ".amocli"
+	defaultConfigFile  = "config.json"
 	defaultKeyDir      = "keys"
 	defaultKeyListFile = "keys.json"
 )
 
 func defaultCLIPath() string {
 	return filepath.Join(os.ExpandEnv("$HOME"), defaultCLIDir)
+}
+
+func DefaultConfigFilePath() string {
+	return filepath.Join(defaultCLIPath(), defaultConfigFile)
 }
 
 func DefaultKeyPath() string {
@@ -52,3 +57,31 @@ func PromptPassphrase() (string, error) {
 }
 
 var LineBreak = &cobra.Command{Run: func(*cobra.Command, []string) {}}
+
+func EnsureDir(dir string, mode os.FileMode) error {
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		err := os.MkdirAll(dir, mode)
+		if err != nil {
+			return fmt.Errorf("Could not create directory %v. %v", dir, err)
+		}
+	}
+	return nil
+}
+
+func EnsureFile(path string) error {
+	dirPath, _ := filepath.Split(path)
+
+	if len(dirPath) > 0 {
+		err := EnsureDir(dirPath, 0775)
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, 0600)
+	if err != nil {
+		return err
+	}
+
+	return err
+}

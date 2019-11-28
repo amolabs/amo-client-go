@@ -109,11 +109,12 @@ func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
 // generic Tx broadcast in Tendermint context
 
 type TxToSign struct {
-	Type    string          `json:"type"`
-	Sender  string          `json:"sender"`
-	Nonce   string          `json:"nonce"`
-	Fee     string          `json:"fee"`
-	Payload json.RawMessage `json:"payload"`
+	Type       string          `json:"type"`
+	Sender     string          `json:"sender"`
+	Nonce      string          `json:"nonce"`
+	Fee        string          `json:"fee"`
+	LastHeight string          `json:"last_height"`
+	Payload    json.RawMessage `json:"payload"`
 }
 
 type TxSig struct {
@@ -122,12 +123,13 @@ type TxSig struct {
 }
 
 type TxToSend struct {
-	Type      string          `json:"type"`
-	Sender    string          `json:"sender"`
-	Nonce     string          `json:"nonce"`
-	Fee       string          `json:"fee"`
-	Payload   json.RawMessage `json:"payload"`
-	Signature TxSig           `json:"signature"`
+	Type       string          `json:"type"`
+	Sender     string          `json:"sender"`
+	Nonce      string          `json:"nonce"`
+	Fee        string          `json:"fee"`
+	LastHeight string          `json:"last_height"`
+	Payload    json.RawMessage `json:"payload"`
+	Signature  TxSig           `json:"signature"`
 }
 
 type BroadcastParams struct {
@@ -152,7 +154,7 @@ func getAddressBytes(pubkey []byte) []byte {
 	return hash[:AddressByteSize]
 }
 
-func SignSendTx(txType string, payload interface{}, key keys.KeyEntry, fee string) (TmTxResult, error) {
+func SignSendTx(txType string, payload interface{}, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	payloadJson, err := json.Marshal(payload)
 	if err != nil {
 		return TmTxResult{}, err
@@ -163,11 +165,12 @@ func SignSendTx(txType string, payload interface{}, key keys.KeyEntry, fee strin
 	sender := strings.ToUpper(key.Address)
 	nonce := strings.ToUpper(hex.EncodeToString(nonceBytes))
 	txToSign := TxToSign{
-		Type:    txType,
-		Sender:  sender,
-		Nonce:   nonce,
-		Payload: payloadJson,
-		Fee:     fee,
+		Type:       txType,
+		Sender:     sender,
+		Nonce:      nonce,
+		Fee:        fee,
+		LastHeight: lastHeight,
+		Payload:    payloadJson,
 	}
 	msg, err := json.Marshal(txToSign)
 	if err != nil {
@@ -199,12 +202,13 @@ func SignSendTx(txType string, payload interface{}, key keys.KeyEntry, fee strin
 		SigBytes: hex.EncodeToString(sigBytes),
 	}
 	tx := TxToSend{
-		Type:      txToSign.Type,    // forward
-		Sender:    txToSign.Sender,  // forward
-		Nonce:     txToSign.Nonce,   // forward
-		Payload:   txToSign.Payload, // forward
-		Fee:       txToSign.Fee,     // forward
-		Signature: txSig,            // signature appendix
+		Type:       txToSign.Type,       // forward
+		Sender:     txToSign.Sender,     // forward
+		Nonce:      txToSign.Nonce,      // forward
+		Fee:        txToSign.Fee,        // forward
+		LastHeight: txToSign.LastHeight, // forward
+		Payload:    txToSign.Payload,    // forward
+		Signature:  txSig,               // signature appendix
 	}
 	b, err := json.Marshal(tx)
 	if err != nil {
