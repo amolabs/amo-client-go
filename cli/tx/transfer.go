@@ -30,13 +30,22 @@ func transferFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Transfer(args[0], args[1], key, Fee)
+	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
+	if err != nil {
+		return err
+	}
+
+	result, err := rpc.Transfer(args[0], args[1], key, Fee, lastHeight)
 	if err != nil {
 		return err
 	}
 
 	if rpc.DryRun {
 		return nil
+	}
+
+	if result.Height != "0" {
+		SetLastHeight(util.DefaultConfigFilePath(), result.Height)
 	}
 
 	if asJson {
