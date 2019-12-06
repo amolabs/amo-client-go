@@ -26,6 +26,8 @@ var (
 	AddressByteSize = 20
 	NonceByteSize   = 4
 	curve           = elliptic.P256() // move to crypto sub-package
+
+	TxBroadcastOption string
 )
 
 // generic ABCI query in Tendermint context
@@ -243,12 +245,12 @@ func BroadcastTx(tx []byte) (TmTxResult, error) {
 				HTTPClient: server.Client(),
 			})
 		// Make dummy HTTP call
-		_, _ = rpcClient.Call("broadcast_tx_sync", params)
+		_, _ = rpcClient.Call("broadcast_tx_"+TxBroadcastOption, params)
 		return TmTxResult{}, nil
 	}
 
 	rpcClient := jsonrpc.NewClient(RpcRemote)
-	rsp, err := rpcClient.Call("broadcast_tx_commit", params)
+	rsp, err := rpcClient.Call("broadcast_tx_"+TxBroadcastOption, params)
 	if err != nil { // call error
 		return TmTxResult{}, err
 	}

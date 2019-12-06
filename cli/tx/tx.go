@@ -6,9 +6,7 @@ import (
 	"github.com/amolabs/amo-client-go/cli/util"
 )
 
-var (
-	Fee string
-)
+var Fee string
 
 var Cmd = &cobra.Command{
 	Use:     "tx",
@@ -34,4 +32,5 @@ func init() {
 		RevokeCmd,
 	)
 	Cmd.PersistentFlags().StringP("fee", "f", "0", "fee for tx")
+	Cmd.PersistentFlags().StringP("broadcast", "b", "commit", "options(commit, sync, async) for broadcast method")
 }

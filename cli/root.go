@@ -56,6 +56,10 @@ func readGlobalFlags(cmd *cobra.Command, args []string) {
 	if err == nil {
 		tx.Fee = feeArg
 	}
+	broadcastOptionArg, err := cmd.Flags().GetString("broadcast")
+	if err == nil {
+		rpc.TxBroadcastOption = broadcastOptionArg
+	}
 	username, err := cmd.Flags().GetString("user")
 	if err == nil {
 		key.Username = username
