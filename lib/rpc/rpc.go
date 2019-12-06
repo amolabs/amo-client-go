@@ -24,7 +24,6 @@ var (
 	rpcWsEndpoint   = "/websocket"
 	DryRun          = false
 	AddressByteSize = 20
-	NonceByteSize   = 4
 	curve           = elliptic.P256() // move to crypto sub-package
 
 	TxBroadcastOption string
@@ -113,7 +112,6 @@ func ABCIQuery(path string, queryData interface{}) ([]byte, error) {
 type TxToSign struct {
 	Type       string          `json:"type"`
 	Sender     string          `json:"sender"`
-	Nonce      string          `json:"nonce"`
 	Fee        string          `json:"fee"`
 	LastHeight string          `json:"last_height"`
 	Payload    json.RawMessage `json:"payload"`
@@ -127,7 +125,6 @@ type TxSig struct {
 type TxToSend struct {
 	Type       string          `json:"type"`
 	Sender     string          `json:"sender"`
-	Nonce      string          `json:"nonce"`
 	Fee        string          `json:"fee"`
 	LastHeight string          `json:"last_height"`
 	Payload    json.RawMessage `json:"payload"`
@@ -162,14 +159,10 @@ func SignSendTx(txType string, payload interface{}, key keys.KeyEntry, fee, last
 		return TmTxResult{}, err
 	}
 
-	nonceBytes := make([]byte, NonceByteSize)
-	_, err = rand.Read(nonceBytes)
 	sender := strings.ToUpper(key.Address)
-	nonce := strings.ToUpper(hex.EncodeToString(nonceBytes))
 	txToSign := TxToSign{
 		Type:       txType,
 		Sender:     sender,
-		Nonce:      nonce,
 		Fee:        fee,
 		LastHeight: lastHeight,
 		Payload:    payloadJson,
@@ -206,7 +199,6 @@ func SignSendTx(txType string, payload interface{}, key keys.KeyEntry, fee, last
 	tx := TxToSend{
 		Type:       txToSign.Type,       // forward
 		Sender:     txToSign.Sender,     // forward
-		Nonce:      txToSign.Nonce,      // forward
 		Fee:        txToSign.Fee,        // forward
 		LastHeight: txToSign.LastHeight, // forward
 		Payload:    txToSign.Payload,    // forward
