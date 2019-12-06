@@ -225,6 +225,15 @@ func BroadcastTx(tx []byte) (TmTxResult, error) {
 		Tx: tx,
 	}
 
+	// filter
+	switch TxBroadcastOption {
+	case "commit":
+	case "sync":
+	case "async":
+	default:
+		return TmTxResult{}, fmt.Errorf("broadcast_tx_%s is not a supported option", TxBroadcastOption)
+	}
+
 	if DryRun {
 		// Setup dummy HTTP server which just prints rpc message body to
 		// stdout.

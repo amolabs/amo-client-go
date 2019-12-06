@@ -32,5 +32,5 @@ func init() {
 		RevokeCmd,
 	)
 	Cmd.PersistentFlags().StringP("fee", "f", "0", "fee for tx")
-	Cmd.PersistentFlags().StringP("broadcast", "b", "commit", "options(commit, sync, async) for broadcast method")
+	Cmd.PersistentFlags().StringP("broadcast", "b", "sync", "options(commit, sync, async) for broadcast method")
 }
