@@ -42,6 +42,14 @@ func parcelFunc(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		fmt.Printf("owner: %s\ncustody: %s\n", parcel.Owner, parcel.Custody)
+		for i, r := range parcel.Requests {
+			fmt.Printf("  requests %2d. payment: %s, expire: %s, buyer: %s\n",
+				i+1, r.Payment.String(), r.Exp, r.Buyer)
+		}
+		for i, u := range parcel.Usages {
+			fmt.Printf("  usages %2d. custody: %s, expire: %s, buyer: %s\n",
+				i+1, u.Custody, u.Exp, u.Buyer)
+		}
 	}
 
 	return nil

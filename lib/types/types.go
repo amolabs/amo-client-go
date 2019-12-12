@@ -60,9 +60,11 @@ type Delegate struct {
 }
 
 type Parcel struct {
-	Owner   Address `json:"owner"`
-	Custody string  `json:"custody"`
-	Info    string  `json:"info,omitempty"`
+	Owner    Address      `json:"owner"`
+	Custody  string       `json:"custody"`
+	Info     string       `json:"info,omitempty"`
+	Requests []*RequestEx `json:"requests,omitempty"`
+	Usages   []*UsageEx   `json:"usages,omitempty"`
 }
 
 type Request struct {
@@ -70,9 +72,19 @@ type Request struct {
 	Exp     time.Time `json:"exp"`
 }
 
+type RequestEx struct {
+	*Request
+	Buyer Address `json:"buyer"`
+}
+
 type Usage struct {
 	Custody string    `json:"custody"`
 	Exp     time.Time `json:"exp"`
+}
+
+type UsageEx struct {
+	*Usage
+	Buyer Address `json:"buyer"`
 }
 
 type IncentiveInfo struct {
