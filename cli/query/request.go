@@ -28,6 +28,10 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	if rpc.DryRun {
+		return nil
+	}
+
 	if asJson {
 		fmt.Println(string(res))
 		return nil

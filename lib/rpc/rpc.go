@@ -275,6 +275,30 @@ type TmStatusResult struct {
 }
 
 func NodeStatus() (TmStatusResult, error) {
+	if DryRun {
+		// Setup dummy HTTP server which just prints rpc message body to
+		// stdout.
+		handler := func(w http.ResponseWriter, r *http.Request) {
+			body, err := ioutil.ReadAll(r.Body)
+			if err == nil {
+				fmt.Println(string(body))
+			}
+			w.WriteHeader(200)
+			return
+		}
+		server := httptest.NewServer(http.HandlerFunc(handler))
+		defer server.Close()
+		// Setup dummy HTTP transport for rpcClient
+		rpcClient := jsonrpc.NewClientWithOpts(
+			server.URL,
+			&jsonrpc.RPCClientOpts{
+				HTTPClient: server.Client(),
+			})
+		// Make dummy HTTP call
+		_, _ = rpcClient.Call("status")
+		return TmStatusResult{}, nil
+	}
+
 	rpcClient := jsonrpc.NewClient(RpcRemote)
 	rsp, err := rpcClient.Call("status")
 	if err != nil { // call error
