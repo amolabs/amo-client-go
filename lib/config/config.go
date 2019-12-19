@@ -96,6 +96,10 @@ func (cfg *Config) UpdateLastHeight() error {
 		return err
 	}
 
+	if rpc.DryRun {
+		return nil
+	}
+
 	jsonMsg, err := json.Marshal(rawMsg.SyncInfo)
 	if err != nil {
 		return err
