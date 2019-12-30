@@ -3,7 +3,7 @@ package rpc
 // ABCI queries in AMO context
 
 func QueryAppConfig() ([]byte, error) {
-	ret, err := ABCIQuery("/app_config", nil)
+	ret, err := ABCIQuery("/config", nil)
 	return ret, err
 }
 
