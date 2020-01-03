@@ -7,11 +7,11 @@ AMO 클라이언트란 [AMO client RPC
 specification](https://github.com/amolabs/docs/blob/master/rpc.md)과 [AMO
 storage
 specification](https://github.com/amolabs/docs/blob/master/storage.md)를
-준수하기만 하면 어떤 소프트웨어 프로그램, 혹은 하드웨어 장치일 수 있다. AMO
-Labs에서는 참조 구현으로서 CLI 프로그램을 제공하며 일상적인 작업에 사용할 수
-있다.
+준수하는 모든 소프트웨어 프로그램, 혹은 하드웨어 장치를 의미한다. AMO
+Labs에서는 참조 구현 형태로 CLI 프로그램을 제공하지만, 일상적인 작업에도 그대로
+사용할 수 있다. 이 프로그램은 AMO 블록체인 노드와 AMO 스토리지 서버라는 두 종류의 원격 서버와 통신한다. AMO 블록체인 노드와의 통신은 필수이지만, data 거래를 직접 하는 경우가 아니라면 AMO 스토리지 서버와의 통신은 필요하지 않다.
 
-## AMO client 설치
+## 설치
 ### 컴파일된 바이너리 설치
 TBA
 ### 소스코드로부터 설치
@@ -22,10 +22,9 @@ TBA
 	설치된다.
   * MacOS에서는 Xcode에 포함된 make를 사용할 수도 있고,
 	[Homebrew](https://brew.sh)를 통하여 GNU Make를 설치할 수도 있다.
-* [golang](https://golang.org/dl/)
+* [golang](https://golang.org/dl/) v.11 혹은 이후 버전 (Go Modules 이용)
   * 경우에 따라서 `GOPATH`와 `GOBIN` 환경변수를 직접 설정해야 할 수 있다. 더
 	진행하기 전에 이 환경변수들을 확인해야 한다.
-* [golang/dep](https://golang.github.io/dep/docs/installation.html)
 
 터미널에서 `go get github.com/amolabs/amo-client-go/cmd/amocli`라고 입력하거나,
 다음과 같이 각 과정을 직접 수행할 수도 있다:
@@ -45,13 +44,18 @@ make install
 `$GOBIN`이 포함돼 있다면 터미널에 `amocli`라고만 입력하여 `amo-client-go`
 프로그램을 구동할 수 있다.
 
+### 클라이언트 라이브러리 설치
+별도의 설치 과정이 필요하지는 않다.
+`https://github.com/amolabs/amo-client-go/lib` 패키지를 golang library로서 바로
+사용할 수 있다.
+
 ## 원격 서버
 `amocli`는 클라이언트 프로그램이기 때문에 사용자 요청을 처리하기 위해서는 원격
 서버의 주소가 필요하다. 다음의 두가지 원격 서버가 필요하다:
 * AMO 블록체인 RPC 노드
 * AMO 스토리지 API 서버
 
-AMO 블록체인 RPC 노드는 AMO 블록체인 네트워크에 연결돼 있고 RPC 서비스를
+**AMO 블록체인 RPC 노드**는 AMO 블록체인 네트워크에 연결돼 있고 RPC 서비스를
 제공하기만 하면 어떠한 노드여도 상관 없다. 공개돼 있는 노드에 연결할 수도 있고
 자신의 클라이언트를 위한 전용 노드를 구축하여 사용할 수도 있다. RPC 노드의
 주소는 IP 주소와 포트 번호로 이루어진다. 일반적으로 포트 번호는 26657이지만
@@ -60,18 +64,20 @@ AMO 블록체인 RPC 노드는 AMO 블록체인 네트워크에 연결돼 있고
 
 TBA: AMO Labs에서 제공하는 공개 RPC 노드들
 
-AMO 스토리지 API 서버는 자신이 선택한 스토리지 서비스의 API 종단 주소이다. 여러
-개의 AMO 스토리지 서비스가 있을 수 있으며 사용자는 이 중에서 자신이 사용할
+**AMO 스토리지 API 서버**는 자신이 선택한 스토리지 서비스의 API 종단 주소이다.
+여러 개의 AMO 스토리지 서비스가 있을 수 있으며 사용자는 이 중에서 자신이 사용할
 서비스를 선택한다. 가용성의 문제가 있을 수 있으므로, AMO Labs에서는 기본
-스토리지 서비스를 제공하며 이를 AMO 기본 스토리지 서비스라 한다. 이 API 서버의
-주소는: TBA.
+스토리지 서비스를 제공하며 이를 AMO 기본 스토리지 서비스라 한다. 
+
+TBA: 기본 스토리지 서비스의 API 단말 주소
 
 ## Keyring 보호
-블록체인에 전송되는 모든 transaction은 사용자 키에 의해 서명되어야 하며,
+블록체인에 전송되는 모든 transaction은 사용자 키에 의해 서명되어야 한다.
 `amocli`는 `$HOME/.amocli/keys/keys.json`에 위치한 keyring의 파일에 저장된
 키들을 사용한다. 이 키들은 사용자 옵션에 따라 암호화되지 않은 형태로 저장될 수
-있기 때문에 잘 보호할 필요가 있다. 이 keyring 파일은 파일 소유주만 읽을 수
-있도록 할 것을 권고한다(Linux나 MacOS의 경우 모드 0600으로 설정).
+있기 때문에 잘 보호할 필요가 있다. 이 keyring 파일은 파일 소유주만 읽고 쓸 수
+있도록 할 것을 권고한다(Linux나 MacOS에서 `chmod` 명령을 사용할 경우 모드
+0600으로 설정).
 
 ## 사용법
 

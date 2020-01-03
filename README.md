@@ -3,15 +3,19 @@ Reference implementation of AMO client for golang. This document is available
 in [Korean](README.ko.md) also.
 
 ## Introduction
-An AMO client is any software or hardware application conforming to [AMO client
-RPC specification](https://github.com/amolabs/docs/blob/master/rpc.md) and [AMO
-storage specification](https://github.com/amolabs/docs/blob/master/storage.md).
+An AMO client is any software or hardware application conforming to
+[AMO client RPC specification](https://github.com/amolabs/docs/blob/master/rpc.md),
+and optionally,
+[AMO storage specification](https://github.com/amolabs/docs/blob/master/storage.md).
 AMO Labs provides a CLI software program as a reference implementation, but it
-can be usable for day-to-day workflow.
+can be usable for day-to-day workflow. This program interacts with two types of
+remote servers: AMO blockchain nodes and AMO storage servers. It is essential
+to interact with AMO blockchain nodes, but it is unnecessary to interact with
+AMO storage servers unless you intend to trade parcels on your own.
 
 The purposes of this software are:
-* To demonstrate how to interact with the AMO blockchain nodes and AMO storage
-  services.
+* To provide a reference implementation for demonstrating how to interact with
+  AMO blockchain nodes, and optionally, AMO storage services.
 * To provide a ready-to-use library for those who don't have much resources to
   write their own client implementation.
 * To provide a out-of-the-stock CLI program to quickly interact with AMO
@@ -24,7 +28,7 @@ with the following conditions:
   [Tendermint](https://github.com/tendermint/tendermint) codes
 * No direct dependency to the [Ceph](https://github.com/ceph) or librgw codes
 
-## Getting AMO client
+## Installation
 ### Install pre-compiled binary
 TBA
 ### Install from source code
@@ -34,10 +38,9 @@ Before compile and install `amo-client-go`, you need to install the followings:
   * For Debian or Ubuntu linux, you can install `build-essential` package.
   * For MacOS, you can use `make` from Xcode, or install GNU Make via
 	[Homebrew](https://brew.sh).
-* [golang](https://golang.org/dl/)
+* [golang](https://golang.org/dl/) v1.11 or later (for Go Modules)
   * In some cases, you need to set `GOPATH` and `GOBIN` environment variable
 	manually. Check these variables are set before you proceed.
-* [golang/dep](https://golang.github.io/dep/docs/installation.html)
 
 You can just type `go get github.com/amolabs/amo-client-go/cmd/amocli` in the
 terminal, or do every step on your own as the following:
@@ -57,34 +60,40 @@ Compiled bianry will be installed in `$GOPATH/bin/amocli`. If your `PATH`
 environment variable contains `$GOBIN`, then you can just type `amocli` in a
 termianl to invoke a `amo-client-go` program.
 
+### Install client library
+No prior installation is needed. You may use
+`https://github.com/amolabs/amo-client-go/lib` package as a golang library for
+your client program.
+
 ## Remote servers
 Since `amocli` is a client program, it needs remote server addresses to perform
 user requests. There are two types of remote servers:
 * AMO blockchain RPC node
 * AMO storage API server
 
-AMO blockchain RPC node is any AMO blockchain node which is connected to AMO
-blockchain network and provides an RPC service. You can connect to any publicly
-available nodes or run your own dedicated node for your clients. An RPC node
-address is composed of an IP address and a port number. Typical port number is
-26657, but it can be any other number. Make sure the firewall of your network
-does not block this port number.
+**AMO blockchain RPC node** is any AMO blockchain node which is connected to
+AMO blockchain network and provides an RPC service. You can connect to any
+publicly available nodes or run your own dedicated node for your clients. An
+RPC node address is composed of an IP address and a port number. The default
+port number is 26657. Make sure the firewall of your network does not block
+this port number.
 
-TBA: public RPC nodes provided by AMO Labs
+TBA: Public RPC node addresses provided by AMO Labs
 
-AMO storage API server is an API endpoint of a storage service of your choice.
-There can be numerous AMO storage services and you can select your storage from
-them. Since there can be an availability issue, AMO Labs provides a default
-storage service, called AMO default storage service. Address of this default
-storage serivce API endpoint is: TBA.
+**AMO storage API server** is an API endpoint of a storage service of your
+choice. There can be numerous AMO storage services and you can select your
+storage from them. Since there might be an availability issue, AMO Labs
+provides a default storage service, called AMO default storage service.
+
+TBA: Address of default storage serivce API endpoint
 
 ## Keyring protection
-Any transaction sent to the blockchain should be signed with a user key, and
+Any transaction sent to the blockchain should be signed with a user key.
 `amocli` utilizes keys saved in a keyring file located at
-`$HOME/.amocli/keys/keys.json`. Since there can be an unencrypted key in a
-keyring according to the user option, you need to protect this keyring. It is
-recommended to set a `read` permission of this keyring file to owner-only
-(`0600` for Linux and MacOS).
+`$HOME/.amocli/keys/keys.json`. There may be an unencrypted key in a keyring if
+appropriate option is given. So you need to protect this keyring. It is
+recommended to set a `read` and `write` permissions of this keyring file to
+owner-only (use mode `0600` on Linux and MacOS when using `chmod` command).
 
 ## Usage
 
