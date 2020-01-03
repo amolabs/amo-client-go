@@ -21,7 +21,6 @@ import (
 
 var (
 	RpcRemote       = "http://0.0.0.0:26657"
-	rpcWsEndpoint   = "/websocket"
 	DryRun          = false
 	AddressByteSize = 20
 	curve           = elliptic.P256() // move to crypto sub-package
