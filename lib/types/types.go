@@ -95,17 +95,19 @@ type IncentiveInfo struct {
 
 type AMOAppConfig struct {
 	MaxValidators   uint64 `json:"max_validators"`
-	WeightValidator int64  `json:"weight_validator"`
-	WeightDelegator int64  `json:"weight_delegator"`
+	WeightValidator uint64 `json:"weight_validator"`
+	WeightDelegator uint64 `json:"weight_delegator"`
 
-	BlkReward uint64 `json:"blk_reward"`
-	TxReward  uint64 `json:"tx_reward"`
+	MinStakingUnit string `json:"min_staking_unit"`
+
+	BlkReward string `json:"blk_reward"`
+	TxReward  string `json:"tx_reward"`
 
 	PenaltyRatioM float64 `json:"penalty_ratio_m"` // malicious validator
 	PenaltyRatioL float64 `json:"penalty_ratio_l"` // lazy validators
 
-	LazinessCounterSize  int64   `json:"laziness_counter_size"`
-	LazinessCounterRatio float64 `json:"laziness_counter_ratio"`
+	LazinessCounterWindow int64   `json:"laziness_counter_window"`
+	LazinessThreshold     float64 `json:"laziness_threshold"`
 
 	BlockBoundTxGracePeriod uint64 `json:"block_bound_tx_grace_period"`
 	LockupPeriod            uint64 `json:"lockup_period"`
