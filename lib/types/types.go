@@ -59,6 +59,32 @@ type Delegate struct {
 	Amount    Currency `json:"amount"`
 }
 
+type Draft struct {
+	Proposer Address      `json:"proposer"`
+	Config   AMOAppConfig `json:"config"`
+	Desc     string       `json:"desc"`
+
+	OpenCount  uint64   `json:"open_count"`
+	CloseCount uint64   `json:"close_count"`
+	ApplyCount uint64   `json:"apply_count"`
+	Deposit    Currency `json:"deposit"`
+
+	TallyQuorum  Currency `json:"tally_quorum"`
+	TallyApprove Currency `json:"tally_approve"`
+	TallyReject  Currency `json:"tally_reject"`
+
+	Votes []*VoteInfo `josn:"votes"`
+}
+
+type Vote struct {
+	Approve bool `json:"approve"`
+}
+
+type VoteInfo struct {
+	Voter Address `json:"voter"`
+	Vote  Vote    `json:"vote"`
+}
+
 type Parcel struct {
 	Owner    Address      `json:"owner"`
 	Custody  string       `json:"custody"`

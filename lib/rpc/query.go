@@ -25,6 +25,19 @@ func QueryDelegate(address string) ([]byte, error) {
 	return ret, err
 }
 
+func QueryDraft(draftID string) ([]byte, error) {
+	ret, err := ABCIQuery("/draft", draftID)
+	return ret, err
+}
+
+func QueryVote(draftID, address string) ([]byte, error) {
+	ret, err := ABCIQuery("/vote", struct {
+		DraftID string `json:"draft_id"`
+		Voter   string `json:"voter"`
+	}{draftID, address})
+	return ret, err
+}
+
 func QueryParcel(parcelID string) ([]byte, error) {
 	ret, err := ABCIQuery("/parcel", parcelID)
 	return ret, err
