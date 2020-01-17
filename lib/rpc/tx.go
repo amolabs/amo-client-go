@@ -44,6 +44,23 @@ func Retract(amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResu
 	return ret, err
 }
 
+func Propose(draftID, config, desc string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	ret, err := SignSendTx("propose", struct {
+		DraftID string `json:"draft_id"`
+		Config  string `json:"config"`
+		Desc    string `json:"desc"`
+	}{draftID, config, desc}, key, fee, lastHeight)
+	return ret, err
+}
+
+func Vote(draftID string, approve bool, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	ret, err := SignSendTx("vote", struct {
+		DraftID string `json:"draft_id"`
+		Approve bool   `json:"approve"`
+	}{draftID, approve}, key, fee, lastHeight)
+	return ret, err
+}
+
 func Register(target string, custody string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	ret, err := SignSendTx("register", struct {
 		Target  string `json:"target"`
