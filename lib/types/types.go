@@ -22,6 +22,10 @@ type Currency struct {
 	big.Int
 }
 
+func (c Currency) MarshalJSON() ([]byte, error) {
+	return []byte("\"" + c.Text(10) + "\""), nil
+}
+
 func (c *Currency) UnmarshalJSON(b []byte) error {
 	if len(b) < 2 || b[0] != '"' || b[len(b)-1] != '"' {
 		return errors.New(
