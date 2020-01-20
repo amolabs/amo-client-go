@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"strconv"
 	"time"
 )
 
@@ -76,8 +77,11 @@ type Draft struct {
 	TallyQuorum  Currency `json:"tally_quorum"`
 	TallyApprove Currency `json:"tally_approve"`
 	TallyReject  Currency `json:"tally_reject"`
+}
 
-	Votes []*VoteInfo `josn:"votes"`
+type DraftEx struct {
+	Draft *Draft      `json:"draft"`
+	Votes []*VoteInfo `json:"votes"`
 }
 
 type Vote struct {
@@ -143,4 +147,12 @@ type AMOAppConfig struct {
 	DraftQuorumRate         float64  `json:"draft_quorum_rate"`
 	DraftPassRate           float64  `json:"draft_pass_rate"`
 	DraftRefundRate         float64  `json:"draft_refund_rate"`
+}
+
+func ConvIDFromStr(IDStr string) (uint32, error) {
+	tmp, err := strconv.ParseInt(IDStr, 10, 32)
+	if err != nil {
+		return 0, err
+	}
+	return uint32(tmp), nil
 }

@@ -1,5 +1,9 @@
 package rpc
 
+import (
+	"github.com/amolabs/amo-client-go/lib/types"
+)
+
 // ABCI queries in AMO context
 
 func QueryAppConfig() ([]byte, error) {
@@ -26,15 +30,23 @@ func QueryDelegate(address string) ([]byte, error) {
 }
 
 func QueryDraft(draftID string) ([]byte, error) {
-	ret, err := ABCIQuery("/draft", draftID)
+	draftIDUint32, err := types.ConvIDFromStr(draftID)
+	if err != nil {
+		return nil, err
+	}
+	ret, err := ABCIQuery("/draft", draftIDUint32)
 	return ret, err
 }
 
 func QueryVote(draftID, address string) ([]byte, error) {
+	draftIDUint32, err := types.ConvIDFromStr(draftID)
+	if err != nil {
+		return nil, err
+	}
 	ret, err := ABCIQuery("/vote", struct {
-		DraftID string `json:"draft_id"`
+		DraftID uint32 `json:"draft_id"`
 		Voter   string `json:"voter"`
-	}{draftID, address})
+	}{draftIDUint32, address})
 	return ret, err
 }
 

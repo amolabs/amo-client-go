@@ -1,7 +1,10 @@
 package rpc
 
 import (
+	"encoding/json"
+
 	"github.com/amolabs/amo-client-go/lib/keys"
+	"github.com/amolabs/amo-client-go/lib/types"
 )
 
 // Tx broadcast in AMO context
@@ -45,19 +48,27 @@ func Retract(amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResu
 }
 
 func Propose(draftID, config, desc string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	draftIDUint32, err := types.ConvIDFromStr(draftID)
+	if err != nil {
+		return TmTxResult{}, err
+	}
 	ret, err := SignSendTx("propose", struct {
-		DraftID string `json:"draft_id"`
-		Config  string `json:"config"`
-		Desc    string `json:"desc"`
-	}{draftID, config, desc}, key, fee, lastHeight)
+		DraftID uint32          `json:"draft_id"`
+		Config  json.RawMessage `json:"config"`
+		Desc    string          `json:"desc"`
+	}{draftIDUint32, []byte(config), desc}, key, fee, lastHeight)
 	return ret, err
 }
 
 func Vote(draftID string, approve bool, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	draftIDUint32, err := types.ConvIDFromStr(draftID)
+	if err != nil {
+		return TmTxResult{}, err
+	}
 	ret, err := SignSendTx("vote", struct {
-		DraftID string `json:"draft_id"`
+		DraftID uint32 `json:"draft_id"`
 		Approve bool   `json:"approve"`
-	}{draftID, approve}, key, fee, lastHeight)
+	}{draftIDUint32, approve}, key, fee, lastHeight)
 	return ret, err
 }
 
