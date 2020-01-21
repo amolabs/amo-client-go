@@ -42,15 +42,15 @@ func voteFunc(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	var vote types.Vote
-	err = json.Unmarshal(res, &vote)
+	var voteInfo types.VoteInfo
+	err = json.Unmarshal(res, &voteInfo)
 	if err != nil {
 		return err
 	}
 
 	fmt.Println("draft_id:", args[0])
-	fmt.Println("voter:", args[1])
-	fmt.Println("approve:", vote.Approve)
+	fmt.Println("voter:", voteInfo.Voter)
+	fmt.Println("approve:", voteInfo.Approve)
 
 	return nil
 }

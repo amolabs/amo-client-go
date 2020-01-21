@@ -79,7 +79,7 @@ type Draft struct {
 }
 
 type DraftEx struct {
-	Draft *Draft      `json:"draft"`
+	*Draft
 	Votes []*VoteInfo `json:"votes"`
 }
 
@@ -89,7 +89,7 @@ type Vote struct {
 
 type VoteInfo struct {
 	Voter Address `json:"voter"`
-	Vote  Vote    `json:"vote"`
+	*Vote
 }
 
 type Storage struct {

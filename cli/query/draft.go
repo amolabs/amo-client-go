@@ -41,34 +41,34 @@ func draftFunc(cmd *cobra.Command, args []string) error {
 		fmt.Println("no draft")
 		return nil
 	}
-	var de types.DraftEx
-	err = json.Unmarshal(res, &de)
+	var draft types.DraftEx
+	err = json.Unmarshal(res, &draft)
 	if err != nil {
 		return err
 	}
 
-	cfg, err := json.MarshalIndent(de.Draft.Config, "", "  ")
+	cfg, err := json.MarshalIndent(draft.Config, "", "  ")
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("proposer: %s\n", de.Draft.Proposer)
+	fmt.Printf("proposer: %s\n", draft.Proposer)
 	fmt.Printf("config: %s\n", cfg)
-	fmt.Printf("desc: \"%s\"\n", de.Draft.Desc)
-	fmt.Printf("open_count: %d\n", de.Draft.OpenCount)
-	fmt.Printf("close_count: %d\n", de.Draft.CloseCount)
-	fmt.Printf("apply_count: %d\n", de.Draft.ApplyCount)
-	fmt.Printf("deposit: %s\n", de.Draft.Deposit.String())
-	fmt.Printf("tally_quorum: %s\n", de.Draft.TallyQuorum.String())
-	fmt.Printf("tally_approve: %s\n", de.Draft.TallyApprove.String())
-	fmt.Printf("tally_reject: %s\n", de.Draft.TallyReject.String())
+	fmt.Printf("desc: \"%s\"\n", draft.Desc)
+	fmt.Printf("open_count: %d\n", draft.OpenCount)
+	fmt.Printf("close_count: %d\n", draft.CloseCount)
+	fmt.Printf("apply_count: %d\n", draft.ApplyCount)
+	fmt.Printf("deposit: %s\n", draft.Deposit.String())
+	fmt.Printf("tally_quorum: %s\n", draft.TallyQuorum.String())
+	fmt.Printf("tally_approve: %s\n", draft.TallyApprove.String())
+	fmt.Printf("tally_reject: %s\n", draft.TallyReject.String())
 	fmt.Printf("votes: ")
-	if len(de.Votes) == 0 {
+	if len(draft.Votes) == 0 {
 		fmt.Printf("none\n")
 	} else {
 		fmt.Print("\n")
 	}
-	for i, v := range de.Votes {
+	for i, v := range draft.Votes {
 		fmt.Printf("  %d. voter: %s, approve: %t\n", i+1, v.Voter, v.Vote.Approve)
 	}
 
