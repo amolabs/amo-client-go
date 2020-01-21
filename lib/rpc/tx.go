@@ -9,7 +9,7 @@ import (
 
 // Tx broadcast in AMO context
 
-func Transfer(udc uint32, to string, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Transfer(udc uint32, to, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	return SignSendTx("transfer", struct {
 		UDC    uint32 `json:"udc,omitempty"`
 		To     string `json:"to"`
@@ -17,7 +17,7 @@ func Transfer(udc uint32, to string, amount string, key keys.KeyEntry, fee, last
 	}{udc, to, amount}, key, fee, lastHeight)
 }
 
-func Stake(validator string, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Stake(validator, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	return SignSendTx("stake", struct {
 		Validator string `json:"validator"`
 		Amount    string `json:"amount"`
@@ -30,7 +30,7 @@ func Withdraw(amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxRes
 	}{amount}, key, fee, lastHeight)
 }
 
-func Delegate(to string, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Delegate(to, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	return SignSendTx("delegate", struct {
 		To     string `json:"to"`
 		Amount string `json:"amount"`
@@ -127,7 +127,7 @@ func Grant(target, grantee, custody, extra string, key keys.KeyEntry, fee, lastH
 	}{target, grantee, custody, []byte(extra)}, key, fee, lastHeight)
 }
 
-func Revoke(target string, grantee string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Revoke(target, grantee string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	return SignSendTx("revoke", struct {
 		Target  string `json:"target"`
 		Grantee string `json:"grantee"`

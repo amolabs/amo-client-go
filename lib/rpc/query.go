@@ -26,13 +26,11 @@ func QueryBalance(udc uint32, address string) ([]byte, error) {
 }
 
 func QueryStake(address string) ([]byte, error) {
-	ret, err := ABCIQuery("/stake", address)
-	return ret, err
+	return ABCIQuery("/stake", address)
 }
 
 func QueryDelegate(address string) ([]byte, error) {
-	ret, err := ABCIQuery("/delegate", address)
-	return ret, err
+	return ABCIQuery("/delegate", address)
 }
 
 func QueryDraft(draftID string) ([]byte, error) {
@@ -40,8 +38,7 @@ func QueryDraft(draftID string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret, err := ABCIQuery("/draft", draftIDUint32)
-	return ret, err
+	return ABCIQuery("/draft", draftIDUint32)
 }
 
 func QueryVote(draftID, address string) ([]byte, error) {
@@ -49,48 +46,41 @@ func QueryVote(draftID, address string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret, err := ABCIQuery("/vote", struct {
+	return ABCIQuery("/vote", struct {
 		DraftID uint32 `json:"draft_id"`
 		Voter   string `json:"voter"`
 	}{draftIDUint32, address})
-	return ret, err
 }
 
 func QueryParcel(parcelID string) ([]byte, error) {
-	ret, err := ABCIQuery("/parcel", parcelID)
-	return ret, err
+	return ABCIQuery("/parcel", parcelID)
 }
 
 func QueryRequest(buyer string, target string) ([]byte, error) {
-	ret, err := ABCIQuery("/request", struct {
+	return ABCIQuery("/request", struct {
 		Buyer  string `json:"buyer"`
 		Target string `json:"target"`
 	}{buyer, target})
-	return ret, err
 }
 
 func QueryUsage(buyer string, target string) ([]byte, error) {
-	ret, err := ABCIQuery("/usage", struct {
+	return ABCIQuery("/usage", struct {
 		Buyer  string `json:"buyer"`
 		Target string `json:"target"`
 	}{buyer, target})
-	return ret, err
 }
 
 func QueryBlockIncentive(height string) ([]byte, error) {
-	ret, err := ABCIQuery("/inc_block", height)
-	return ret, err
+	return ABCIQuery("/inc_block", height)
 }
 
 func QueryAddressIncentive(address string) ([]byte, error) {
-	ret, err := ABCIQuery("/inc_address", address)
-	return ret, err
+	return ABCIQuery("/inc_address", address)
 }
 
 func QueryIncentive(height string, address string) ([]byte, error) {
-	ret, err := ABCIQuery("/inc", struct {
+	return ABCIQuery("/inc", struct {
 		Height  string `json:"height"`
 		Address string `json:"address"`
 	}{height, address})
-	return ret, err
 }
