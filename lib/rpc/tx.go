@@ -9,11 +9,12 @@ import (
 
 // Tx broadcast in AMO context
 
-func Transfer(to string, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Transfer(udc uint32, to string, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	ret, err := SignSendTx("transfer", struct {
+		UDC    uint32 `json:"udc,omitempty"`
 		To     string `json:"to"`
 		Amount string `json:"amount"`
-	}{to, amount}, key, fee, lastHeight)
+	}{udc, to, amount}, key, fee, lastHeight)
 	return ret, err
 }
 

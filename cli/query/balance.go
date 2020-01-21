@@ -23,8 +23,13 @@ func balanceFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	udc, err := cmd.Flags().GetUint32("udc")
+	if err != nil {
+		return err
+	}
+
 	// TODO: do some sanity check on client side
-	res, err := rpc.QueryBalance(args[0])
+	res, err := rpc.QueryBalance(udc, args[0])
 	if err != nil {
 		return err
 	}
@@ -46,4 +51,8 @@ func balanceFunc(cmd *cobra.Command, args []string) error {
 	fmt.Println(balance.String())
 
 	return nil
+}
+
+func init() {
+	BalanceCmd.PersistentFlags().Uint32("udc", uint32(0), "specify udc id if necessary")
 }

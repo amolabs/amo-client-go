@@ -1,6 +1,8 @@
 package rpc
 
 import (
+	"fmt"
+
 	"github.com/amolabs/amo-client-go/lib/types"
 )
 
@@ -11,8 +13,12 @@ func QueryAppConfig() ([]byte, error) {
 	return ret, err
 }
 
-func QueryBalance(address string) ([]byte, error) {
-	ret, err := ABCIQuery("/balance", address)
+func QueryBalance(udc uint32, address string) ([]byte, error) {
+	queryPath := "/balance"
+	if udc != 0 {
+		queryPath = fmt.Sprintf("%s"+"/%d", queryPath, udc)
+	}
+	ret, err := ABCIQuery(queryPath, address)
 	if ret == nil {
 		ret = []byte("0")
 	}
