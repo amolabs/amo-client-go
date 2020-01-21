@@ -73,6 +73,31 @@ func Vote(draftID string, approve bool, key keys.KeyEntry, fee, lastHeight strin
 	return ret, err
 }
 
+func Setup(storageID, url, regFee, hostFee string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	storageIDUint32, err := types.ConvIDFromStr(storageID)
+	if err != nil {
+		return TmTxResult{}, err
+	}
+	ret, err := SignSendTx("setup", struct {
+		Storage         uint32 `json:"storage"`
+		Url             string `json:"url"`
+		RegistrationFee string `json:"registration_fee"`
+		HostingFee      string `json:"hosting_fee"`
+	}{storageIDUint32, url, regFee, hostFee}, key, fee, lastHeight)
+	return ret, err
+}
+
+func Close(storageID string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	storageIDUint32, err := types.ConvIDFromStr(storageID)
+	if err != nil {
+		return TmTxResult{}, err
+	}
+	ret, err := SignSendTx("close", struct {
+		Storage uint32 `json:"storage"`
+	}{storageIDUint32}, key, fee, lastHeight)
+	return ret, err
+}
+
 func Register(target string, custody string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	ret, err := SignSendTx("register", struct {
 		Target  string `json:"target"`
