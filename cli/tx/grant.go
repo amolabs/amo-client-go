@@ -34,7 +34,12 @@ func grantFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Grant(args[0], args[1], args[2], key, Fee, lastHeight)
+	extra, err := cmd.Flags().GetString("extra")
+	if err != nil {
+		return err
+	}
+
+	result, err := rpc.Grant(args[0], args[1], args[2], extra, key, Fee, lastHeight)
 	if err != nil {
 		return err
 	}
@@ -55,4 +60,8 @@ func grantFunc(cmd *cobra.Command, args []string) error {
 	// TODO: rich output
 
 	return nil
+}
+
+func init() {
+	GrantCmd.PersistentFlags().String("extra", "", "extra info")
 }

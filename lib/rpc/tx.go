@@ -89,11 +89,13 @@ func Close(storageID string, key keys.KeyEntry, fee, lastHeight string) (TmTxRes
 	}{storageIDUint32}, key, fee, lastHeight)
 }
 
-func Register(target string, custody string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Register(target, custody, proxy, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	return SignSendTx("register", struct {
-		Target  string `json:"target"`
-		Custody string `json:"custody"`
-	}{target, custody}, key, fee, lastHeight)
+		Target       string          `json:"target"`
+		Custody      string          `json:"custody"`
+		ProxyAccount string          `json:"proxy_account"`
+		Extra        json.RawMessage `json:"extra"`
+	}{target, custody, proxy, []byte(extra)}, key, fee, lastHeight)
 }
 
 func Discard(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
@@ -102,11 +104,12 @@ func Discard(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResu
 	}{target}, key, fee, lastHeight)
 }
 
-func Request(target string, payment string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Request(target, payment, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	return SignSendTx("request", struct {
-		Target  string `json:"target"`
-		Payment string `json:"payment"`
-	}{target, payment}, key, fee, lastHeight)
+		Target  string          `json:"target"`
+		Payment string          `json:"payment"`
+		Extra   json.RawMessage `json:"extra"`
+	}{target, payment, []byte(extra)}, key, fee, lastHeight)
 }
 
 func Cancel(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
@@ -115,12 +118,13 @@ func Cancel(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResul
 	}{target}, key, fee, lastHeight)
 }
 
-func Grant(target string, grantee string, custody string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Grant(target, grantee, custody, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	return SignSendTx("grant", struct {
-		Target  string `json:"target"`
-		Grantee string `json:"grantee"`
-		Custody string `json:"custody"`
-	}{target, grantee, custody}, key, fee, lastHeight)
+		Target  string          `json:"target"`
+		Grantee string          `json:"grantee"`
+		Custody string          `json:"custody"`
+		Extra   json.RawMessage `json:"extra"`
+	}{target, grantee, custody, []byte(extra)}, key, fee, lastHeight)
 }
 
 func Revoke(target string, grantee string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {

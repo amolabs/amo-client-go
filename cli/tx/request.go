@@ -34,7 +34,12 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Request(args[0], args[1], key, Fee, lastHeight)
+	extra, err := cmd.Flags().GetString("extra")
+	if err != nil {
+		return err
+	}
+
+	result, err := rpc.Request(args[0], args[1], extra, key, Fee, lastHeight)
 	if err != nil {
 		return err
 	}
@@ -55,4 +60,8 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 	// TODO: rich output
 
 	return nil
+}
+
+func init() {
+	RequestCmd.PersistentFlags().String("extra", "", "extra info")
 }

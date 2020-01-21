@@ -34,7 +34,17 @@ func registerFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Register(args[0], args[1], key, Fee, lastHeight)
+	proxy, err := cmd.Flags().GetString("proxy")
+	if err != nil {
+		return err
+	}
+
+	extra, err := cmd.Flags().GetString("extra")
+	if err != nil {
+		return err
+	}
+
+	result, err := rpc.Register(args[0], args[1], proxy, extra, key, Fee, lastHeight)
 	if err != nil {
 		return err
 	}
@@ -55,4 +65,9 @@ func registerFunc(cmd *cobra.Command, args []string) error {
 	// TODO: rich output
 
 	return nil
+}
+
+func init() {
+	RegisterCmd.PersistentFlags().String("proxy", "", "proxy account of parcel")
+	RegisterCmd.PersistentFlags().String("extra", "", "extra info")
 }
