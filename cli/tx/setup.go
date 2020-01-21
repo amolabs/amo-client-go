@@ -13,7 +13,7 @@ import (
 
 var SetupCmd = &cobra.Command{
 	Use:   "setup <storage_id> <url> <registration_fee> <hosting_fee>",
-	Short: "Setup storage with url and paying fees",
+	Short: "Setup a storage with url and paying fees",
 	Args:  cobra.MinimumNArgs(4),
 	RunE:  setupFunc,
 }

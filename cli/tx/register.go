@@ -13,7 +13,7 @@ import (
 
 var RegisterCmd = &cobra.Command{
 	Use:   "register <parcel_id> <key_custody>",
-	Short: "Register parcel with extra information",
+	Short: "Register a parcel with extra information",
 	Args:  cobra.MinimumNArgs(2),
 	RunE:  registerFunc,
 }

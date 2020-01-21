@@ -13,7 +13,7 @@ import (
 
 var CloseCmd = &cobra.Command{
 	Use:   "close <storage_id>",
-	Short: "Close storage with its id",
+	Short: "Close a storage with its id",
 	Args:  cobra.MinimumNArgs(1),
 	RunE:  closeFunc,
 }
