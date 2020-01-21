@@ -65,9 +65,11 @@ func draftFunc(cmd *cobra.Command, args []string) error {
 	fmt.Printf("votes: ")
 	if len(de.Votes) == 0 {
 		fmt.Printf("none\n")
+	} else {
+		fmt.Print("\n")
 	}
 	for i, v := range de.Votes {
-		fmt.Printf("  \n%d. voter: %s, approve: %t\n", i+1, v.Voter, v.Vote.Approve)
+		fmt.Printf("  %d. voter: %s, approve: %t\n", i+1, v.Voter, v.Vote.Approve)
 	}
 
 	return nil
