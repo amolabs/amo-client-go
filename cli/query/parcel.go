@@ -39,21 +39,26 @@ func parcelFunc(cmd *cobra.Command, args []string) error {
 
 	if res == nil || len(res) == 0 || string(res) == "null" {
 		fmt.Println("no parcel")
-	} else {
-		var parcel types.Parcel
-		err = json.Unmarshal(res, &parcel)
-		if err != nil {
-			return err
-		}
-		fmt.Printf("owner: %s\ncustody: %s\n", parcel.Owner, parcel.Custody)
-		for i, r := range parcel.Requests {
-			fmt.Printf("  requests %2d. payment: %s, expire: %s, buyer: %s\n",
-				i+1, r.Payment.String(), r.Exp, r.Buyer)
-		}
-		for i, u := range parcel.Usages {
-			fmt.Printf("  usages %2d. custody: %s, expire: %s, buyer: %s\n",
-				i+1, u.Custody, u.Exp, u.Buyer)
-		}
+		return nil
+	}
+
+	var parcel types.ParcelEx
+	err = json.Unmarshal(res, &parcel)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("owner: %s\n", parcel.Owner)
+	fmt.Printf("custody: %s\n", parcel.Custody)
+	fmt.Printf("proxy_account: %s\n", parcel.ProxyAccount)
+	fmt.Printf("extra: %s\n", parcel.Extra)
+	for i, r := range parcel.Requests {
+		fmt.Printf("  requests %2d. payment: %s, dealer: %s, dealer_fee: %s, extra: %s, buyer: %s\n",
+			i+1, r.Payment.String(), r.Dealer, r.DealerFee.String(), r.Extra, r.Buyer)
+	}
+	for i, u := range parcel.Usages {
+		fmt.Printf("  usages %2d. custody: %s, extra: %s, buyer: %s\n",
+			i+1, u.Custody, u.Extra, u.Buyer)
 	}
 
 	return nil

@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"math/big"
 	"strconv"
-	"time"
 )
 
 // These types are borrowed from github.com/amolabs/amoabci/amo/types. The
@@ -101,17 +100,30 @@ type Storage struct {
 	Active          bool     `json:"active"`
 }
 
+type Extra struct {
+	Register json.RawMessage `json:"register,omitempty"`
+	Request  json.RawMessage `json:"request,omitempty"`
+	Grant    json.RawMessage `json:"grant,omitempty"`
+}
+
 type Parcel struct {
-	Owner    Address      `json:"owner"`
-	Custody  string       `json:"custody"`
-	Info     string       `json:"info,omitempty"`
+	Owner        Address `json:"owner"`
+	Custody      string  `json:"custody"`
+	ProxyAccount Address `json:"proxy_account,omitempty"`
+	Extra        Extra   `json:"extra,omitempty"`
+}
+
+type ParcelEx struct {
+	*Parcel
 	Requests []*RequestEx `json:"requests,omitempty"`
 	Usages   []*UsageEx   `json:"usages,omitempty"`
 }
 
 type Request struct {
-	Payment Currency  `json:"payment"`
-	Exp     time.Time `json:"exp"`
+	Payment   Currency `json:"payment"`
+	Dealer    Address  `json:"dealer,omitempty"`
+	DealerFee Currency `json:"dealer_fee,omitempty"`
+	Extra     Extra    `json:"extra,omitempty"`
 }
 
 type RequestEx struct {
@@ -120,8 +132,8 @@ type RequestEx struct {
 }
 
 type Usage struct {
-	Custody string    `json:"custody"`
-	Exp     time.Time `json:"exp"`
+	Custody string `json:"custody"`
+	Extra   Extra  `json:"extra,omitempty"`
 }
 
 type UsageEx struct {
