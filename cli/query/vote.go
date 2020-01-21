@@ -12,7 +12,7 @@ import (
 
 var VoteCmd = &cobra.Command{
 	Use:   "vote <draft_id> <address>",
-	Short: "Get vote status of given voter address",
+	Short: "Vote status of given voter address",
 	Args:  cobra.MinimumNArgs(2),
 	RunE:  voteFunc,
 }

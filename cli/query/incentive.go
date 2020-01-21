@@ -14,7 +14,7 @@ import (
 
 var IncentiveCmd = &cobra.Command{
 	Use:   "incentive <block_height | address>",
-	Short: "get the incentives of specified data",
+	Short: "Incentive history of given data",
 	Args:  cobra.RangeArgs(1, 2),
 	RunE:  incentiveFunc,
 }

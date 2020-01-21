@@ -12,7 +12,7 @@ import (
 
 var DraftCmd = &cobra.Command{
 	Use:   "draft <draft_id>",
-	Short: "Get draft status",
+	Short: "Draft status",
 	Args:  cobra.MinimumNArgs(1),
 	RunE:  draftFunc,
 }

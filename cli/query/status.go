@@ -13,7 +13,7 @@ import (
 
 var StatusCmd = &cobra.Command{
 	Use:   "node",
-	Short: "Show status of AMO node",
+	Short: "Status of AMO node",
 	Long:  "Show status of AMO node including node info, pubkey, latest block hash, app hash, block height and time",
 	RunE:  statusFunc,
 }

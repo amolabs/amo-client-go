@@ -14,7 +14,7 @@ import (
 
 var AppConfigCmd = &cobra.Command{
 	Use:   "config",
-	Short: "Show config of AMO app",
+	Short: "Config of AMO app",
 	RunE:  appConfigFunc,
 }
 

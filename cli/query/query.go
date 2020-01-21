@@ -32,6 +32,8 @@ func init() {
 		DraftCmd,
 		VoteCmd,
 		util.LineBreak,
+		StorageCmd,
+		util.LineBreak,
 		ParcelCmd,
 		RequestCmd,
 		UsageCmd,

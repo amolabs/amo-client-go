@@ -93,6 +93,14 @@ type VoteInfo struct {
 	Vote  Vote    `json:"vote"`
 }
 
+type Storage struct {
+	Owner           Address  `json:"owner"`
+	Url             string   `json:"url"`
+	RegistrationFee Currency `json:"registration_fee"`
+	HostingFee      Currency `json:"hosting_fee"`
+	Active          bool     `json:"active"`
+}
+
 type Parcel struct {
 	Owner    Address      `json:"owner"`
 	Custody  string       `json:"custody"`
