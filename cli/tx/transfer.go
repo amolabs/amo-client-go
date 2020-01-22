@@ -35,7 +35,12 @@ func transferFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Transfer(args[0], args[1], key, Fee, lastHeight)
+	udc, err := cmd.Flags().GetUint32("udc")
+	if err != nil {
+		return err
+	}
+
+	result, err := rpc.Transfer(udc, args[0], args[1], key, Fee, lastHeight)
 	if err != nil {
 		return err
 	}
@@ -60,4 +65,8 @@ func transferFunc(cmd *cobra.Command, args []string) error {
 	// TODO: rich output
 
 	return nil
+}
+
+func init() {
+	TransferCmd.PersistentFlags().Uint32("udc", uint32(0), "specify udc id if necessary")
 }

@@ -10,20 +10,20 @@ import (
 	"github.com/amolabs/amo-client-go/lib/types"
 )
 
-var UsageCmd = &cobra.Command{
-	Use:   "usage <buyer_address> <parcel_id>",
-	Short: "Granted parcel usage",
+var VoteCmd = &cobra.Command{
+	Use:   "vote <draft_id> <address>",
+	Short: "Vote status of given voter address",
 	Args:  cobra.MinimumNArgs(2),
-	RunE:  usageFunc,
+	RunE:  voteFunc,
 }
 
-func usageFunc(cmd *cobra.Command, args []string) error {
+func voteFunc(cmd *cobra.Command, args []string) error {
 	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
 	}
 
-	res, err := rpc.QueryUsage(args[0], args[1])
+	res, err := rpc.QueryVote(args[0], args[1])
 	if err != nil {
 		return err
 	}
@@ -38,19 +38,19 @@ func usageFunc(cmd *cobra.Command, args []string) error {
 	}
 
 	if res == nil || len(res) == 0 || string(res) == "null" {
-		fmt.Println("no usage")
+		fmt.Println("no vote")
 		return nil
 	}
 
-	var usage types.UsageEx
-	err = json.Unmarshal(res, &usage)
+	var voteInfo types.VoteInfo
+	err = json.Unmarshal(res, &voteInfo)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("custody: %s\n", usage.Custody)
-	fmt.Printf("buyer: %s\n", usage.Buyer)
-	fmt.Printf("extra: %s\n", usage.Extra)
+	fmt.Println("draft_id:", args[0])
+	fmt.Println("voter:", voteInfo.Voter)
+	fmt.Println("approve:", voteInfo.Approve)
 
 	return nil
 }

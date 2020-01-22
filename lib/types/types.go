@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
-	"time"
+	"strconv"
 )
 
 // These types are borrowed from github.com/amolabs/amoabci/amo/types. The
@@ -20,6 +20,10 @@ import (
 
 type Currency struct {
 	big.Int
+}
+
+func (c Currency) MarshalJSON() ([]byte, error) {
+	return []byte("\"" + c.Text(10) + "\""), nil
 }
 
 func (c *Currency) UnmarshalJSON(b []byte) error {
@@ -59,17 +63,67 @@ type Delegate struct {
 	Amount    Currency `json:"amount"`
 }
 
+type Draft struct {
+	Proposer Address      `json:"proposer"`
+	Config   AMOAppConfig `json:"config"`
+	Desc     string       `json:"desc"`
+
+	OpenCount  uint64   `json:"open_count"`
+	CloseCount uint64   `json:"close_count"`
+	ApplyCount uint64   `json:"apply_count"`
+	Deposit    Currency `json:"deposit"`
+
+	TallyQuorum  Currency `json:"tally_quorum"`
+	TallyApprove Currency `json:"tally_approve"`
+	TallyReject  Currency `json:"tally_reject"`
+}
+
+type DraftEx struct {
+	*Draft
+	Votes []*VoteInfo `json:"votes"`
+}
+
+type Vote struct {
+	Approve bool `json:"approve"`
+}
+
+type VoteInfo struct {
+	Voter Address `json:"voter"`
+	*Vote
+}
+
+type Storage struct {
+	Owner           Address  `json:"owner"`
+	Url             string   `json:"url"`
+	RegistrationFee Currency `json:"registration_fee"`
+	HostingFee      Currency `json:"hosting_fee"`
+	Active          bool     `json:"active"`
+}
+
+type Extra struct {
+	Register json.RawMessage `json:"register,omitempty"`
+	Request  json.RawMessage `json:"request,omitempty"`
+	Grant    json.RawMessage `json:"grant,omitempty"`
+}
+
 type Parcel struct {
-	Owner    Address      `json:"owner"`
-	Custody  string       `json:"custody"`
-	Info     string       `json:"info,omitempty"`
+	Owner        Address `json:"owner"`
+	Custody      string  `json:"custody"`
+	ProxyAccount Address `json:"proxy_account,omitempty"`
+	Extra        Extra   `json:"extra,omitempty"`
+}
+
+type ParcelEx struct {
+	*Parcel
 	Requests []*RequestEx `json:"requests,omitempty"`
 	Usages   []*UsageEx   `json:"usages,omitempty"`
 }
 
 type Request struct {
-	Payment Currency  `json:"payment"`
-	Exp     time.Time `json:"exp"`
+	Payment   Currency `json:"payment"`
+	Dealer    Address  `json:"dealer,omitempty"`
+	DealerFee Currency `json:"dealer_fee,omitempty"`
+	Extra     Extra    `json:"extra,omitempty"`
 }
 
 type RequestEx struct {
@@ -78,8 +132,8 @@ type RequestEx struct {
 }
 
 type Usage struct {
-	Custody string    `json:"custody"`
-	Exp     time.Time `json:"exp"`
+	Custody string `json:"custody"`
+	Extra   Extra  `json:"extra,omitempty"`
 }
 
 type UsageEx struct {
@@ -94,21 +148,31 @@ type IncentiveInfo struct {
 }
 
 type AMOAppConfig struct {
-	MaxValidators   uint64 `json:"max_validators"`
-	WeightValidator uint64 `json:"weight_validator"`
-	WeightDelegator uint64 `json:"weight_delegator"`
+	MaxValidators           uint64   `json:"max_validators"`
+	WeightValidator         uint64   `json:"weight_validator"`
+	WeightDelegator         uint64   `json:"weight_delegator"`
+	MinStakingUnit          Currency `json:"min_staking_unit"`
+	BlkReward               Currency `json:"blk_reward"`
+	TxReward                Currency `json:"tx_reward"`
+	PenaltyRatioM           float64  `json:"penalty_ratio_m"` // malicious validator
+	PenaltyRatioL           float64  `json:"penalty_ratio_l"` // lazy validators
+	LazinessCounterWindow   int64    `json:"laziness_counter_window"`
+	LazinessThreshold       float64  `json:"laziness_threshold"`
+	BlockBoundTxGracePeriod uint64   `json:"block_bound_tx_grace_period"`
+	LockupPeriod            uint64   `json:"lockup_period"`
+	DraftOpenCount          uint64   `json:"draft_open_count"`
+	DraftCloseCount         uint64   `json:"draft_close_count"`
+	DraftApplyCount         uint64   `json:"draft_apply_count"`
+	DraftDeposit            Currency `json:"draft_deposit"`
+	DraftQuorumRate         float64  `json:"draft_quorum_rate"`
+	DraftPassRate           float64  `json:"draft_pass_rate"`
+	DraftRefundRate         float64  `json:"draft_refund_rate"`
+}
 
-	MinStakingUnit string `json:"min_staking_unit"`
-
-	BlkReward string `json:"blk_reward"`
-	TxReward  string `json:"tx_reward"`
-
-	PenaltyRatioM float64 `json:"penalty_ratio_m"` // malicious validator
-	PenaltyRatioL float64 `json:"penalty_ratio_l"` // lazy validators
-
-	LazinessCounterWindow int64   `json:"laziness_counter_window"`
-	LazinessThreshold     float64 `json:"laziness_threshold"`
-
-	BlockBoundTxGracePeriod uint64 `json:"block_bound_tx_grace_period"`
-	LockupPeriod            uint64 `json:"lockup_period"`
+func ConvIDFromStr(IDStr string) (uint32, error) {
+	tmp, err := strconv.ParseInt(IDStr, 10, 32)
+	if err != nil {
+		return 0, err
+	}
+	return uint32(tmp), nil
 }

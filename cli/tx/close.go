@@ -11,14 +11,14 @@ import (
 	"github.com/amolabs/amo-client-go/lib/rpc"
 )
 
-var RegisterCmd = &cobra.Command{
-	Use:   "register <parcel_id> <key_custody>",
-	Short: "Register a parcel with extra information",
-	Args:  cobra.MinimumNArgs(2),
-	RunE:  registerFunc,
+var CloseCmd = &cobra.Command{
+	Use:   "close <storage_id>",
+	Short: "Close a storage with its id",
+	Args:  cobra.MinimumNArgs(1),
+	RunE:  closeFunc,
 }
 
-func registerFunc(cmd *cobra.Command, args []string) error {
+func closeFunc(cmd *cobra.Command, args []string) error {
 	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
@@ -34,17 +34,7 @@ func registerFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	proxy, err := cmd.Flags().GetString("proxy")
-	if err != nil {
-		return err
-	}
-
-	extra, err := cmd.Flags().GetString("extra")
-	if err != nil {
-		return err
-	}
-
-	result, err := rpc.Register(args[0], args[1], proxy, extra, key, Fee, lastHeight)
+	result, err := rpc.Close(args[0], key, Fee, lastHeight)
 	if err != nil {
 		return err
 	}
@@ -62,12 +52,5 @@ func registerFunc(cmd *cobra.Command, args []string) error {
 		fmt.Println(string(resultJSON))
 	}
 
-	// TODO: rich output
-
 	return nil
-}
-
-func init() {
-	RegisterCmd.PersistentFlags().String("proxy", "", "proxy account of parcel")
-	RegisterCmd.PersistentFlags().String("extra", "", "extra info")
 }

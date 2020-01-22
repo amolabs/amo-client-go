@@ -158,6 +158,19 @@ func SignSendTx(txType string, payload interface{}, key keys.KeyEntry, fee, last
 		return TmTxResult{}, err
 	}
 
+	if txType == "propose" {
+		var propose struct {
+			DraftID uint32          `json:"draft_id"`
+			Config  json.RawMessage `json:"config"`
+			Desc    string          `json:"desc"`
+		}
+		err := json.Unmarshal(payloadJson, &propose)
+		if err != nil {
+			return TmTxResult{}, err
+		}
+		fmt.Printf("draftID: %d, config: %s, desc: %s\n", propose.DraftID, propose.Config, propose.Desc)
+	}
+
 	sender := strings.ToUpper(key.Address)
 	txToSign := TxToSign{
 		Type:       txType,

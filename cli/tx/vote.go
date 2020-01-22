@@ -3,6 +3,7 @@ package tx
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/spf13/cobra"
 
@@ -11,14 +12,14 @@ import (
 	"github.com/amolabs/amo-client-go/lib/rpc"
 )
 
-var RegisterCmd = &cobra.Command{
-	Use:   "register <parcel_id> <key_custody>",
-	Short: "Register a parcel with extra information",
+var VoteCmd = &cobra.Command{
+	Use:   "vote <draft_id> <approve>",
+	Short: "Vote on a draft",
 	Args:  cobra.MinimumNArgs(2),
-	RunE:  registerFunc,
+	RunE:  voteFunc,
 }
 
-func registerFunc(cmd *cobra.Command, args []string) error {
+func voteFunc(cmd *cobra.Command, args []string) error {
 	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
@@ -34,17 +35,12 @@ func registerFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	proxy, err := cmd.Flags().GetString("proxy")
+	apBool, err := strconv.ParseBool(args[1])
 	if err != nil {
 		return err
 	}
 
-	extra, err := cmd.Flags().GetString("extra")
-	if err != nil {
-		return err
-	}
-
-	result, err := rpc.Register(args[0], args[1], proxy, extra, key, Fee, lastHeight)
+	result, err := rpc.Vote(args[0], apBool, key, Fee, lastHeight)
 	if err != nil {
 		return err
 	}
@@ -62,12 +58,5 @@ func registerFunc(cmd *cobra.Command, args []string) error {
 		fmt.Println(string(resultJSON))
 	}
 
-	// TODO: rich output
-
 	return nil
-}
-
-func init() {
-	RegisterCmd.PersistentFlags().String("proxy", "", "proxy account of parcel")
-	RegisterCmd.PersistentFlags().String("extra", "", "extra info")
 }
