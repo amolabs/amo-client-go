@@ -69,5 +69,5 @@ func registerFunc(cmd *cobra.Command, args []string) error {
 
 func init() {
 	RegisterCmd.PersistentFlags().String("proxy", "", "proxy account of parcel")
-	RegisterCmd.PersistentFlags().String("extra", "", "extra info")
+	RegisterCmd.PersistentFlags().String("extra", "null", "extra info")
 }

@@ -63,5 +63,5 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 }
 
 func init() {
-	RequestCmd.PersistentFlags().String("extra", "", "extra info")
+	RequestCmd.PersistentFlags().String("extra", "null", "extra info")
 }
