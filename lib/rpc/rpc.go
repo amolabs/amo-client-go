@@ -158,7 +158,7 @@ func SignSendTx(txType string, payload interface{}, key keys.KeyEntry, fee, last
 		return TmTxResult{}, err
 	}
 
-	sender := strings.ToUpper(key.Address)
+	sender := toUpper(key.Address)
 	txToSign := TxToSign{
 		Type:       txType,
 		Sender:     sender,
@@ -312,4 +312,8 @@ func NodeStatus() (TmStatusResult, error) {
 		return TmStatusResult{}, err
 	}
 	return res, nil
+}
+
+func toUpper(str string) string {
+	return strings.ToUpper(str)
 }

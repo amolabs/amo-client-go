@@ -18,6 +18,7 @@ func QueryBalance(udc uint32, address string) ([]byte, error) {
 	if udc != 0 {
 		queryPath = fmt.Sprintf("%s"+"/%d", queryPath, udc)
 	}
+	address = toUpper(address)
 	ret, err := ABCIQuery(queryPath, address)
 	if ret == nil {
 		ret = []byte("0")
@@ -26,10 +27,12 @@ func QueryBalance(udc uint32, address string) ([]byte, error) {
 }
 
 func QueryStake(address string) ([]byte, error) {
+	address = toUpper(address)
 	return ABCIQuery("/stake", address)
 }
 
 func QueryDelegate(address string) ([]byte, error) {
+	address = toUpper(address)
 	return ABCIQuery("/delegate", address)
 }
 
@@ -46,6 +49,7 @@ func QueryVote(draftID, address string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	address = toUpper(address)
 	return ABCIQuery("/vote", struct {
 		DraftID uint32 `json:"draft_id"`
 		Voter   string `json:"voter"`
@@ -61,10 +65,13 @@ func QueryStorage(storageID string) ([]byte, error) {
 }
 
 func QueryParcel(parcelID string) ([]byte, error) {
+	parcelID = toUpper(parcelID)
 	return ABCIQuery("/parcel", parcelID)
 }
 
 func QueryRequest(buyer string, target string) ([]byte, error) {
+	buyer = toUpper(buyer)
+	target = toUpper(target)
 	return ABCIQuery("/request", struct {
 		Buyer  string `json:"buyer"`
 		Target string `json:"target"`
@@ -72,6 +79,8 @@ func QueryRequest(buyer string, target string) ([]byte, error) {
 }
 
 func QueryUsage(buyer string, target string) ([]byte, error) {
+	buyer = toUpper(buyer)
+	target = toUpper(target)
 	return ABCIQuery("/usage", struct {
 		Buyer  string `json:"buyer"`
 		Target string `json:"target"`
@@ -83,10 +92,12 @@ func QueryBlockIncentive(height string) ([]byte, error) {
 }
 
 func QueryAddressIncentive(address string) ([]byte, error) {
+	address = toUpper(address)
 	return ABCIQuery("/inc_address", address)
 }
 
 func QueryIncentive(height string, address string) ([]byte, error) {
+	address = toUpper(address)
 	return ABCIQuery("/inc", struct {
 		Height  string `json:"height"`
 		Address string `json:"address"`
