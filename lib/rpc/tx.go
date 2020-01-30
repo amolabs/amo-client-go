@@ -10,6 +10,7 @@ import (
 // Tx broadcast in AMO context
 
 func Transfer(udc uint32, to, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	to = toUpper(to)
 	return SignSendTx("transfer", struct {
 		UDC    uint32 `json:"udc,omitempty"`
 		To     string `json:"to"`
@@ -18,6 +19,7 @@ func Transfer(udc uint32, to, amount string, key keys.KeyEntry, fee, lastHeight 
 }
 
 func Stake(validator, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	toUpper(validator)
 	return SignSendTx("stake", struct {
 		Validator string `json:"validator"`
 		Amount    string `json:"amount"`
@@ -31,6 +33,7 @@ func Withdraw(amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxRes
 }
 
 func Delegate(to, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	toUpper(to)
 	return SignSendTx("delegate", struct {
 		To     string `json:"to"`
 		Amount string `json:"amount"`
@@ -90,6 +93,9 @@ func Close(storageID string, key keys.KeyEntry, fee, lastHeight string) (TmTxRes
 }
 
 func Register(target, custody, proxy, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	target = toUpper(target)
+	custody = toUpper(custody)
+	proxy = toUpper(proxy)
 	return SignSendTx("register", struct {
 		Target       string          `json:"target"`
 		Custody      string          `json:"custody"`
@@ -99,12 +105,14 @@ func Register(target, custody, proxy, extra string, key keys.KeyEntry, fee, last
 }
 
 func Discard(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	target = toUpper(target)
 	return SignSendTx("discard", struct {
 		Target string `json:"target"`
 	}{target}, key, fee, lastHeight)
 }
 
 func Request(target, payment, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	target = toUpper(target)
 	return SignSendTx("request", struct {
 		Target  string          `json:"target"`
 		Payment string          `json:"payment"`
@@ -113,12 +121,16 @@ func Request(target, payment, extra string, key keys.KeyEntry, fee, lastHeight s
 }
 
 func Cancel(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	target = toUpper(target)
 	return SignSendTx("cancel", struct {
 		Target string `json:"target"`
 	}{target}, key, fee, lastHeight)
 }
 
 func Grant(target, grantee, custody, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	target = toUpper(target)
+	grantee = toUpper(grantee)
+	custody = toUpper(custody)
 	return SignSendTx("grant", struct {
 		Target  string          `json:"target"`
 		Grantee string          `json:"grantee"`
@@ -128,6 +140,8 @@ func Grant(target, grantee, custody, extra string, key keys.KeyEntry, fee, lastH
 }
 
 func Revoke(target, grantee string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	target = toUpper(target)
+	grantee = toUpper(grantee)
 	return SignSendTx("revoke", struct {
 		Target  string `json:"target"`
 		Grantee string `json:"grantee"`
