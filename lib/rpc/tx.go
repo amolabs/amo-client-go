@@ -18,6 +18,19 @@ func Transfer(udc uint32, to, amount string, key keys.KeyEntry, fee, lastHeight 
 	}{udc, to, amount}, key, fee, lastHeight)
 }
 
+func Issue(udcID, amount string, desc string, operators []string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	udcIDUint32, err := types.ConvIDFromStr(udcID)
+	if err != nil {
+		return TmTxResult{}, err
+	}
+	return SignSendTx("issue", struct {
+		UDC       uint32   `json:"udc"`
+		Desc      string   `json:"desc,omitempty"`
+		Operators []string `json:"operators,omitempty"`
+		Amount    string   `json:"amount"`
+	}{udcIDUint32, desc, operators, amount}, key, fee, lastHeight)
+}
+
 func Stake(validator, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	toUpper(validator)
 	return SignSendTx("stake", struct {
