@@ -23,6 +23,7 @@ func init() {
 		util.LineBreak,
 		IssueCmd,
 		BurnCmd,
+		LockCmd,
 		util.LineBreak,
 		StakeCmd,
 		WithdrawCmd,
