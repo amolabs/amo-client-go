@@ -22,6 +22,7 @@ func init() {
 		TransferCmd,
 		util.LineBreak,
 		IssueCmd,
+		BurnCmd,
 		util.LineBreak,
 		StakeCmd,
 		WithdrawCmd,

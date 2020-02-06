@@ -31,6 +31,17 @@ func Issue(udcID, amount string, desc string, operators []string, key keys.KeyEn
 	}{udcIDUint32, desc, operators, amount}, key, fee, lastHeight)
 }
 
+func Burn(udcID, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	udcIDUint32, err := types.ConvIDFromStr(udcID)
+	if err != nil {
+		return TmTxResult{}, err
+	}
+	return SignSendTx("burn", struct {
+		UDC    uint32 `json:"udc"`
+		Amount string `json:"amount"`
+	}{udcIDUint32, amount}, key, fee, lastHeight)
+}
+
 func Stake(validator, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	toUpper(validator)
 	return SignSendTx("stake", struct {
