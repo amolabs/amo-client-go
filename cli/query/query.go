@@ -26,6 +26,7 @@ func init() {
 		util.LineBreak,
 		BalanceCmd,
 		UdcCmd,
+		UdcLockCmd,
 		util.LineBreak,
 		StakeCmd,
 		DelegateCmd,

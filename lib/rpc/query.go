@@ -16,7 +16,7 @@ func QueryAppConfig() ([]byte, error) {
 func QueryBalance(udc uint32, address string) ([]byte, error) {
 	queryPath := "/balance"
 	if udc != 0 {
-		queryPath = fmt.Sprintf("%s"+"/%d", queryPath, udc)
+		queryPath = fmt.Sprintf("%s/%d", queryPath, udc)
 	}
 	address = toUpper(address)
 	ret, err := ABCIQuery(queryPath, address)
@@ -32,6 +32,11 @@ func QueryUDC(udcID string) ([]byte, error) {
 		return nil, err
 	}
 	return ABCIQuery("/udc", udcIDUint32)
+}
+
+func QueryUDCLock(udcID, address string) ([]byte, error) {
+	address = toUpper(address)
+	return ABCIQuery("/udclock/"+udcID, address)
 }
 
 func QueryStake(address string) ([]byte, error) {
