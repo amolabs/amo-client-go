@@ -34,6 +34,10 @@ func setupFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	if rpc.DryRun {
+		return nil
+	}
+
 	if result.Height != "0" {
 		SetLastHeight(util.DefaultConfigFilePath(), result.Height)
 	}
