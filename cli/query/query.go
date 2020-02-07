@@ -25,6 +25,8 @@ func init() {
 		AppConfigCmd,
 		util.LineBreak,
 		BalanceCmd,
+		UdcCmd,
+		util.LineBreak,
 		StakeCmd,
 		DelegateCmd,
 		IncentiveCmd,

@@ -26,6 +26,14 @@ func QueryBalance(udc uint32, address string) ([]byte, error) {
 	return ret, err
 }
 
+func QueryUDC(udcID string) ([]byte, error) {
+	udcIDUint32, err := types.ConvIDFromStr(udcID)
+	if err != nil {
+		return nil, err
+	}
+	return ABCIQuery("/udc", udcIDUint32)
+}
+
 func QueryStake(address string) ([]byte, error) {
 	address = toUpper(address)
 	return ABCIQuery("/stake", address)
