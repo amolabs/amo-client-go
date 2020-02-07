@@ -44,10 +44,6 @@ func transferFunc(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	if rpc.DryRun {
-		return nil
-	}
-
 	if result.Height != "0" {
 		SetLastHeight(util.DefaultConfigFilePath(), result.Height)
 	}
