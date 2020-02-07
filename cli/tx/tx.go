@@ -21,6 +21,10 @@ func init() {
 	Cmd.AddCommand(
 		TransferCmd,
 		util.LineBreak,
+		IssueCmd,
+		BurnCmd,
+		LockCmd,
+		util.LineBreak,
 		StakeCmd,
 		WithdrawCmd,
 		DelegateCmd,

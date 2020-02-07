@@ -51,6 +51,13 @@ func (c *Currency) String() string {
 type PubKeyEd25519 []byte
 type Address string
 
+type UDC struct {
+	Owner     Address   `json:"owner"`     // required
+	Desc      string    `json:"desc"`      // optional
+	Operators []Address `json:"operators"` // optional
+	Total     Currency  `json:"total"`     // required
+}
+
 type Stake struct {
 	Validator PubKeyEd25519 `json:"validator"`
 	Amount    Currency      `json:"amount"`

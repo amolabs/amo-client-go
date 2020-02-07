@@ -11,14 +11,14 @@ import (
 	"github.com/amolabs/amo-client-go/lib/rpc"
 )
 
-var RequestCmd = &cobra.Command{
-	Use:   "request <parcel_id> <amount>",
-	Short: "Request a parcel permission with payment",
+var IssueCmd = &cobra.Command{
+	Use:   "issue <udc_id> <amount>",
+	Short: "Issue a UDC with its id and total issue amount",
 	Args:  cobra.MinimumNArgs(2),
-	RunE:  requestFunc,
+	RunE:  issueFunc,
 }
 
-func requestFunc(cmd *cobra.Command, args []string) error {
+func issueFunc(cmd *cobra.Command, args []string) error {
 	asJson, err := cmd.Flags().GetBool("json")
 	if err != nil {
 		return err
@@ -29,28 +29,24 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	dealer, err := cmd.Flags().GetString("dealer")
+	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
 	if err != nil {
 		return err
 	}
 
-	dealerFee, err := cmd.Flags().GetString("dealer-fee")
+	desc, err := cmd.Flags().GetString("desc")
 	if err != nil {
 		return err
 	}
 
-	extra, err := cmd.Flags().GetString("extra")
+	operators, err := cmd.Flags().GetStringSlice("operators")
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Request(args[0], args[1], dealer, dealerFee, extra, key, Fee, Height)
+	result, err := rpc.Issue(args[0], args[1], desc, operators, key, Fee, lastHeight)
 	if err != nil {
 		return err
-	}
-
-	if rpc.DryRun {
-		return nil
 	}
 
 	if result.Height != "0" {
@@ -67,12 +63,10 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 	}
 
 	// TODO: rich output
-
 	return nil
 }
 
 func init() {
-	RequestCmd.PersistentFlags().String("dealer", "", "dealer address")
-	RequestCmd.PersistentFlags().String("dealer-fee", "", "fee to pay for dealer")
-	RequestCmd.PersistentFlags().String("extra", "null", "extra info")
+	IssueCmd.PersistentFlags().String("desc", "", "description")
+	IssueCmd.PersistentFlags().StringSliceP("operators", "o", []string{}, "operator addresses")
 }

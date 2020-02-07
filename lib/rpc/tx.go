@@ -18,6 +18,42 @@ func Transfer(udc uint32, to, amount string, key keys.KeyEntry, fee, lastHeight 
 	}{udc, to, amount}, key, fee, lastHeight)
 }
 
+func Issue(udcID, amount string, desc string, operators []string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	udcIDUint32, err := types.ConvIDFromStr(udcID)
+	if err != nil {
+		return TmTxResult{}, err
+	}
+	return SignSendTx("issue", struct {
+		UDC       uint32   `json:"udc"`
+		Desc      string   `json:"desc,omitempty"`
+		Operators []string `json:"operators,omitempty"`
+		Amount    string   `json:"amount"`
+	}{udcIDUint32, desc, operators, amount}, key, fee, lastHeight)
+}
+
+func Burn(udcID, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	udcIDUint32, err := types.ConvIDFromStr(udcID)
+	if err != nil {
+		return TmTxResult{}, err
+	}
+	return SignSendTx("burn", struct {
+		UDC    uint32 `json:"udc"`
+		Amount string `json:"amount"`
+	}{udcIDUint32, amount}, key, fee, lastHeight)
+}
+
+func Lock(udcID, holder, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	udcIDUint32, err := types.ConvIDFromStr(udcID)
+	if err != nil {
+		return TmTxResult{}, err
+	}
+	return SignSendTx("lock", struct {
+		UDC    uint32 `json:"udc"`
+		Holder string `json:"holder"`
+		Amount string `json:"amount"`
+	}{udcIDUint32, holder, amount}, key, fee, lastHeight)
+}
+
 func Stake(validator, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	toUpper(validator)
 	return SignSendTx("stake", struct {
@@ -111,13 +147,15 @@ func Discard(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResu
 	}{target}, key, fee, lastHeight)
 }
 
-func Request(target, payment, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Request(target, payment, dealer, dealerFee, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	target = toUpper(target)
 	return SignSendTx("request", struct {
-		Target  string          `json:"target"`
-		Payment string          `json:"payment"`
-		Extra   json.RawMessage `json:"extra"`
-	}{target, payment, []byte(extra)}, key, fee, lastHeight)
+		Target    string          `json:"target"`
+		Payment   string          `json:"payment"`
+		Dealer    string          `json:"dealer"`
+		DealerFee string          `json:"dealer_fee"`
+		Extra     json.RawMessage `json:"extra"`
+	}{target, payment, dealer, dealerFee, []byte(extra)}, key, fee, lastHeight)
 }
 
 func Cancel(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
