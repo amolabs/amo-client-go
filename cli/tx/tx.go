@@ -6,7 +6,10 @@ import (
 	"github.com/amolabs/amo-client-go/cli/util"
 )
 
-var Fee string
+var (
+	Fee    string
+	Height string
+)
 
 var Cmd = &cobra.Command{
 	Use:     "tx",
@@ -37,6 +40,13 @@ func init() {
 		CancelCmd,
 		RevokeCmd,
 	)
+
+	height, err := GetLastHeight(util.DefaultConfigFilePath())
+	if err != nil {
+		return
+	}
+
 	Cmd.PersistentFlags().StringP("fee", "f", "0", "fee for tx")
+	Cmd.PersistentFlags().String("height", height, "height for block binding tx")
 	Cmd.PersistentFlags().StringP("broadcast", "b", "sync", "options(commit, sync, async) for broadcast method")
 }

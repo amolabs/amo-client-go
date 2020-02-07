@@ -29,17 +29,12 @@ func grantFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return err
-	}
-
 	extra, err := cmd.Flags().GetString("extra")
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Grant(args[0], args[1], args[2], extra, key, Fee, lastHeight)
+	result, err := rpc.Grant(args[0], args[1], args[2], extra, key, Fee, Height)
 	if err != nil {
 		return err
 	}

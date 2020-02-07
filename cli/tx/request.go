@@ -29,17 +29,12 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return err
-	}
-
 	extra, err := cmd.Flags().GetString("extra")
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Request(args[0], args[1], extra, key, Fee, lastHeight)
+	result, err := rpc.Request(args[0], args[1], extra, key, Fee, Height)
 	if err != nil {
 		return err
 	}

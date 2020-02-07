@@ -29,12 +29,7 @@ func setupFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return err
-	}
-
-	result, err := rpc.Setup(args[0], args[1], args[2], args[3], key, Fee, lastHeight)
+	result, err := rpc.Setup(args[0], args[1], args[2], args[3], key, Fee, Height)
 	if err != nil {
 		return err
 	}

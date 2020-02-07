@@ -30,17 +30,12 @@ func voteFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return err
-	}
-
 	apBool, err := strconv.ParseBool(args[1])
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Vote(args[0], apBool, key, Fee, lastHeight)
+	result, err := rpc.Vote(args[0], apBool, key, Fee, Height)
 	if err != nil {
 		return err
 	}

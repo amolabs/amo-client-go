@@ -29,12 +29,7 @@ func proposeFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return err
-	}
-
-	result, err := rpc.Propose(args[0], args[1], args[2], key, Fee, lastHeight)
+	result, err := rpc.Propose(args[0], args[1], args[2], key, Fee, Height)
 	if err != nil {
 		return err
 	}

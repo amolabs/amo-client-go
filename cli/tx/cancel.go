@@ -29,12 +29,7 @@ func cancelFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return err
-	}
-
-	result, err := rpc.Cancel(args[0], key, Fee, lastHeight)
+	result, err := rpc.Cancel(args[0], key, Fee, Height)
 	if err != nil {
 		return err
 	}

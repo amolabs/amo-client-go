@@ -42,12 +42,7 @@ func stakeFunc(cmd *cobra.Command, args []string) error {
 		val = args[0]
 	}
 
-	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return err
-	}
-
-	result, err := rpc.Stake(val, args[1], key, Fee, lastHeight)
+	result, err := rpc.Stake(val, args[1], key, Fee, Height)
 	if err != nil {
 		return err
 	}

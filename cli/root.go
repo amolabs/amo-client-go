@@ -40,25 +40,29 @@ func init() {
 }
 
 func readGlobalFlags(cmd *cobra.Command, args []string) {
-	rpcArg, err := cmd.Flags().GetString("rpc")
+	rpcFlag, err := cmd.Flags().GetString("rpc")
 	if err == nil {
-		rpc.RpcRemote = "http://" + rpcArg
+		rpc.RpcRemote = "http://" + rpcFlag
 	}
-	stoArg, err := cmd.Flags().GetString("sto")
+	stoFlag, err := cmd.Flags().GetString("sto")
 	if err == nil {
-		storage.Endpoint = "http://" + stoArg
+		storage.Endpoint = "http://" + stoFlag
 	}
 	dryRun, err := cmd.Flags().GetBool("dry")
 	if err == nil {
 		rpc.DryRun = dryRun
 	}
-	feeArg, err := cmd.Flags().GetString("fee")
+	feeFlag, err := cmd.Flags().GetString("fee")
 	if err == nil {
-		tx.Fee = feeArg
+		tx.Fee = feeFlag
 	}
-	broadcastOptionArg, err := cmd.Flags().GetString("broadcast")
+	heightFlag, err := cmd.Flags().GetString("height")
 	if err == nil {
-		rpc.TxBroadcastOption = broadcastOptionArg
+		tx.Height = heightFlag
+	}
+	broadcastOptionFlag, err := cmd.Flags().GetString("broadcast")
+	if err == nil {
+		rpc.TxBroadcastOption = broadcastOptionFlag
 	}
 	username, err := cmd.Flags().GetString("user")
 	if err == nil {

@@ -29,12 +29,7 @@ func revokeFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return err
-	}
-
-	result, err := rpc.Revoke(args[0], args[1], key, Fee, lastHeight)
+	result, err := rpc.Revoke(args[0], args[1], key, Fee, Height)
 	if err != nil {
 		return err
 	}

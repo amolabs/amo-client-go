@@ -29,11 +29,6 @@ func registerFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return err
-	}
-
 	proxy, err := cmd.Flags().GetString("proxy")
 	if err != nil {
 		return err
@@ -44,7 +39,7 @@ func registerFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Register(args[0], args[1], proxy, extra, key, Fee, lastHeight)
+	result, err := rpc.Register(args[0], args[1], proxy, extra, key, Fee, Height)
 	if err != nil {
 		return err
 	}

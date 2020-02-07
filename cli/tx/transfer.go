@@ -30,17 +30,12 @@ func transferFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	lastHeight, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return err
-	}
-
 	udc, err := cmd.Flags().GetUint32("udc")
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Transfer(udc, args[0], args[1], key, Fee, lastHeight)
+	result, err := rpc.Transfer(udc, args[0], args[1], key, Fee, Height)
 	if err != nil {
 		return err
 	}
