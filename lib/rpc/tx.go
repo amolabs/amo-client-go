@@ -147,13 +147,15 @@ func Discard(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResu
 	}{target}, key, fee, lastHeight)
 }
 
-func Request(target, payment, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Request(target, payment, dealer, dealerFee, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	target = toUpper(target)
 	return SignSendTx("request", struct {
-		Target  string          `json:"target"`
-		Payment string          `json:"payment"`
-		Extra   json.RawMessage `json:"extra"`
-	}{target, payment, []byte(extra)}, key, fee, lastHeight)
+		Target    string          `json:"target"`
+		Payment   string          `json:"payment"`
+		Dealer    string          `json:"dealer"`
+		DealerFee string          `json:"dealer_fee"`
+		Extra     json.RawMessage `json:"extra"`
+	}{target, payment, dealer, dealerFee, []byte(extra)}, key, fee, lastHeight)
 }
 
 func Cancel(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {

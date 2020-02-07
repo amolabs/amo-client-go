@@ -29,12 +29,22 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	dealer, err := cmd.Flags().GetString("dealer")
+	if err != nil {
+		return err
+	}
+
+	dealerFee, err := cmd.Flags().GetString("dealer-fee")
+	if err != nil {
+		return err
+	}
+
 	extra, err := cmd.Flags().GetString("extra")
 	if err != nil {
 		return err
 	}
 
-	result, err := rpc.Request(args[0], args[1], extra, key, Fee, Height)
+	result, err := rpc.Request(args[0], args[1], dealer, dealerFee, extra, key, Fee, Height)
 	if err != nil {
 		return err
 	}
@@ -62,5 +72,7 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 }
 
 func init() {
+	RequestCmd.PersistentFlags().String("dealer", "", "dealer address")
+	RequestCmd.PersistentFlags().String("dealer-fee", "", "fee to pay for dealer")
 	RequestCmd.PersistentFlags().String("extra", "null", "extra info")
 }
