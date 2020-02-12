@@ -91,13 +91,13 @@ func (cfg *Config) SetABCIConfig(abciConfig types.AMOAppConfig) {
 }
 
 func (cfg *Config) UpdateLastHeight() error {
+	if rpc.DryRun {
+		return nil
+	}
+
 	rawMsg, err := rpc.NodeStatus()
 	if err != nil {
 		return err
-	}
-
-	if rpc.DryRun {
-		return nil
 	}
 
 	jsonMsg, err := json.Marshal(rawMsg.SyncInfo)
