@@ -58,7 +58,15 @@ func readGlobalFlags(cmd *cobra.Command, args []string) {
 	}
 	heightFlag, err := cmd.Flags().GetString("height")
 	if err == nil {
-		tx.Height = heightFlag
+		if heightFlag == "" {
+			height, err := tx.GetLastHeight(util.DefaultConfigFilePath())
+			if err != nil {
+				return
+			}
+			tx.Height = height
+		} else {
+			tx.Height = heightFlag
+		}
 	}
 	broadcastOptionFlag, err := cmd.Flags().GetString("broadcast")
 	if err == nil {

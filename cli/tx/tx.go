@@ -45,12 +45,7 @@ func init() {
 		RevokeCmd,
 	)
 
-	height, err := GetLastHeight(util.DefaultConfigFilePath())
-	if err != nil {
-		return
-	}
-
 	Cmd.PersistentFlags().StringP("fee", "f", "0", "fee for tx")
-	Cmd.PersistentFlags().String("height", height, "height for block binding tx")
+	Cmd.PersistentFlags().String("height", "", "height for block binding tx")
 	Cmd.PersistentFlags().StringP("broadcast", "b", "sync", "options(commit, sync, async) for broadcast method")
 }
