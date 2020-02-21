@@ -44,10 +44,7 @@ func (cfg *Config) Load() error {
 
 	newConfig := ConfigSet{}
 	if len(b) > 0 {
-		err = json.Unmarshal(b, &newConfig)
-		if err != nil {
-			return err
-		}
+		json.Unmarshal(b, &newConfig)
 	}
 
 	cfg.configSet = newConfig
