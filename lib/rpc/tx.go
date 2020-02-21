@@ -135,8 +135,8 @@ func Register(target, custody, proxy, extra string, key keys.KeyEntry, fee, last
 	return SignSendTx("register", struct {
 		Target       string          `json:"target"`
 		Custody      string          `json:"custody"`
-		ProxyAccount string          `json:"proxy_account"`
-		Extra        json.RawMessage `json:"extra"`
+		ProxyAccount string          `json:"proxy_accoun,omitempty"`
+		Extra        json.RawMessage `json:"extra,omitempty"`
 	}{target, custody, proxy, []byte(extra)}, key, fee, lastHeight)
 }
 
@@ -152,9 +152,9 @@ func Request(target, payment, dealer, dealerFee, extra string, key keys.KeyEntry
 	return SignSendTx("request", struct {
 		Target    string          `json:"target"`
 		Payment   string          `json:"payment"`
-		Dealer    string          `json:"dealer"`
-		DealerFee string          `json:"dealer_fee"`
-		Extra     json.RawMessage `json:"extra"`
+		Dealer    string          `json:"dealer,omitempty"`
+		DealerFee string          `json:"dealer_fee,omitempty"`
+		Extra     json.RawMessage `json:"extra,omitempty"`
 	}{target, payment, dealer, dealerFee, []byte(extra)}, key, fee, lastHeight)
 }
 
@@ -173,7 +173,7 @@ func Grant(target, grantee, custody, extra string, key keys.KeyEntry, fee, lastH
 		Target  string          `json:"target"`
 		Grantee string          `json:"grantee"`
 		Custody string          `json:"custody"`
-		Extra   json.RawMessage `json:"extra"`
+		Extra   json.RawMessage `json:"extra,omitempty"`
 	}{target, grantee, custody, []byte(extra)}, key, fee, lastHeight)
 }
 
