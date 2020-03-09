@@ -7,7 +7,7 @@ import (
 )
 
 // VERSION represents the general version of this app
-const VERSION = "v1.4.2"
+const VERSION = "v1.5.0"
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
