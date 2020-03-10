@@ -391,6 +391,8 @@ sender must be the owner the data parcel.
 
 ### AMO blockchain RPC
 
+https://godoc.org/github.com/amolabs/amo-client-go/lib/rpc
+
 AMO blockchain is based on [Tendermint](https://github.com/tendermint/tendermint).
 Client supports basic Tendermint [RPCs](https://docs.tendermint.com/master/rpc/).
 
