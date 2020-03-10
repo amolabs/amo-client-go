@@ -1,4 +1,4 @@
-# amo-client-go
+# amo-client-go [![GoDoc](https://godoc.org/github.com/amolabs/amo-client-go/lib?status.svg)](https://godoc.org/github.com/amolabs/amo-client-go/lib)
 Reference implementation of AMO client for golang. This document is available
 in [Korean](README.ko.md) also.
 
@@ -386,3 +386,47 @@ amocli parcel remove <parcelID> [flags]
 ```
 The sender removes a data parcel `<parcelID>` from an AMO storage service. The
 sender must be the owner the data parcel.
+
+## Lib
+
+### AMO blockchain RPC
+
+https://godoc.org/github.com/amolabs/amo-client-go/lib/rpc
+
+AMO blockchain is based on [Tendermint](https://github.com/tendermint/tendermint).
+Client supports basic Tendermint [RPCs](https://docs.tendermint.com/master/rpc/).
+
+```text
+rpc.NodeStatus()
+rpc.BroadcastTx(tx)
+rpc.ABCIQuery(path, queryData)
+```
+
+Client also provides wrapper of above functions for AMO blockchain specific
+[RPCs](https://github.com/amolabs/docs/blob/master/rpc.md)
+```text
+// Key is needed for signing transaction
+// Transaction definition 
+// https://github.com/amolabs/docs/blob/master/protocol.md
+
+// Bank
+rpc.Transfer(...)
+// Stake
+rpc.Stake(...)
+// Governance
+rpc.Propose(...)
+// Parcel
+rpc.Register(...)
+// UDC
+rpc.Issue(...)
+
+// Return types of ABCI Query are defined in AMO blockchain RPC document
+// https://github.com/amolabs/docs/blob/master/rpc.md#abci-query
+// ABCI Query
+rpc.QueryBalance(0, address)   // Query AMO of address
+rpc.QueryBalance(udc, address) // Query UDC of address
+```
+
+### AMO Storage
+
+- TODO

@@ -1,5 +1,6 @@
 # Editors and IDEs
 .*.sw*
+.idea/
 
 # Binaries for programs and plugins
 *.exe
