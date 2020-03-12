@@ -34,7 +34,7 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	dealerFee, err := cmd.Flags().GetString("dealer-fee")
+	dealerFee, err := cmd.Flags().GetString("dealer_fee")
 	if err != nil {
 		return err
 	}
@@ -73,6 +73,6 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 
 func init() {
 	RequestCmd.PersistentFlags().String("dealer", "", "dealer address")
-	RequestCmd.PersistentFlags().String("dealer-fee", "", "fee to pay for dealer")
-	RequestCmd.PersistentFlags().String("extra", "null", "extra info")
+	RequestCmd.PersistentFlags().String("dealer_fee", "", "fee to pay for dealer")
+	RequestCmd.PersistentFlags().String("extra", "", "extra info")
 }

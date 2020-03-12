@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/amolabs/amo-client-go/lib/keys"
 	"github.com/amolabs/amo-client-go/lib/types"
@@ -22,6 +23,9 @@ func Issue(udcID, amount string, desc string, operators []string, key keys.KeyEn
 	udcIDUint32, err := types.ConvIDFromStr(udcID)
 	if err != nil {
 		return TmTxResult{}, err
+	}
+	for i, op := range operators {
+		operators[i] = toUpper(op)
 	}
 	return SignSendTx("issue", struct {
 		UDC       uint32   `json:"udc"`
@@ -47,6 +51,7 @@ func Lock(udcID, holder, amount string, key keys.KeyEntry, fee, lastHeight strin
 	if err != nil {
 		return TmTxResult{}, err
 	}
+	holder = toUpper(holder)
 	return SignSendTx("lock", struct {
 		UDC    uint32 `json:"udc"`
 		Holder string `json:"holder"`
@@ -55,7 +60,7 @@ func Lock(udcID, holder, amount string, key keys.KeyEntry, fee, lastHeight strin
 }
 
 func Stake(validator, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
-	toUpper(validator)
+	validator = toUpper(validator)
 	return SignSendTx("stake", struct {
 		Validator string `json:"validator"`
 		Amount    string `json:"amount"`
@@ -69,7 +74,7 @@ func Withdraw(amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxRes
 }
 
 func Delegate(to, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
-	toUpper(to)
+	to = toUpper(to)
 	return SignSendTx("delegate", struct {
 		To     string `json:"to"`
 		Amount string `json:"amount"`
@@ -148,7 +153,15 @@ func Discard(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResu
 }
 
 func Request(target, payment, dealer, dealerFee, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	if dealer != "" && dealerFee == "" {
+		return TmTxResult{}, errors.New("'dealer_fee' is missing")
+	}
+	if dealer == "" && dealerFee != "" {
+		return TmTxResult{}, errors.New("'dealer' is missing")
+	}
+
 	target = toUpper(target)
+	dealer = toUpper(dealer)
 	return SignSendTx("request", struct {
 		Target    string          `json:"target"`
 		Payment   string          `json:"payment"`

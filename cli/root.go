@@ -13,9 +13,9 @@ import (
 )
 
 var RootCmd = &cobra.Command{
-	Use:              "amocli",
-	Short:            "AMO blockchain console",
-	PersistentPreRun: readGlobalFlags,
+	Use:               "amocli",
+	Short:             "AMO blockchain console",
+	PersistentPreRunE: readGlobalFlags,
 }
 
 func init() {
@@ -39,7 +39,7 @@ func init() {
 	RootCmd.PersistentFlags().StringP("pass", "p", "", "passphrase")
 }
 
-func readGlobalFlags(cmd *cobra.Command, args []string) {
+func readGlobalFlags(cmd *cobra.Command, args []string) error {
 	rpcFlag, err := cmd.Flags().GetString("rpc")
 	if err == nil {
 		rpc.RpcRemote = "http://" + rpcFlag
@@ -61,7 +61,7 @@ func readGlobalFlags(cmd *cobra.Command, args []string) {
 		if heightFlag == "" {
 			height, err := tx.GetLastHeight(util.DefaultConfigFilePath())
 			if err != nil {
-				return
+				return err
 			}
 			tx.Height = height
 		} else {
@@ -80,4 +80,5 @@ func readGlobalFlags(cmd *cobra.Command, args []string) {
 	if err == nil {
 		key.Passphrase = passphrase
 	}
+	return nil
 }

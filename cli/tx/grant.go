@@ -62,5 +62,5 @@ func grantFunc(cmd *cobra.Command, args []string) error {
 }
 
 func init() {
-	GrantCmd.PersistentFlags().String("extra", "null", "extra info")
+	GrantCmd.PersistentFlags().String("extra", "", "extra info")
 }
