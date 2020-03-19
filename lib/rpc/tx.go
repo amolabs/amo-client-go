@@ -140,7 +140,7 @@ func Register(target, custody, proxy, extra string, key keys.KeyEntry, fee, last
 	return SignSendTx("register", struct {
 		Target       string          `json:"target"`
 		Custody      string          `json:"custody"`
-		ProxyAccount string          `json:"proxy_accoun,omitempty"`
+		ProxyAccount string          `json:"proxy_account,omitempty"`
 		Extra        json.RawMessage `json:"extra,omitempty"`
 	}{target, custody, proxy, []byte(extra)}, key, fee, lastHeight)
 }
