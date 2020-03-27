@@ -156,8 +156,8 @@ type IncentiveInfo struct {
 
 type AMOAppConfig struct {
 	MaxValidators          uint64   `json:"max_validators"`
-	WeightValidator        uint64   `json:"weight_validator"`
-	WeightDelegator        uint64   `json:"weight_delegator"`
+	WeightValidator        float64  `json:"weight_validator"`
+	WeightDelegator        float64  `json:"weight_delegator"`
 	MinStakingUnit         Currency `json:"min_staking_unit"`
 	BlkReward              Currency `json:"blk_reward"`
 	TxReward               Currency `json:"tx_reward"`
