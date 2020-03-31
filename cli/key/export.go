@@ -40,7 +40,10 @@ func exportFunc(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		passphrase := []byte(b)
-		key.Decrypt(passphrase)
+		err = key.Decrypt(passphrase)
+		if err != nil {
+			return err
+		}
 	}
 	fmt.Printf("Private key for user '%s'\n  Hex: %s\n  Base64: %s\n",
 		username,
