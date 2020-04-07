@@ -185,6 +185,11 @@ amocli query node [flags]
 블록체인 노드의 상태를 표시한다.
 
 ```bash
+amocli query config [flags]
+```
+블록체인 노드의 설정을 표시한다.
+
+```bash
 amocli query balance <address> [flags]
 ```
 계정의 AMO 잔고를 출력한다. `<address>`는 HEX 인코딩된 바이트 열이다. 계정의
