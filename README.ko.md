@@ -228,6 +228,13 @@ amocli query delegate <address> [flags]
 계정의 위임된 stake 정보를 출력한다. `<address>`는 HEX 인코딩된 바이트 열이다.
 
 ```bash
+amocli query incentive <block_height | address> [flags]
+```
+`<block_height>` 혹은 `<address>`의 incentive 정보를 출력한다. 두 가지 모두
+동시에 주어질 수 있다. `<block_height>`는 십진법 숫자이다. `<address>`는 HEX
+인코딩된 바이트 열이다.
+
+```bash
 amocli query parcel <parcelID> [flags]
 ```
 등록된 parcel의 정보를 출력한다. `<parcelID>`는 HEX 인코딩된 바이트 열이다.

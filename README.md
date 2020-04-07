@@ -249,6 +249,13 @@ Print delegated stake info of an account. `<address>` is a HEX-encoded byte
 array.
 
 ```bash
+amocli query incentive <block_height | address> [flags]
+```
+Print incentive info of either `<block_height>` or `<address>`. Both of them
+can be given at the same time. `<block_height>` is a decimal number.
+`<address>` is a HEX-encoded byte array.
+
+```bash
 amocli query parcel <parcelID> [flags]
 ```
 Print registered parcel info. `<parcelID>` is a HEX-encoded byte array.
