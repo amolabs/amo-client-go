@@ -106,7 +106,6 @@ Commands working locally:
 * `amocli [flags] key <subcommand>`: manage keys in the local keyring
 
 Commands working with a remote server:
-* `amocli [flags] status`: print blockchain node status
 * `amocli [flags] query <subcommand>`: query blockchain data
 * `amocli [flags] tx <subcommand>`: send a signed transaction to the blockchain
 * `amocli [flags] parcel <subcommand>`: manage data parcels in the storage service
@@ -192,17 +191,21 @@ Remove a key from the local keyring.
 permanently. If this is the key for the address holding some digital assets,
 you will lose control over these assets.**
 
-### Status command
-```bash
-amocli status
-```
-Print blockchain node status.
-
 ### Query command
 ```bash
 amocli query <subcommand>
 ```
 Query blockchain data. All of `query` subcommands do not require user key.
+
+```bash
+amocli query node [flags]
+```
+Print blockchain node status.
+
+```bash
+amocli query config [flags]
+```
+Print blockchain node config.
 
 ```bash
 amocli query balance <address> [flags]

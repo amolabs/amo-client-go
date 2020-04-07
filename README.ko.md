@@ -90,7 +90,6 @@ TBA: 기본 스토리지 서비스의 API 단말 주소
 * `amocli [flags] key <subcommand>`: keyring의 키를 관리
 
 원격 서버와 함께 동작하는 명령:
-* `amocli [flags] status`: 블록체인 노드의 상태 표시
 * `amocli [flags] query <subcommand>`: 블록체인 데이터 조회
 * `amocli [flags] tx <subcommand>`: 블록체인에 서명된 거래 전송
 * `amocli [flags] parcel <subcommand>`: 스토리지 서비스의 데이터 parcel 관리
@@ -173,18 +172,17 @@ Keyring에서 키 하나를 제거한다.
 디지털 자산을 보유하고 있는 계정에 연결된 키라면 해당 자산에 대한 통제권 역시
 상실하게 된다.**
 
-### Status 명령
-```bash
-amocli status
-```
-블록체인 노드의 상태를 표시한다.
-
 ### Query 명령
 ```bash
 amocli query <subcommand>
 ```
 블록체인 상의 데이터를 조회한다. 모든 `query` 하부명령은 사용자 키를 필요로 하지
 않는다.
+
+```bash
+amocli query node [flags] 
+```
+블록체인 노드의 상태를 표시한다.
 
 ```bash
 amocli query balance <address> [flags]
