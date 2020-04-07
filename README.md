@@ -263,7 +263,7 @@ Print registered parcel info. `<parcelID>` is a HEX-encoded byte array.
 ```bash
 amocli query draft <draft_id> [flags]
 ```
-Print proposed draft info. `<draft_id>` is a decimal number.
+Print proposed draft status. `<draft_id>` is a decimal number.
 
 ```bash
 amocli query request <buyer_address> <parcel_id> [flags]

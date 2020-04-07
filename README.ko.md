@@ -242,7 +242,7 @@ amocli query parcel <parcelID> [flags]
 ```bash
 amocli query draft <draft_id> [flags]
 ```
-제안된 draft 정보를 출력한다. `<draft_id>`는 10진법 숫자이다.
+제안된 draft 상태를 출력한다. `<draft_id>`는 10진법 숫자이다.
 
 ```bash
 amocli query request <buyer_address> <parcel_id> [flags]
