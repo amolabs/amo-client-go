@@ -22,7 +22,7 @@ TBA
 	설치된다.
   * MacOS에서는 Xcode에 포함된 make를 사용할 수도 있고,
 	[Homebrew](https://brew.sh)를 통하여 GNU Make를 설치할 수도 있다.
-* [golang](https://golang.org/dl/) v.11 혹은 이후 버전 (Go Modules 이용)
+* [golang](https://golang.org/dl/) v1.13 혹은 이후 버전 (Go Modules 이용)
   * 경우에 따라서 `GOPATH`와 `GOBIN` 환경변수를 직접 설정해야 할 수 있다. 더
 	진행하기 전에 이 환경변수들을 확인해야 한다.
 

@@ -38,7 +38,7 @@ Before compile and install `amo-client-go`, you need to install the followings:
   * For Debian or Ubuntu linux, you can install `build-essential` package.
   * For MacOS, you can use `make` from Xcode, or install GNU Make via
 	[Homebrew](https://brew.sh).
-* [golang](https://golang.org/dl/) v1.11 or later (for Go Modules)
+* [golang](https://golang.org/dl/) v1.13 or later (for Go Modules)
   * In some cases, you need to set `GOPATH` and `GOBIN` environment variable
 	manually. Check these variables are set before you proceed.
 
