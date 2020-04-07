@@ -213,7 +213,8 @@ amocli query balance <address> [flags]
 Print AMO balance of an account. `<address>` is a HEX-encoded byte array.
 Account balance is displayed in two ways: in AMO unit and in *mote* unit. 1 AMO
 is equivalent to 1000000000000000000 mote. When supplied with `--json` flag,
-only *mote* unit is displayed as a string form.
+only *mote* unit is displayed as a string form. When supplied with `--udc
+<udc_id>` flag, print UDC balance of an account.
 
 ```bash
 amocli query udc <udc_id> [flags]

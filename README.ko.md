@@ -195,7 +195,7 @@ amocli query balance <address> [flags]
 계정의 AMO 잔고를 출력한다. `<address>`는 HEX 인코딩된 바이트 열이다. 계정의
 잔고는 AMO 단위와 *mote* 단위 두가지로 표시된다. 1 AMO는 1000000000000000000
 mote과 같다. `--json` 플래그가 주어졌을 경우는 *mote* 단위만 문자열의 형태로
-출력된다.
+출력된다. `--udc <udc_id>` 플래그가 주어졌을 경우는 계정의 UDC 잔고를 출력한다. 
 
 ```bash
 amocli query udc <udc_id> [flags]
