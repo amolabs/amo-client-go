@@ -219,8 +219,17 @@ only *mote* unit is displayed as a string form. When supplied with `--udc
 ```bash
 amocli query udc <udc_id> [flags]
 ```
-Print general information of UDC issued on blockchain. `udc_id` is a decimal
+Print general information of UDC issued on blockchain. `<udc_id>` is a decimal
 number.
+
+```bash
+amocli query lock <udc_id> <address> [flags]
+```
+Print locked UDC balance of an account. `<udc_id>` is a decimal number.
+`<address>` is a HEX-encoded byte array. Locked balance is displayed in two
+ways: in AMO unit and in *mote* unit. 1 AMO is equivalent to
+1000000000000000000 mote. When supplied with `--json` flag, only *mote* unit is
+displayed as a string form. 
 
 ```bash
 amocli query stake <address> [flags]
