@@ -216,6 +216,12 @@ is equivalent to 1000000000000000000 mote. When supplied with `--json` flag,
 only *mote* unit is displayed as a string form.
 
 ```bash
+amocli query udc <udc_id> [flags]
+```
+Print general information of UDC issued on blockchain. `udc_id` is a decimal
+number.
+
+```bash
 amocli query stake <address> [flags]
 ```
 Print stake info of an account. `<address>` is a HEX-encoded byte array. This

@@ -198,6 +198,12 @@ mote과 같다. `--json` 플래그가 주어졌을 경우는 *mote* 단위만 �
 출력된다.
 
 ```bash
+amocli query udc <udc_id> [flags]
+```
+블록체인 상에서 발행된 UDC의 전반적인 정보를 표시한다. `udc_id`는 10진법
+숫자이다.
+
+```bash
 amocli query stake <address> [flags]
 ```
 계정의 stake 정보를 출력한다. `<address>`는 HEX 인코딩된 바이트 열이다. 이
