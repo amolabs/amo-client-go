@@ -240,6 +240,11 @@ amocli query parcel <parcelID> [flags]
 등록된 parcel의 정보를 출력한다. `<parcelID>`는 HEX 인코딩된 바이트 열이다.
 
 ```bash
+amocli query draft <draft_id> [flags]
+```
+제안된 draft 정보를 출력한다. `<draft_id>`는 10진법 숫자이다.
+
+```bash
 amocli query request <buyer_address> <parcel_id> [flags]
 ```
 Parcel에 대한 구매요청 정보를 출력한다. `<buyer_address>`와 `<parcel_id>`는 HEX
