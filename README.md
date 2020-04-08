@@ -304,6 +304,11 @@ The sender transfers `<amount>` of AMO coin (in mote unit) to the account
 associated with `<address>`.
 
 ```bash
+amocli tx issue <udc_id> <amount> [flags]
+```
+The sender issues `<amount>` of UDC coin (in mote unit) with `<udc_id>`.
+
+```bash
 amocli tx stake <validator_pubkey> <amount> [flags]
 ```
 The sender creates a new stake or increase an existing stake associated with
