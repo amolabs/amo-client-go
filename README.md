@@ -267,6 +267,11 @@ Print vote status of given voter address. `<draft_id>` is a decimal number.
 `<address>` is a HEX-encoded byte array.
 
 ```bash
+amocli query storage <storage_id> [flags]
+```
+Print storage info. `<storage_id>` is a decimal number.
+
+```bash
 amocli query parcel <parcelID> [flags]
 ```
 Print registered parcel info. `<parcelID>` is a HEX-encoded byte array.

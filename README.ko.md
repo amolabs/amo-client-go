@@ -246,6 +246,11 @@ amocli query vote <draft_id> <address> [flags]
 `<address>`는 HEX 인코딩된 바이트 열이다.
 
 ```bash
+amocli query storage <storage_id> [flags]
+```
+storage 정보를 출력한다. `<storage_id>`는 십진법 숫자이다.
+
+```bash
 amocli query parcel <parcelID> [flags]
 ```
 등록된 parcel의 정보를 출력한다. `<parcelID>`는 HEX 인코딩된 바이트 열이다.
