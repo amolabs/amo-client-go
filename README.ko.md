@@ -292,6 +292,12 @@ amocli tx burn <udc_id> <amount> [flags]
 송신자는 `<amount>` 만큼의 UDC coin(mote 단위)을 `<udc_id>`와 함께 소각한다.
 
 ```bash
+amocli tx lock <udc_id> <holder_address> <amount> [flags]
+```
+송신자는 `<holder_address>` 소유의 `<amount>` 만큼의 UDC coin(mote 단위)을
+`<udc_id>`와 함께 잠금한다.
+
+```bash
 amocli tx stake <validator_pubkey> <amount> [flags]
 ```
 송신자는 `<validator_pubkey>`에 연결된 stake를 새로 생성하거나 기존의 stake를

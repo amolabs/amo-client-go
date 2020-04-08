@@ -314,6 +314,12 @@ amocli tx burn <udc_id> <amount> [flags]
 The sender burns `<amount>` of UDC coin (in mote unit) with `<udc_id>`.
 
 ```bash
+amocli tx lock <udc_id> <holder_address> <amount> [flags]
+```
+The sender locks `<amount>` of UDC coin (in mote unit) owned by
+`<holder_address>` with `<udc_id>`.
+
+```bash
 amocli tx stake <validator_pubkey> <amount> [flags]
 ```
 The sender creates a new stake or increase an existing stake associated with
