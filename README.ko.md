@@ -341,9 +341,19 @@ amocli tx propose <draft_id> <config> <desc> [flags]
 ```bash
 amocli tx vote <draft_id> <approve> [flags]
 ```
-송신자는 `<draft_id>`와 `<approve>`로 drafte에 찬/반 투표를 할 수 있다.
+송신자는 `<draft_id>`와 `<approve>`로 drafte에 찬반투표를 한다.
 `<draft_id>`는 십진법 숫자이다. `<approve>`는 boolean 값이다; `true` 혹은
 `false`.
+
+```bash
+amocli tx setup <storage_id> <url> <registration_fee> <hosting_fee> [flags]
+```
+송신자는 `<storage_id>`, `<url>`, `<registration_fee>` 그리고 `<hosting_fee>`로
+storage를 설정한다. `<storage_id>`는 십진법 숫자이다. `<url>`은 홈페이지
+주소이다; 예) `https://amo.foundation`. `<registration_fee>`는 parcel 소유자가
+parcel 등록 대가로 storage 호스트에게 지불하는 일정량의 AMO 코인이다.
+`<hosting_fee>`는 parcel 소유자가 parcel 호스팅 대가로 storage 호스트에게
+지불하는 일정량의 AMO 코인이다.
 
 ```bash
 amocli tx register <parcel_id> <key_custody> [flags]

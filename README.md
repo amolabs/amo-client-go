@@ -370,6 +370,16 @@ The sender votes for or against a draft with `<draft_id>` and `<approve>`.
 `false`.
 
 ```bash
+amocli tx setup <storage_id> <url> <registration_fee> <hosting_fee> [flags]
+```
+The sender sets up a storage with `<storage_id>`, `<url>`, `<registration_fee>`
+and `<hosting_fee>`. `<storage_id>` is a decimal number. `<url>` is a homepage
+address; ex) `https://amo.foundation`. `<registration_fee>` is a certain amount
+of AMO coins which parcel owner pays storage host for registring the parcel.
+`<hosting_fee>` is a certain amount of AMO coins which parcel owner pays
+storage host for hosting the parcel.
+
+```bash
 amocli tx register <parcel_id> <key_custody> [flags]
 ```
 The sender registers a data parcel having `<parcel_id>` to the blockchain along
