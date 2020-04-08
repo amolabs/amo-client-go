@@ -355,6 +355,14 @@ amocli tx retract <amount> [flags]
 The sender retract coin delegation by `<amount>` of AMO coins.
 
 ```bash
+amocli tx propose <draft_id> <config> <desc> [flags]
+```
+The sender proposes a draft containing `<config>` expected to get applied to
+blockchain configuration with `<draft_id>` and `<desc>`. `<draft_id>` is a
+decimal number. `<config>` is a JSON object. `<desc>` is a human-readable
+string.
+
+```bash
 amocli tx register <parcel_id> <key_custody> [flags]
 ```
 The sender registers a data parcel having `<parcel_id>` to the blockchain along
