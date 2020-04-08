@@ -284,8 +284,12 @@ amocli tx transfer <address> <amount> [flags]
 ```bash
 amocli tx issue <udc_id> <amount> [flags]
 ```
-The sender issues `<amount>` of UDC coin (in mote unit) with `<udc_id>`.
 송신자는 `<amount>` 만큼의 UDC coin(mote 단위)을 `<udc_id>`와 함께 발행한다.
+
+```bash
+amocli tx burn <udc_id> <amount> [flags]
+```
+송신자는 `<amount>` 만큼의 UDC coin(mote 단위)을 `<udc_id>`와 함께 소각한다.
 
 ```bash
 amocli tx stake <validator_pubkey> <amount> [flags]
