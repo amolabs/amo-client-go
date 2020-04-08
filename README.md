@@ -363,6 +363,13 @@ decimal number. `<config>` is a JSON object. `<desc>` is a human-readable
 string.
 
 ```bash
+amocli tx vote <draft_id> <approve> [flags]
+```
+The sender votes for or against a draft with `<draft_id>` and `<approve>`.
+`<draft_id>` is a decimal number. `<approve>` is a boolean value; `true` or
+`false`.
+
+```bash
 amocli tx register <parcel_id> <key_custody> [flags]
 ```
 The sender registers a data parcel having `<parcel_id>` to the blockchain along

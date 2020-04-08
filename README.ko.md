@@ -339,6 +339,13 @@ amocli tx propose <draft_id> <config> <desc> [flags]
 `<config>`는 JSON 오브젝트이다. `<desc>`는 사람이 읽을 수 있는 string 이다.
 
 ```bash
+amocli tx vote <draft_id> <approve> [flags]
+```
+송신자는 `<draft_id>`와 `<approve>`로 drafte에 찬/반 투표를 할 수 있다.
+`<draft_id>`는 십진법 숫자이다. `<approve>`는 boolean 값이다; `true` 혹은
+`false`.
+
+```bash
 amocli tx register <parcel_id> <key_custody> [flags]
 ```
 송신자는 `<parcel_id>`를 갖는 데이터 parcel을 소유주의 키 보관값
