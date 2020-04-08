@@ -256,14 +256,20 @@ can be given at the same time. `<block_height>` is a decimal number.
 `<address>` is a HEX-encoded byte array.
 
 ```bash
-amocli query parcel <parcelID> [flags]
-```
-Print registered parcel info. `<parcelID>` is a HEX-encoded byte array.
-
-```bash
 amocli query draft <draft_id> [flags]
 ```
 Print proposed draft status. `<draft_id>` is a decimal number.
+
+```bash
+amocli query vote <draft_id> <address> [flags]
+```
+Print vote status of given voter address. `<draft_id>` is a decimal number.
+`<address>` is a HEX-encoded byte array.
+
+```bash
+amocli query parcel <parcelID> [flags]
+```
+Print registered parcel info. `<parcelID>` is a HEX-encoded byte array.
 
 ```bash
 amocli query request <buyer_address> <parcel_id> [flags]

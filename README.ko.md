@@ -200,7 +200,7 @@ mote과 같다. `--json` 플래그가 주어졌을 경우는 *mote* 단위만 �
 ```bash
 amocli query udc <udc_id> [flags]
 ```
-블록체인 상에서 발행된 UDC의 전반적인 정보를 표시한다. `<udc_id>`는 10진법
+블록체인 상에서 발행된 UDC의 전반적인 정보를 표시한다. `<udc_id>`는 십진법
 숫자이다.
 
 ```bash
@@ -235,14 +235,20 @@ amocli query incentive <block_height | address> [flags]
 인코딩된 바이트 열이다.
 
 ```bash
+amocli query draft <draft_id> [flags]
+```
+제안된 draft 상태를 출력한다. `<draft_id>`는 십진법 숫자이다.
+
+```bash
+amocli query vote <draft_id> <address> [flags]
+```
+주어진 투표자 주소의 투표 현황을 출력한다. `<draft_id>`는 십진법 숫자이다.
+`<address>`는 HEX 인코딩된 바이트 열이다.
+
+```bash
 amocli query parcel <parcelID> [flags]
 ```
 등록된 parcel의 정보를 출력한다. `<parcelID>`는 HEX 인코딩된 바이트 열이다.
-
-```bash
-amocli query draft <draft_id> [flags]
-```
-제안된 draft 상태를 출력한다. `<draft_id>`는 10진법 숫자이다.
 
 ```bash
 amocli query request <buyer_address> <parcel_id> [flags]
