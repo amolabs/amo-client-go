@@ -356,6 +356,13 @@ parcel 등록 대가로 storage 호스트에게 지불하는 일정량의 AMO �
 지불하는 일정량의 AMO 코인이다.
 
 ```bash
+amocli tx close <storage_id> [flags]
+```
+The sender closes a storage with `<storage_id>`. `<storage_id>` is a decimal
+number.
+송신자는 `<storage_id>`로 storage를 닫는다. `<storage_id>는 십진수 숫자이다.
+
+```bash
 amocli tx register <parcel_id> <key_custody> [flags]
 ```
 송신자는 `<parcel_id>`를 갖는 데이터 parcel을 소유주의 키 보관값

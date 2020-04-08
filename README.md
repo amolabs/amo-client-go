@@ -380,6 +380,12 @@ of AMO coins which parcel owner pays storage host for registring the parcel.
 storage host for hosting the parcel.
 
 ```bash
+amocli tx close <storage_id> [flags]
+```
+The sender closes a storage with `<storage_id>`. `<storage_id>` is a decimal
+number.
+
+```bash
 amocli tx register <parcel_id> <key_custody> [flags]
 ```
 The sender registers a data parcel having `<parcel_id>` to the blockchain along
