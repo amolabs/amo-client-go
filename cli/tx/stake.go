@@ -31,15 +31,19 @@ func stakeFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// This step is for user convenience. First, try base64 encoding, if it
-	// succeeds encode it as hex again and send. If it fails assume hex
-	// encoding and send it as is.
+	// This step is for user convenience. First, try decoding it in hex, if it
+	// succeeds send it as it is. If it fails assume base64 encoding and decode
+	// it in base64 and encode it in hex and send it.
 	var val string
-	bin, err := base64.StdEncoding.DecodeString(args[0])
+	_, err = hex.DecodeString(args[0])
 	if err == nil {
-		val = hex.EncodeToString(bin)
-	} else {
 		val = args[0]
+	} else {
+		bin, err := base64.StdEncoding.DecodeString(args[0])
+		if err != nil {
+			return err
+		}
+		val = hex.EncodeToString(bin)
 	}
 
 	result, err := rpc.Stake(val, args[1], key, Fee, Height)
