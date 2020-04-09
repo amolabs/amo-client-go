@@ -218,9 +218,9 @@ amocli query stake <address> [flags]
 명령은 stake와 연결된 validator 공개키도 함께 표시한다. `--json` 플래그가
 주어졌을 경우는 출력은 다음과 같은 형태가 된다:
 ```json
-{"amount":"100000000000000000000","validator":[2,159,24,22,130,8,178,58,184,144,63,228,30,59,242,78,67,4,214,169,251,33,154,132,147,202,252,180,160,43,19,241]}
+{"amount":"100000000000000000000","validator":"1A8EFD2CDD19BA884E4DA53C733F960C18845846D09B5A390F7F8F8266D57C44"}
 ```
-Validator 공개키는 바이트열로 표시된다.
+Validator 공개키는 HEX 인코딩된 바이트 열로 표시된다.
 
 ```bash
 amocli query delegate <address> [flags]
@@ -301,8 +301,9 @@ amocli tx lock <udc_id> <holder_address> <amount> [flags]
 amocli tx stake <validator_pubkey> <amount> [flags]
 ```
 송신자는 `<validator_pubkey>`에 연결된 stake를 새로 생성하거나 기존의 stake를
-`<amount>` 만큼 증액한다. `<validator_pubkey>`는 HEX 인코딩된 바이트 열이다.
-사용자는 서로 다른 validator 공개키를 갖는 복수의 stake를 보유할 수 없다.
+`<amount>` 만큼 증액한다. `<validator_pubkey>`는 HEX 인코딩 혹은 base64 인코딩
+된 바이트 열이다.  사용자는 서로 다른 validator 공개키를 갖는 복수의 stake를
+보유할 수 없다.
 
 AMO coin을 stake로 지정한다는 것은 사용자가 블록 생성 과정에 validator로서
 참여하겠다는 의미이다. 모든 validator 노드(AMO 블록체인 네트워크 문서 참조)는

@@ -238,9 +238,9 @@ Print stake info of an account. `<address>` is a HEX-encoded byte array. This
 subcommand displays a validator public key associated with a stake. When
 supplied with `--json` flag, output has the following form:
 ```json
-{"amount":"100000000000000000000","validator":[2,159,24,22,130,8,178,58,184,144,63,228,30,59,242,78,67,4,214,169,251,33,154,132,147,202,252,180,160,43,19,241]}
+{"amount":"100000000000000000000","validator":"1A8EFD2CDD19BA884E4DA53C733F960C18845846D09B5A390F7F8F8266D57C44"}
 ```
-Validator public key is displayed as a byte array.
+Validator public key is displayed as hex-encoded byte array.
 
 ```bash
 amocli query delegate <address> [flags]
@@ -324,8 +324,8 @@ amocli tx stake <validator_pubkey> <amount> [flags]
 ```
 The sender creates a new stake or increase an existing stake associated with
 the `<validator_pubkey>` by `<amount>` of AMO coin. `<validator_pubkey>` is a
-HEX-encoded byte array. A user cannot have multiple stakes with different
-validator public keys.
+HEX-encoded or base64-encoded byte array. A user cannot have multiple stakes
+with different validator public keys.
 
 Staking coins means the user wants to participate in a block production process
 as a validator. Every validator node(see AMO blockchain network document) has a
