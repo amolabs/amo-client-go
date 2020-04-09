@@ -48,7 +48,6 @@ func stakeFunc(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		valhexstr := hex.EncodeToString(stake.Validator)
 		valb64str := base64.StdEncoding.EncodeToString(stake.Validator)
 		valb64, err := hex.DecodeString(valb64str)
 		if err != nil {
@@ -57,7 +56,7 @@ func stakeFunc(cmd *cobra.Command, args []string) error {
 		valb64b64str := base64.StdEncoding.EncodeToString(valb64)
 
 		fmt.Printf("amount: %s\n", stake.Amount.String())
-		fmt.Printf("validator pubkey (hex)   : 0x%s\n", valhexstr)
+		fmt.Printf("validator pubkey (hex)   : 0x%s\n", valb64str)
 		fmt.Printf("validator pubkey (base64): %s\n", valb64b64str)
 		for i, d := range stake.Delegates {
 			fmt.Printf("  delegate %2d: %s from %s\n",
