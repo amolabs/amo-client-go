@@ -31,6 +31,7 @@ func init() {
 		StakeCmd,
 		DelegateCmd,
 		IncentiveCmd,
+		PenaltyCmd,
 		util.LineBreak,
 		DraftCmd,
 		VoteCmd,

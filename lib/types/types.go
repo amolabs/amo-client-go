@@ -154,6 +154,8 @@ type IncentiveInfo struct {
 	Amount      Currency `json:"amount"`
 }
 
+type PenaltyInfo IncentiveInfo
+
 type AMOAppConfig struct {
 	MaxValidators          uint64   `json:"max_validators"`
 	WeightValidator        float64  `json:"weight_validator"`
