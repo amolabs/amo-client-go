@@ -30,8 +30,6 @@ func init() {
 		util.LineBreak,
 		StakeCmd,
 		DelegateCmd,
-		IncentiveCmd,
-		PenaltyCmd,
 		util.LineBreak,
 		DraftCmd,
 		VoteCmd,
