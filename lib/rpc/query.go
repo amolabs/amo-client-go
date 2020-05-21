@@ -99,37 +99,3 @@ func QueryUsage(buyer string, target string) ([]byte, error) {
 		Target string `json:"target"`
 	}{buyer, target})
 }
-
-func QueryBlockIncentive(height string) ([]byte, error) {
-	return ABCIQuery("/inc_block", height)
-}
-
-func QueryAddressIncentive(address string) ([]byte, error) {
-	address = toUpper(address)
-	return ABCIQuery("/inc_address", address)
-}
-
-func QueryIncentive(height string, address string) ([]byte, error) {
-	address = toUpper(address)
-	return ABCIQuery("/inc", struct {
-		Height  string `json:"height"`
-		Address string `json:"address"`
-	}{height, address})
-}
-
-func QueryBlockPenalty(height string) ([]byte, error) {
-	return ABCIQuery("/pen_block", height)
-}
-
-func QueryAddressPenalty(address string) ([]byte, error) {
-	address = toUpper(address)
-	return ABCIQuery("/pen_address", address)
-}
-
-func QueryPenalty(height string, address string) ([]byte, error) {
-	address = toUpper(address)
-	return ABCIQuery("/pen", struct {
-		Height  string `json:"height"`
-		Address string `json:"address"`
-	}{height, address})
-}
