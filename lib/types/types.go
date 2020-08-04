@@ -48,8 +48,13 @@ func (c *Currency) String() string {
 	return fmt.Sprintf("%s mote (%s AMO)", c.Int.String(), amo.String())
 }
 
-type PubKeyEd25519 []byte
-type Address string
+const PubKeyP256Size = 65
+
+type (
+	PubKeyEd25519 []byte
+	PubKeyP256    [PubKeyP256Size]byte
+	Address       string
+)
 
 type UDC struct {
 	Owner     Address   `json:"owner"`     // required
@@ -127,10 +132,11 @@ type ParcelEx struct {
 }
 
 type Request struct {
-	Payment   Currency `json:"payment"`
-	Dealer    Address  `json:"dealer,omitempty"`
-	DealerFee Currency `json:"dealer_fee,omitempty"`
-	Extra     Extra    `json:"extra,omitempty"`
+	Payment         Currency   `json:"payment"`
+	RecipientPubKey PubKeyP256 `json:"recipient_pubkey"`
+	Dealer          Address    `json:"dealer,omitempty"`
+	DealerFee       Currency   `json:"dealer_fee,omitempty"`
+	Extra           Extra      `json:"extra,omitempty"`
 }
 
 type RequestEx struct {
@@ -178,4 +184,15 @@ func ConvIDFromStr(IDStr string) (uint32, error) {
 		return 0, err
 	}
 	return uint32(tmp), nil
+}
+
+func (pubKey *PubKeyP256) UnmarshalJSON(data []byte) error {
+	if len(data) != PubKeyP256Size*2+2 {
+		return errors.New("Invalid public key format")
+	}
+	_, err := hex.Decode(pubKey[:], data[1:len(data)-1])
+	if err != nil {
+		return err
+	}
+	return nil
 }
