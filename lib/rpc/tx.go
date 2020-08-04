@@ -152,7 +152,8 @@ func Discard(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResu
 	}{target}, key, fee, lastHeight)
 }
 
-func Request(target, payment, dealer, dealerFee, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Request(target, payment, recipient_pubkey, dealer, dealerFee, extra string,
+	key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	if dealer != "" && dealerFee == "" {
 		return TmTxResult{}, errors.New("'dealer_fee' is missing")
 	}
@@ -161,14 +162,17 @@ func Request(target, payment, dealer, dealerFee, extra string, key keys.KeyEntry
 	}
 
 	target = toUpper(target)
+	recipient_pubkey = toUpper(recipient_pubkey)
 	dealer = toUpper(dealer)
+
 	return SignSendTx("request", struct {
-		Target    string          `json:"target"`
-		Payment   string          `json:"payment"`
-		Dealer    string          `json:"dealer,omitempty"`
-		DealerFee string          `json:"dealer_fee,omitempty"`
-		Extra     json.RawMessage `json:"extra,omitempty"`
-	}{target, payment, dealer, dealerFee, []byte(extra)}, key, fee, lastHeight)
+		Target          string          `json:"target"`
+		Payment         string          `json:"payment"`
+		RecipientPubKey string          `json:"recipient_pubkey"`
+		Dealer          string          `json:"dealer,omitempty"`
+		DealerFee       string          `json:"dealer_fee,omitempty"`
+		Extra           json.RawMessage `json:"extra,omitempty"`
+	}{target, payment, recipient_pubkey, dealer, dealerFee, []byte(extra)}, key, fee, lastHeight)
 }
 
 func Cancel(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
