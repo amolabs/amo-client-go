@@ -14,14 +14,23 @@ var ListCmd = &cobra.Command{
 	RunE:  listFunc,
 }
 
+func init() {
+	cmd := ListCmd
+	cmd.Flags().BoolP("pubkey", "k", false, "show public key")
+}
+
 func listFunc(cmd *cobra.Command, args []string) error {
 	keyFile := util.DefaultKeyFilePath()
+	flags := cmd.Flags()
+
 	kr, err := keys.GetKeyRing(keyFile)
 	if err != nil {
 		return err
 	}
 
-	kr.PrintKeyList()
+	withPubKey, err := flags.GetBool("pubkey")
+
+	kr.PrintKeyList(withPubKey)
 
 	return nil
 }

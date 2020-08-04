@@ -106,15 +106,23 @@ func (kr *KeyRing) RemoveKey(username string) error {
 	return kr.Save()
 }
 
-func (kr *KeyRing) PrintKeyList() {
+func (kr *KeyRing) PrintKeyList(withPubKey bool) {
 	sortKey := make([]string, 0, len(kr.keyList))
+	maxUsernameSize := 0
 	for k := range kr.keyList {
+		if len(k) > maxUsernameSize {
+			maxUsernameSize = len(k)
+		}
 		sortKey = append(sortKey, k)
 	}
 
 	sort.Strings(sortKey)
 
-	fmt.Printf("%3s %-9s %-3s %-40s\n", "#", "username", "enc", "address")
+	fmt.Printf("%3s %-*s %-3s %-40s", "#", maxUsernameSize, "username", "enc", "address")
+	if withPubKey {
+		fmt.Printf(" %-65s", "pubkey")
+	}
+	fmt.Printf("\n")
 
 	i := 0
 	for _, username := range sortKey {
@@ -125,7 +133,11 @@ func (kr *KeyRing) PrintKeyList() {
 		if key.Encrypted {
 			enc = "o"
 		}
-		fmt.Printf("%3d %-9s %-3s %-40s\n", i, username, enc, key.Address)
+		fmt.Printf("%3d %-*s %-3s %-40s", i, maxUsernameSize, username, enc, key.Address)
+		if withPubKey {
+			fmt.Printf(" %-65X", key.PubKey)
+		}
+		fmt.Printf("\n")
 	}
 }
 

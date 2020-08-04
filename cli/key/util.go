@@ -28,7 +28,7 @@ func GetUserKey(path string) (keys.KeyEntry, error) {
 	}
 
 	if len(Username) == 0 {
-		kr.PrintKeyList()
+		kr.PrintKeyList(false)
 		Username, err = util.PromptUsername()
 		if err != nil {
 			return empty, err
