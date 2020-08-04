@@ -49,6 +49,7 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 	}
 
 	fmt.Printf("payment: %s\n", request.Payment.String())
+	fmt.Printf("recipient_pubkey: %X\n", request.RecipientPubKey)
 	fmt.Printf("dealer: %s\n", request.Dealer)
 	fmt.Printf("dealer_fee: %s\n", request.DealerFee.String())
 	fmt.Printf("buyer: %s\n", request.Buyer)
