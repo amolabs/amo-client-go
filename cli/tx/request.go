@@ -12,9 +12,9 @@ import (
 )
 
 var RequestCmd = &cobra.Command{
-	Use:   "request <parcel_id> <amount>",
+	Use:   "request <parcel_id> <amount> <recipient_pubkey>",
 	Short: "Request a parcel permission with payment",
-	Args:  cobra.MinimumNArgs(2),
+	Args:  cobra.MinimumNArgs(3),
 	RunE:  requestFunc,
 }
 
@@ -44,7 +44,8 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Request(args[0], args[1], dealer, dealerFee, extra, key, Fee, Height)
+	result, err := rpc.Request(args[0], args[1], args[2],
+		dealer, dealerFee, extra, key, Fee, Height)
 	if err != nil {
 		return err
 	}
