@@ -12,7 +12,7 @@ import (
 )
 
 var GrantCmd = &cobra.Command{
-	Use:   "grant <parcel_id> <address> <key_custody>",
+	Use:   "grant <recipient> <parcel_id> <key_custody>",
 	Short: "Grant a parcel permission",
 	Args:  cobra.MinimumNArgs(3),
 	RunE:  grantFunc,

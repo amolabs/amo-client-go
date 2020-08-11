@@ -12,7 +12,7 @@ import (
 )
 
 var RequestCmd = &cobra.Command{
-	Use:   "request <parcel_id> <amount> <recipient_pubkey>",
+	Use:   "request <recipient> <parcel_id> <amount>",
 	Short: "Request a parcel permission with payment",
 	Args:  cobra.MinimumNArgs(3),
 	RunE:  requestFunc,

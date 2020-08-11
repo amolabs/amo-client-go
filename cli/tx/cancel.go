@@ -12,9 +12,9 @@ import (
 )
 
 var CancelCmd = &cobra.Command{
-	Use:   "cancel <parcel_id>",
+	Use:   "cancel <recipient> <parcel_id>",
 	Short: "Cancel the request of parcel in store/request",
-	Args:  cobra.MinimumNArgs(1),
+	Args:  cobra.MinimumNArgs(2),
 	RunE:  cancelFunc,
 }
 
@@ -29,7 +29,7 @@ func cancelFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Cancel(args[0], key, Fee, Height)
+	result, err := rpc.Cancel(args[0], args[1], key, Fee, Height)
 	if err != nil {
 		return err
 	}
