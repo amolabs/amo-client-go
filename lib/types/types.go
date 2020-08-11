@@ -132,16 +132,16 @@ type ParcelEx struct {
 }
 
 type Request struct {
-	Payment         Currency   `json:"payment"`
-	RecipientPubKey PubKeyP256 `json:"recipient_pubkey"`
-	Dealer          Address    `json:"dealer,omitempty"`
-	DealerFee       Currency   `json:"dealer_fee,omitempty"`
-	Extra           Extra      `json:"extra,omitempty"`
+	Agency    Address  `json:"agency"`
+	Recipient Address  `json:"recipient"`
+	Payment   Currency `json:"payment"`
+	Dealer    Address  `json:"dealer,omitempty"`
+	DealerFee Currency `json:"dealer_fee,omitempty"`
+	Extra     Extra    `json:"extra,omitempty"`
 }
 
 type RequestEx struct {
 	*Request
-	Buyer Address `json:"buyer"`
 }
 
 type Usage struct {
@@ -151,7 +151,7 @@ type Usage struct {
 
 type UsageEx struct {
 	*Usage
-	Buyer Address `json:"buyer"`
+	Recipient Address `json:"recipient"`
 }
 
 type AMOAppConfig struct {

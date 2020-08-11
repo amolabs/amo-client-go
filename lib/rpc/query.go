@@ -82,20 +82,20 @@ func QueryParcel(parcelID string) ([]byte, error) {
 	return ABCIQuery("/parcel", parcelID)
 }
 
-func QueryRequest(buyer string, target string) ([]byte, error) {
-	buyer = toUpper(buyer)
+func QueryRequest(recipient string, target string) ([]byte, error) {
+	recipient = toUpper(recipient)
 	target = toUpper(target)
 	return ABCIQuery("/request", struct {
-		Buyer  string `json:"buyer"`
-		Target string `json:"target"`
-	}{buyer, target})
+		Recipient string `json:"recipient"`
+		Target    string `json:"target"`
+	}{recipient, target})
 }
 
-func QueryUsage(buyer string, target string) ([]byte, error) {
-	buyer = toUpper(buyer)
+func QueryUsage(recipient string, target string) ([]byte, error) {
+	recipient = toUpper(recipient)
 	target = toUpper(target)
 	return ABCIQuery("/usage", struct {
-		Buyer  string `json:"buyer"`
+		Buyer  string `json:"recipient"`
 		Target string `json:"target"`
-	}{buyer, target})
+	}{recipient, target})
 }
