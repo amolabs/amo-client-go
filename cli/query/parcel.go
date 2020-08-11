@@ -53,12 +53,12 @@ func parcelFunc(cmd *cobra.Command, args []string) error {
 	fmt.Printf("proxy_account: %s\n", parcel.ProxyAccount)
 	fmt.Printf("extra: %s\n", parcel.Extra)
 	for i, r := range parcel.Requests {
-		fmt.Printf("  requests %2d. payment: %s, dealer: %s, dealer_fee: %s, extra: %s, buyer: %s\n",
-			i+1, r.Payment.String(), r.Dealer, r.DealerFee.String(), r.Extra, r.Buyer)
+		fmt.Printf("  requests %2d. agency: %s, recipient: %s, payment: %s, dealer: %s, dealer_fee: %s, extra: %s\n",
+			i+1, r.Agency, r.Recipient, r.Payment.String(), r.Dealer, r.DealerFee.String(), r.Extra)
 	}
 	for i, u := range parcel.Usages {
-		fmt.Printf("  usages %2d. custody: %s, extra: %s, buyer: %s\n",
-			i+1, u.Custody, u.Extra, u.Buyer)
+		fmt.Printf("  usages %2d. recipient: %s, custody: %s, extra: %s\n",
+			i+1, u.Recipient, u.Custody, u.Extra)
 	}
 
 	return nil

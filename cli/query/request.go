@@ -11,7 +11,7 @@ import (
 )
 
 var RequestCmd = &cobra.Command{
-	Use:   "request <buyer_address> <parcel_id>",
+	Use:   "request <recipient> <parcel_id>",
 	Short: "Requested parcel usage",
 	Args:  cobra.MinimumNArgs(2),
 	RunE:  requestFunc,
@@ -48,11 +48,11 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	fmt.Printf("agency: %s\n", request.Agency)
+	fmt.Printf("recipient: %s\n", request.Recipient)
 	fmt.Printf("payment: %s\n", request.Payment.String())
-	fmt.Printf("recipient_pubkey: %X\n", request.RecipientPubKey)
 	fmt.Printf("dealer: %s\n", request.Dealer)
 	fmt.Printf("dealer_fee: %s\n", request.DealerFee.String())
-	fmt.Printf("buyer: %s\n", request.Buyer)
 	fmt.Printf("extra: %s\n", request.Extra)
 
 	return nil
