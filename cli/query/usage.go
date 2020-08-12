@@ -11,7 +11,7 @@ import (
 )
 
 var UsageCmd = &cobra.Command{
-	Use:   "usage <recipient> <parcel_id>",
+	Use:   "usage <parcel_id> <recipient>",
 	Short: "Granted parcel usage",
 	Args:  cobra.MinimumNArgs(2),
 	RunE:  usageFunc,
@@ -48,9 +48,9 @@ func usageFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("recipient: %s\n", usage.Recipient)
 	fmt.Printf("custody: %s\n", usage.Custody)
 	fmt.Printf("extra: %s\n", usage.Extra)
+	fmt.Printf("recipient: %s\n", usage.Recipient)
 
 	return nil
 }

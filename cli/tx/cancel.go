@@ -12,9 +12,9 @@ import (
 )
 
 var CancelCmd = &cobra.Command{
-	Use:   "cancel <recipient> <parcel_id>",
+	Use:   "cancel <parcel_id>",
 	Short: "Cancel the request of parcel in store/request",
-	Args:  cobra.MinimumNArgs(2),
+	Args:  cobra.MinimumNArgs(1),
 	RunE:  cancelFunc,
 }
 
@@ -29,7 +29,12 @@ func cancelFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Cancel(args[0], args[1], key, Fee, Height)
+	recipient, err := cmd.Flags().GetString("recipient")
+	if err != nil {
+		return err
+	}
+
+	result, err := rpc.Cancel(args[0], recipient, key, Fee, Height)
 	if err != nil {
 		return err
 	}
@@ -54,4 +59,8 @@ func cancelFunc(cmd *cobra.Command, args []string) error {
 	// TODO: rich output
 
 	return nil
+}
+
+func init() {
+	CancelCmd.PersistentFlags().String("recipient", "", "recipient address")
 }

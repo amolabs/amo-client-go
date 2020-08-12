@@ -132,9 +132,8 @@ type ParcelEx struct {
 }
 
 type Request struct {
-	Agency    Address  `json:"agency"`
-	Recipient Address  `json:"recipient"`
 	Payment   Currency `json:"payment"`
+	Agency    Address  `json:"agency,omitempty"`
 	Dealer    Address  `json:"dealer,omitempty"`
 	DealerFee Currency `json:"dealer_fee,omitempty"`
 	Extra     Extra    `json:"extra,omitempty"`
@@ -142,6 +141,7 @@ type Request struct {
 
 type RequestEx struct {
 	*Request
+	Recipient Address `json:"recipient"`
 }
 
 type Usage struct {

@@ -12,9 +12,9 @@ import (
 )
 
 var RequestCmd = &cobra.Command{
-	Use:   "request <recipient> <parcel_id> <amount>",
+	Use:   "request <parcel_id> <amount>",
 	Short: "Request a parcel permission with payment",
-	Args:  cobra.MinimumNArgs(3),
+	Args:  cobra.MinimumNArgs(2),
 	RunE:  requestFunc,
 }
 
@@ -25,6 +25,11 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 	}
 
 	key, err := key.GetUserKey(util.DefaultKeyFilePath())
+	if err != nil {
+		return err
+	}
+
+	recipient, err := cmd.Flags().GetString("recipient")
 	if err != nil {
 		return err
 	}
@@ -44,8 +49,8 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Request(args[0], args[1], args[2],
-		dealer, dealerFee, extra, key, Fee, Height)
+	result, err := rpc.Request(args[0], args[1],
+		recipient, dealer, dealerFee, extra, key, Fee, Height)
 	if err != nil {
 		return err
 	}
@@ -73,6 +78,7 @@ func requestFunc(cmd *cobra.Command, args []string) error {
 }
 
 func init() {
+	RequestCmd.PersistentFlags().String("recipient", "", "recipient address")
 	RequestCmd.PersistentFlags().String("dealer", "", "dealer address")
 	RequestCmd.PersistentFlags().String("dealer_fee", "", "fee to pay for dealer")
 	RequestCmd.PersistentFlags().String("extra", "", "extra info")

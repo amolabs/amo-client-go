@@ -12,7 +12,7 @@ import (
 )
 
 var RevokeCmd = &cobra.Command{
-	Use:   "revoke <recipient> <parcel_id>",
+	Use:   "revoke <parcel_id> <recipient>",
 	Short: "Delete the usage of parcel in store/usage",
 	Args:  cobra.MinimumNArgs(2),
 	RunE:  revokeFunc,

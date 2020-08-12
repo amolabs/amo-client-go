@@ -152,7 +152,7 @@ func Discard(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResu
 	}{target}, key, fee, lastHeight)
 }
 
-func Request(recipient, target, payment, dealer, dealerFee, extra string,
+func Request(target, payment, recipient, dealer, dealerFee, extra string,
 	key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	if dealer != "" && dealerFee == "" {
 		return TmTxResult{}, errors.New("'dealer_fee' is missing")
@@ -161,46 +161,46 @@ func Request(recipient, target, payment, dealer, dealerFee, extra string,
 		return TmTxResult{}, errors.New("'dealer' is missing")
 	}
 
-	recipient = toUpper(recipient)
 	target = toUpper(target)
+	recipient = toUpper(recipient)
 	dealer = toUpper(dealer)
 
 	return SignSendTx("request", struct {
-		Recipient string          `json:"recipient"`
 		Target    string          `json:"target"`
 		Payment   string          `json:"payment"`
+		Recipient string          `json:"recipient,omitempty"`
 		Dealer    string          `json:"dealer,omitempty"`
 		DealerFee string          `json:"dealer_fee,omitempty"`
 		Extra     json.RawMessage `json:"extra,omitempty"`
-	}{recipient, target, payment, dealer, dealerFee, []byte(extra)}, key, fee, lastHeight)
+	}{target, payment, recipient, dealer, dealerFee, []byte(extra)}, key, fee, lastHeight)
 }
 
-func Cancel(recipient, target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
-	recipient = toUpper(recipient)
+func Cancel(target, recipient string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	target = toUpper(target)
+	recipient = toUpper(recipient)
 	return SignSendTx("cancel", struct {
-		Recipient string `json:"recipient"`
 		Target    string `json:"target"`
-	}{recipient, target}, key, fee, lastHeight)
+		Recipient string `json:"recipient,omitempty"`
+	}{target, recipient}, key, fee, lastHeight)
 }
 
-func Grant(recipient, target, custody, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
-	recipient = toUpper(recipient)
+func Grant(target, recipient, custody, extra string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	target = toUpper(target)
+	recipient = toUpper(recipient)
 	custody = toUpper(custody)
 	return SignSendTx("grant", struct {
-		Recipient string          `json:"recipient"`
 		Target    string          `json:"target"`
+		Recipient string          `json:"recipient"`
 		Custody   string          `json:"custody"`
 		Extra     json.RawMessage `json:"extra,omitempty"`
-	}{recipient, target, custody, []byte(extra)}, key, fee, lastHeight)
+	}{target, recipient, custody, []byte(extra)}, key, fee, lastHeight)
 }
 
-func Revoke(recipient, target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
-	recipient = toUpper(recipient)
+func Revoke(target, recipient string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	target = toUpper(target)
+	recipient = toUpper(recipient)
 	return SignSendTx("revoke", struct {
-		Recipient string `json:"recipient"`
 		Target    string `json:"target"`
-	}{recipient, target}, key, fee, lastHeight)
+		Recipient string `json:"recipient"`
+	}{target, recipient}, key, fee, lastHeight)
 }
