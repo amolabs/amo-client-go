@@ -12,8 +12,8 @@ import (
 )
 
 var TransferCmd = &cobra.Command{
-	Use:   "transfer <address> <amount>",
-	Short: "Transfer the specified amount of money to <address>",
+	Use:   "transfer <address> <amount>|<parcel_id>",
+	Short: "Transfer the specified amount of money or parcel to <address>",
 	Args:  cobra.MinimumNArgs(2),
 	//	PersistentPreRun: readGlobalFlags,
 	RunE: transferFunc,
@@ -35,7 +35,12 @@ func transferFunc(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	result, err := rpc.Transfer(udc, args[0], args[1], key, Fee, Height)
+	isParcel, err := cmd.Flags().GetBool("parcel")
+	if err != nil {
+		return err
+	}
+
+	result, err := rpc.Transfer(udc, args[0], args[1], isParcel, key, Fee, Height)
 	if err != nil {
 		return err
 	}
@@ -64,4 +69,5 @@ func transferFunc(cmd *cobra.Command, args []string) error {
 
 func init() {
 	TransferCmd.PersistentFlags().Uint32("udc", uint32(0), "specify udc id if necessary")
+	TransferCmd.PersistentFlags().Bool("parcel", false, "when true, transfer parcel instead of coin")
 }
