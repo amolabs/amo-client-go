@@ -10,13 +10,21 @@ import (
 
 // Tx broadcast in AMO context
 
-func Transfer(udc uint32, to, amount string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+func Transfer(udc uint32, to, asset string, isParcel bool, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
 	to = toUpper(to)
+	amount := ""
+	parcel := ""
+	if isParcel {
+		parcel = asset
+	} else {
+		amount = asset
+	}
 	return SignSendTx("transfer", struct {
-		UDC    uint32 `json:"udc,omitempty"`
 		To     string `json:"to"`
-		Amount string `json:"amount"`
-	}{udc, to, amount}, key, fee, lastHeight)
+		UDC    uint32 `json:"udc,omitempty"`
+		Amount string `json:"amount,omitempty"`
+		Parcel string `json:"parcel,omitempty"`
+	}{to, udc, amount, parcel}, key, fee, lastHeight)
 }
 
 func Issue(udcID, amount string, desc string, operators []string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
