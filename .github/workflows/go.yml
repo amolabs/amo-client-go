@@ -1,0 +1,73 @@
+name: Go
+
+on:
+  push:
+    branches:
+      - "!*"
+    tags:
+      - "v*"
+env:
+  VERSION=${GITHUB_REF#refs/tags/}
+  
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15
+
+    - name: Test
+      run: make test
+
+    - name: Build
+      run: |
+        TARGET=darwin make
+        tar zcf amocli-${GITHUB_REF#refs/tags/}-macos.tar.gz amocli
+        rm -f amocli; TARGET=linux make
+        tar zcf amocli-${GITHUB_REF#refs/tags/}-linux.tar.gz amocli
+        rm -f amocli; TARGET=windows make
+        tar zcf amocli-${GITHUB_REF#refs/tags/}-windows.tar.gz amocli.exe
+        rm -f amocli.exe
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${GITHUB_REF#refs/tags/}
+        release_name: ${GITHUB_REF#refs/tags/} release
+        draft: true
+        prelease: true
+    
+    - name: Upload Release Asset (macos)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./amocli-${GITHUB_REF#refs/tags/}-macos.tar.gz
+        asset_name: amocli-${GITHUB_REF#refs/tags/}-macos.tar.gz
+        asset_content_type: application/gzip
+
+    - name: Upload Release Asset (linux)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./amocli-${GITHUB_REF#refs/tags/}-linux.tar.gz
+        asset_name: amocli-${GITHUB_REF#refs/tags/}-linux.tar.gz
+        asset_content_type: application/gzip
+
+    - name: Upload Release Asset (windows)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./amocli-${GITHUB_REF#refs/tags/}-windows.tar.gz
+        asset_name: amocli-${GITHUB_REF#refs/tags/}-windows.tar.gz
+        asset_content_type: application/gzip
