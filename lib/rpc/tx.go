@@ -3,6 +3,7 @@ package rpc
 import (
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 
 	"github.com/amolabs/amo-client-go/lib/keys"
 	"github.com/amolabs/amo-client-go/lib/types"
@@ -211,4 +212,40 @@ func Revoke(target, recipient string, key keys.KeyEntry, fee, lastHeight string)
 		Target    string `json:"target"`
 		Recipient string `json:"recipient"`
 	}{target, recipient}, key, fee, lastHeight)
+}
+
+func DIDClaim(target, docFile string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	b, err := ioutil.ReadFile(docFile)
+	if err != nil {
+		return TmTxResult{}, err
+	}
+
+	return SignSendTx("did.claim", struct {
+		Target   string          `json:"target"`
+		Document json.RawMessage `json:"document"`
+	}{target, b}, key, fee, lastHeight)
+}
+
+func DIDDismiss(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	return SignSendTx("did.dismiss", struct {
+		Target string `json:"target"`
+	}{target}, key, fee, lastHeight)
+}
+
+func DIDIssue(target, docFile string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	b, err := ioutil.ReadFile(docFile)
+	if err != nil {
+		return TmTxResult{}, err
+	}
+
+	return SignSendTx("did.issue", struct {
+		Target     string          `json:"target"`
+		Credential json.RawMessage `json:"credential"`
+	}{target, b}, key, fee, lastHeight)
+}
+
+func DIDRevoke(target string, key keys.KeyEntry, fee, lastHeight string) (TmTxResult, error) {
+	return SignSendTx("did.revoke", struct {
+		Target string `json:"target"`
+	}{target}, key, fee, lastHeight)
 }

@@ -43,6 +43,11 @@ func init() {
 		DiscardCmd,
 		CancelCmd,
 		RevokeCmd,
+		util.LineBreak,
+		DIDClaimCmd,
+		DIDDismissCmd,
+		DIDIssueCmd,
+		DIDRevokeCmd,
 	)
 
 	Cmd.PersistentFlags().StringP("fee", "f", "0", "fee for tx")
