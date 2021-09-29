@@ -104,3 +104,11 @@ func QueryUsage(target, recipient string) ([]byte, error) {
 		Recipient string `json:"recipient"`
 	}{target, recipient})
 }
+
+func QueryDID(did string) ([]byte, error) {
+	return ABCIQuery("/did", did)
+}
+
+func QueryVC(vcid string) ([]byte, error) {
+	return ABCIQuery("/vc", vcid)
+}

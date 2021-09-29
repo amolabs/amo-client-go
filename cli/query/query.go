@@ -40,5 +40,8 @@ func init() {
 		ParcelCmd,
 		RequestCmd,
 		UsageCmd,
+		util.LineBreak,
+		DIDCmd,
+		VCCmd,
 	)
 }

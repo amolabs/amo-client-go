@@ -154,6 +154,11 @@ type UsageEx struct {
 	Recipient Address `json:"recipient"`
 }
 
+type DIDEntry struct {
+	Document json.RawMessage `json:"document"`
+	Meta     json.RawMessage `json:"meta,omitempty"`
+}
+
 type AMOAppConfig struct {
 	MaxValidators          uint64   `json:"max_validators"`
 	WeightValidator        float64  `json:"weight_validator"`
