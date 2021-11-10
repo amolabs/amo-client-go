@@ -176,23 +176,23 @@ Keyring에서 키 하나를 제거한다.
 ```bash
 amocli query <subcommand>
 ```
-블록체인 상의 데이터를 조회한다. 모든 `query` 하부명령은 사용자 키를 필요로 하지
+: 블록체인 상의 데이터를 조회한다. 모든 `query` 하부명령은 사용자 키를 필요로 하지
 않는다.
 
 ```bash
 amocli query node [flags] 
 ```
-블록체인 노드의 상태를 표시한다.
+: 블록체인 노드의 상태를 표시한다.
 
 ```bash
 amocli query config [flags]
 ```
-블록체인 노드의 설정을 표시한다.
+: 블록체인 노드의 설정을 표시한다.
 
 ```bash
 amocli query balance <address> [flags]
 ```
-계정의 AMO 잔고를 출력한다. `<address>`는 HEX 인코딩된 바이트 열이다. 계정의
+: 계정의 AMO 잔고를 출력한다. `<address>`는 HEX 인코딩된 바이트 열이다. 계정의
 잔고는 AMO 단위와 *mote* 단위 두가지로 표시된다. 1 AMO는 1000000000000000000
 mote과 같다. `--json` 플래그가 주어졌을 경우는 *mote* 단위만 문자열의 형태로
 출력된다. `--udc <udc_id>` 플래그가 주어졌을 경우는 계정의 UDC 잔고를 출력한다. 
@@ -200,7 +200,7 @@ mote과 같다. `--json` 플래그가 주어졌을 경우는 *mote* 단위만 �
 ```bash
 amocli query udc <udc_id> [flags]
 ```
-블록체인 상에서 발행된 UDC의 전반적인 정보를 표시한다. `<udc_id>`는 십진법
+: 블록체인 상에서 발행된 UDC의 전반적인 정보를 표시한다. `<udc_id>`는 십진법
 숫자이다.
 
 ```bash
@@ -214,7 +214,7 @@ amocli query lock <udc_id> <address> [flags]
 ```bash
 amocli query stake <address> [flags]
 ```
-계정의 stake 정보를 출력한다. `<address>`는 HEX 인코딩된 바이트 열이다. 이
+: 계정의 stake 정보를 출력한다. `<address>`는 HEX 인코딩된 바이트 열이다. 이
 명령은 stake와 연결된 validator 공개키도 함께 표시한다. `--json` 플래그가
 주어졌을 경우는 출력은 다음과 같은 형태가 된다:
 ```json
@@ -225,19 +225,19 @@ Validator 공개키는 HEX 인코딩된 바이트 열로 표시된다.
 ```bash
 amocli query delegate <address> [flags]
 ```
-계정의 위임된 stake 정보를 출력한다. `<address>`는 HEX 인코딩된 바이트 열이다.
+: 계정의 위임된 stake 정보를 출력한다. `<address>`는 HEX 인코딩된 바이트 열이다.
 
 ```bash
 amocli query incentive <block_height | address> [flags]
 ```
-`<block_height>` 혹은 `<address>`의 incentive 정보를 출력한다. 두 가지 모두
+: `<block_height>` 혹은 `<address>`의 incentive 정보를 출력한다. 두 가지 모두
 동시에 주어질 수 있다. `<block_height>`는 십진법 숫자이다. `<address>`는 HEX
 인코딩된 바이트 열이다.
 
 ```bash
 amocli query draft <draft_id> [flags]
 ```
-제안된 draft 상태를 출력한다. `<draft_id>`는 십진법 숫자이다.
+: 제안된 draft 상태를 출력한다. `<draft_id>`는 십진법 숫자이다.
 
 ```bash
 amocli query vote <draft_id> <address> [flags]
@@ -253,54 +253,54 @@ storage 정보를 출력한다. `<storage_id>`는 십진법 숫자이다.
 ```bash
 amocli query parcel <parcelID> [flags]
 ```
-등록된 parcel의 정보를 출력한다. `<parcelID>`는 HEX 인코딩된 바이트 열이다.
+: 등록된 parcel의 정보를 출력한다. `<parcelID>`는 HEX 인코딩된 바이트 열이다.
 
 ```bash
 amocli query request <buyer_address> <parcel_id> [flags]
 ```
-Parcel에 대한 구매요청 정보를 출력한다. `<buyer_address>`와 `<parcel_id>`는 HEX
+: Parcel에 대한 구매요청 정보를 출력한다. `<buyer_address>`와 `<parcel_id>`는 HEX
 인코딩된 바이트 열이다.
 
 ```bash
 amocli query usage <buyer_address> <parcel_id> [flags]
 ```
-Parcel에 대한 사용허가 정보를 출력한다. `<buyer_address>`와 `<parcel_id>`는 HEX
+: Parcel에 대한 사용허가 정보를 출력한다. `<buyer_address>`와 `<parcel_id>`는 HEX
 인코딩된 바이트 열이다.
 
 ### Tx 명령
 ```bash
 amocli tx <subcommand>
 ```
-서명된 거래를 블록체인에 전송한다. 모든 `tx` 하부명령은 사용자 키를 필요로
+: 서명된 거래를 블록체인에 전송한다. 모든 `tx` 하부명령은 사용자 키를 필요로
 한다. `--user`와 `--pass` 플래그를 사용하여 선택한 키를 사용하게 지정한다. 이
 사용자 계정이 전송되는 거래의 송신자로 간주된다.
 
 ```bash
 amocli tx transfer <address> <amount> [flags]
 ```
-송신자는 `<amount>` 만큼의 AMO coin(mote 단위)을 `<address>`로 식별되는 계정에
+: 송신자는 `<amount>` 만큼의 AMO coin(mote 단위)을 `<address>`로 식별되는 계정에
 송금한다.
 
 ```bash
 amocli tx issue <udc_id> <amount> [flags]
 ```
-송신자는 `<amount>` 만큼의 UDC coin(mote 단위)을 `<udc_id>`와 함께 발행한다.
+: 송신자는 `<amount>` 만큼의 UDC coin(mote 단위)을 `<udc_id>`와 함께 발행한다.
 
 ```bash
 amocli tx burn <udc_id> <amount> [flags]
 ```
-송신자는 `<amount>` 만큼의 UDC coin(mote 단위)을 `<udc_id>`와 함께 소각한다.
+: 송신자는 `<amount>` 만큼의 UDC coin(mote 단위)을 `<udc_id>`와 함께 소각한다.
 
 ```bash
 amocli tx lock <udc_id> <holder_address> <amount> [flags]
 ```
-송신자는 `<holder_address>` 소유의 `<amount>` 만큼의 UDC coin(mote 단위)을
+: 송신자는 `<holder_address>` 소유의 `<amount>` 만큼의 UDC coin(mote 단위)을
 `<udc_id>`와 함께 잠금한다.
 
 ```bash
 amocli tx stake <validator_pubkey> <amount> [flags]
 ```
-송신자는 `<validator_pubkey>`에 연결된 stake를 새로 생성하거나 기존의 stake를
+: 송신자는 `<validator_pubkey>`에 연결된 stake를 새로 생성하거나 기존의 stake를
 `<amount>` 만큼 증액한다. `<validator_pubkey>`는 HEX 인코딩 혹은 base64 인코딩
 된 바이트 열이다.  사용자는 서로 다른 validator 공개키를 갖는 복수의 stake를
 보유할 수 없다.
@@ -318,38 +318,38 @@ stake로 지정하려면 해당 validator key가 설치된 validator 노드가 �
 ```bash
 amocli tx withdraw <amount> [flags]
 ```
-송신자는 자신의 계정에 stake된 AMO coin을 `<amount>`만큼 인출한다. 계정에
+: 송신자는 자신의 계정에 stake된 AMO coin을 `<amount>`만큼 인출한다. 계정에
 stake된 AMO coin의 양이 0이 되면 해당 stake가 완전히 제거된다.
 
 ```bash
 amocli tx delegate <address> <amount> [flags]
 ```
-송신자는 자신의 AMO coin을 다른 계정에 위임한다. 이 계정은 stake를 보유한
+: 송신자는 자신의 AMO coin을 다른 계정에 위임한다. 이 계정은 stake를 보유한
 계정이어야 한다. 사용자는 복수의 계정에게 coin을 위임할 수 없다.
 
 ```bash
 amocli tx retract <amount> [flags]
 ```
-송신자는 `<amount>` 만큼의 AMO coin 위임을 철회한다.
+: 송신자는 `<amount>` 만큼의 AMO coin 위임을 철회한다.
 
 ```bash
 amocli tx propose <draft_id> <config> <desc> [flags]
 ```
-송신자는 블록체인 configuration에 적용되어질 `<config>`를 포함한 draft를
+: 송신자는 블록체인 configuration에 적용되어질 `<config>`를 포함한 draft를
 `<draft_id>`와 `<desc>` 함께 제시한다. `<draft_id>`는 십진법 숫자이다.
 `<config>`는 JSON 오브젝트이다. `<desc>`는 사람이 읽을 수 있는 string 이다.
 
 ```bash
 amocli tx vote <draft_id> <approve> [flags]
 ```
-송신자는 `<draft_id>`와 `<approve>`로 drafte에 찬반투표를 한다.
+: 송신자는 `<draft_id>`와 `<approve>`로 drafte에 찬반투표를 한다.
 `<draft_id>`는 십진법 숫자이다. `<approve>`는 boolean 값이다; `true` 혹은
 `false`.
 
 ```bash
 amocli tx setup <storage_id> <url> <registration_fee> <hosting_fee> [flags]
 ```
-송신자는 `<storage_id>`, `<url>`, `<registration_fee>` 그리고 `<hosting_fee>`로
+: 송신자는 `<storage_id>`, `<url>`, `<registration_fee>` 그리고 `<hosting_fee>`로
 storage를 설정한다. `<storage_id>`는 십진법 숫자이다. `<url>`은 홈페이지
 주소이다; 예) `https://amo.foundation`. `<registration_fee>`는 parcel 소유자가
 parcel 등록 대가로 storage 호스트에게 지불하는 일정량의 AMO 코인이다.
@@ -361,12 +361,12 @@ amocli tx close <storage_id> [flags]
 ```
 The sender closes a storage with `<storage_id>`. `<storage_id>` is a decimal
 number.
-송신자는 `<storage_id>`로 storage를 닫는다. `<storage_id>는 십진수 숫자이다.
+: 송신자는 `<storage_id>`로 storage를 닫는다. `<storage_id>는 십진수 숫자이다.
 
 ```bash
 amocli tx register <parcel_id> <key_custody> [flags]
 ```
-송신자는 `<parcel_id>`를 갖는 데이터 parcel을 소유주의 키 보관값
+: 송신자는 `<parcel_id>`를 갖는 데이터 parcel을 소유주의 키 보관값
 `<key_custody>`와 함께 블록체인에 등록한다. `<parcel_id>`와 `<key_custody>`는
 HEX 인코딩된 바이트 열이다. `<parcel_id>`는 구매자들이 저장 위치를 식별할 수
 있도록 AMO 스토리지 서비스로부터 획득한 것이어야 한다. 기술적으로는
@@ -379,14 +379,14 @@ HEX 인코딩된 바이트 열이다. `<parcel_id>`는 구매자들이 저장 �
 ```bash
 amocli tx request <parcel_id> <amount> [flags]
 ```
-송신자는 소유주에게 데이터 parcel `<parcel_id>`의 사용권을 요청하며
+: 송신자는 소유주에게 데이터 parcel `<parcel_id>`의 사용권을 요청하며
 `<amount>`의 AMO coin을 댓가로 지불하겠다고 약속한다. `<amount>`의 AMO coin이
 송신자의 계정에서 차감되고 블록체인 내에 데이터 parcel 요청과 함께 잠긴다.
 
 ```bash
 amocli tx grant <parcel_id> <address> <key_custody> [flags]
 ```
-송신자는 데이터 parcel `<parcel_id>`의 사용권을 계정 `<address>`에게 허가하며
+: 송신자는 데이터 parcel `<parcel_id>`의 사용권을 계정 `<address>`에게 허가하며
 구매자의 키 보관값 `<key_custody>`를 전달한다. 구매자는 나중에 블록체인을
 조회하여 자신에게 전달된 암호화키를 획득할 수 있다. 기술적으로는
 `<key_custody>`는 특별한 의미가 없는 임의의 값을 사용해도 되지만, 이를 저장하는
@@ -396,20 +396,20 @@ amocli tx grant <parcel_id> <address> <key_custody> [flags]
 ```bash
 amocli tx discard <parcel_id> [flags]
 ```
-송신자는 블록체인으로부터 데이터 parcel `<parcel_id>`를 폐기한다. 이 이후에는
+: 송신자는 블록체인으로부터 데이터 parcel `<parcel_id>`를 폐기한다. 이 이후에는
 어떤 구매자도 AMO 스토리지 서비스로부터 해당 데이터 parcel을 다운로드하지
 못한다.
 
 ```bash
 amocli tx cancel <parcel_id> [flags]
 ```
-송신자는 자신이 이전에 전송했던 데이터 parcel 요청을 취소하고 블록체인으로부터
+: 송신자는 자신이 이전에 전송했던 데이터 parcel 요청을 취소하고 블록체인으로부터
 삭제한다. 지불하기로 약속되어 잠겼던 금액은 송신자에게 환불된다.
 
 ```bash
 amocli tx revoke <parcel_id> <address> [flags]
 ```
-송신자는 자신이 이전에 계정 `<address>`에게 허가했던 데이터 parcel
+: 송신자는 자신이 이전에 계정 `<address>`에게 허가했던 데이터 parcel
 `<parcel_id>`에 대한 사용 허가를 파기한다. 이 이후에 계정 `<address>`는 AMO
 스토리지 서비스로부터 해당 데이터 parcel을 다운로드하지 못한다.
 
@@ -417,7 +417,7 @@ amocli tx revoke <parcel_id> <address> [flags]
 ```bash
 amocli parcel <subcommand>
 ```
-스토리지 서비스의 데이터 parcel들을 관리한다. `upload`, `download`와 `remove`
+: 스토리지 서비스의 데이터 parcel들을 관리한다. `upload`, `download`와 `remove`
 하부명령은 사용자 키를 필요로 한다. `--user`와 `--pass` 플래그를 사용하여
 선택한 키를 사용하게 지정한다. 이 사용자 계정이 전송되는 AMO 스토리지 API
 요청의 송신자로 간주된다.
@@ -425,7 +425,7 @@ amocli parcel <subcommand>
 ```bash
 amocli parcel upload {<hex> | --file <filename>} [flags]
 ```
-송신자는 AMO 스토리지 서비스에 새로운 데이터 parcel을 업로드한다. 송신자는
+: 송신자는 AMO 스토리지 서비스에 새로운 데이터 parcel을 업로드한다. 송신자는
 업로드된 데이터 parcel의 소유주로 지정된다. AMO 스토리지 서비스는 업로드된
 데이터로부터 생성된 parcel의 ID를 응답한다. 업로드할 데이터를 지정하는 데에는
 두 가지 방식이 있다: HEX 인코딩된 바이트 열을 직접 입력하거나, 읽어들일 파일
@@ -435,7 +435,7 @@ amocli parcel upload {<hex> | --file <filename>} [flags]
 ```bash
 amocli parcel download <parcelID> [flags]
 ```
-송신자는 AMO 스토리지 서비스로부터 데이터 parcel `<parcelID>`를 다운로드한다.
+: 송신자는 AMO 스토리지 서비스로부터 데이터 parcel `<parcelID>`를 다운로드한다.
 데이터 parcel의 소유주가 해당 데이터 parcel에 대한 사용권한을 송신자에게 허가해
 놓은 상태라면 서버는 데이터 parcel의 본체와 metadata를 응답한다. 그렇지 않으면
 에러를 응답한다. 데이터 parcel의 소유주는 `amocli tx grant` 명령으로 특정
@@ -444,12 +444,12 @@ amocli parcel download <parcelID> [flags]
 ```bash
 amocli parcel inspect <parcelID> [flags]
 ```
-송신자는 AMO 스토리지 서비스로부터 데이터 parcel `<parcelID>`의 metadata를
+: 송신자는 AMO 스토리지 서비스로부터 데이터 parcel `<parcelID>`의 metadata를
 다운로드한다. 이 명령을 소유주로부터의 허가를 필요로 하지 않는다. 따라서 데이터
 parcel이 스토리지 서버에 존재하기만 하면 언제나 성공한다.
 
 ```bash
 amocli parcel remove <parcelID> [flags]
 ```
-송신자는 AMO 스토리지 서비스로부터 데이터 parcel `<parcelID>`를 삭제한다.
+: 송신자는 AMO 스토리지 서비스로부터 데이터 parcel `<parcelID>`를 삭제한다.
 송신자는 해당 데이터 parcel의 소유주여야 한다.
