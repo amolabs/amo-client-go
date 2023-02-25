@@ -7,5 +7,5 @@ require (
 	github.com/stretchr/testify v1.5.1
 	github.com/tendermint/tendermint v0.33.2
 	github.com/ybbus/jsonrpc v2.1.2+incompatible
-	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413
+	golang.org/x/crypto v0.1.0
 )
